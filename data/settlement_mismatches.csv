@@ -1,0 +1,39 @@
+date,match_id,event_code,market_key,market_tr,line,selection_tr,selection,hit_official,hit_engine
+2026-10-03,4443056,3175309,HT_BTTS,1. Yarı Karşılıklı Gol,,Var,yes,0,1
+2026-10-03,4443056,3175309,HT_BTTS,1. Yarı Karşılıklı Gol,,Yok,no,1,0
+2026-10-03,4443056,3175309,HT_OU_1.5,"1. Yarı 1,5 Alt/Üst",1.5,Alt,under,1,0
+2026-10-03,4443056,3175309,HT_OU_1.5,"1. Yarı 1,5 Alt/Üst",1.5,Üst,over,0,1
+2026-10-03,4443056,3175309,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Alt,under,1,0
+2026-10-03,4443056,3175309,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Üst,over,0,1
+2026-10-03,4443056,3175309,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Alt,under,1,0
+2026-10-03,4443056,3175309,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Üst,over,0,1
+2026-10-03,4505038,3179497,HANDICAP_-2,Hnd. MS (0:2),-2.0,1,home,1,0
+2026-10-03,4505038,3179497,HANDICAP_-2,Hnd. MS (0:2),-2.0,X,draw,0,1
+2026-10-03,4505038,3179497,ODD_EVEN,Tek/Çift,,Tek,odd,1,0
+2026-10-03,4505038,3179497,ODD_EVEN,Tek/Çift,,Çift,even,0,1
+2026-10-03,4566858,3250313,HT_BTTS,1. Yarı Karşılıklı Gol,,Var,yes,1,0
+2026-10-03,4566858,3250313,HT_BTTS,1. Yarı Karşılıklı Gol,,Yok,no,0,1
+2026-10-03,4566858,3250313,HT_OU_1.5,"1. Yarı 1,5 Alt/Üst",1.5,Alt,under,0,1
+2026-10-03,4566858,3250313,HT_OU_1.5,"1. Yarı 1,5 Alt/Üst",1.5,Üst,over,1,0
+2026-10-03,4566858,3250313,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Alt,under,0,1
+2026-10-03,4566858,3250313,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Üst,over,1,0
+2026-10-03,4566858,3250313,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Alt,under,0,1
+2026-10-03,4566858,3250313,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Üst,over,1,0
+2026-10-03,4566859,3250299,HT_1X2,1. Yarı Sonucu,,1,home,1,0
+2026-10-03,4566859,3250299,HT_1X2,1. Yarı Sonucu,,X,draw,0,1
+2026-10-03,4566859,3250299,HT_DC,1. Yarı Çifte Şans,,1-2,12,1,0
+2026-10-03,4566859,3250299,HT_DC,1. Yarı Çifte Şans,,X-2,X2,0,1
+2026-10-03,4566859,3250299,HT_ODD_EVEN,1. Yarı Tek/Çift,,Tek,odd,1,0
+2026-10-03,4566859,3250299,HT_ODD_EVEN,1. Yarı Tek/Çift,,Çift,even,0,1
+2026-10-03,4566859,3250299,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Alt,under,0,1
+2026-10-03,4566859,3250299,HT_TEAM_OU_home_0.5,"1. Yarı Ev Sahibi 0,5 Alt/Üst",0.5,Üst,over,1,0
+2026-10-04,4563463,3179993,HT_1X2,1. Yarı Sonucu,,2,away,1,0
+2026-10-04,4563463,3179993,HT_1X2,1. Yarı Sonucu,,X,draw,0,1
+2026-10-04,4563463,3179993,HT_DC,1. Yarı Çifte Şans,,1-2,12,1,0
+2026-10-04,4563463,3179993,HT_DC,1. Yarı Çifte Şans,,1-X,1X,0,1
+2026-10-04,4563463,3179993,HT_ODD_EVEN,1. Yarı Tek/Çift,,Tek,odd,1,0
+2026-10-04,4563463,3179993,HT_ODD_EVEN,1. Yarı Tek/Çift,,Çift,even,0,1
+2026-10-04,4563463,3179993,HT_OU_0.5,"1. Yarı 0,5 Alt/Üst",0.5,Alt,under,0,1
+2026-10-04,4563463,3179993,HT_OU_0.5,"1. Yarı 0,5 Alt/Üst",0.5,Üst,over,1,0
+2026-10-04,4563463,3179993,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Alt,under,0,1
+2026-10-04,4563463,3179993,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Üst,over,1,0
