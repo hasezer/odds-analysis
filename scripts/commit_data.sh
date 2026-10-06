@@ -4,7 +4,9 @@ set -euo pipefail
 msg="${1:-data update}"
 git config user.name "odds-bot"
 git config user.email "odds-bot@users.noreply.github.com"
-git add -A data exports reports 2>/dev/null || true
+for path in data exports reports; do
+  if [ -e "$path" ]; then git add -A "$path"; fi
+done
 if git diff --cached --quiet; then
   echo "nothing to commit"
   exit 0
