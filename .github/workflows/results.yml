@@ -32,7 +32,8 @@ jobs:
         run: PYTHONPATH=src python -m odds_analysis results --raw-dir raw
       - name: Commit data
         if: always()
-        run: scripts/commit_data.sh "data: results $(date -u +%Y-%m-%dT%H:%MZ)"
+        run: |
+          scripts/commit_data.sh "data: results $(date -u +%Y-%m-%dT%H:%MZ)"
       - name: Upload raw responses (7 days)
         if: always()
         uses: actions/upload-artifact@v4
