@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# Raw responses go to Actions artifacts, never to git
+phase0_output/
+raw/
+*.sqlite
+*.duckdb
+.venv/
