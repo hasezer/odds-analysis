@@ -78,9 +78,29 @@ def _settle(days: int, all_dates: bool) -> int:
     return 1 if error else 0
 
 
+def _dates(days: int, all_dates: bool, table: str = "results") -> list[str]:
+    from datetime import timedelta
+
+    from .config import DATA, TR
+
+    if all_dates:
+        return sorted(p.name[:10] for p in (DATA / table).glob("*.csv.gz"))
+    today = now_utc().astimezone(TR).date()
+    return [(today - timedelta(days=d)).isoformat() for d in range(days, -1, -1)]
+
+
+def _export(days: int, all_dates: bool) -> int:
+    from .config import load
+    from .export import export
+
+    stats = export(_dates(days, all_dates, "settled"), load("pipeline").get("exports", {}).get("keep_daily_xlsx_days", 60))
+    print(json.dumps(stats, indent=1))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="odds_analysis")
-    ap.add_argument("command", choices=["snapshot", "results", "settle", "health", "build-db"])
+    ap.add_argument("command", choices=["snapshot", "results", "settle", "export", "health", "build-db"])
     ap.add_argument("--days", type=int, default=7, help="settle: match dates from today-N to today")
     ap.add_argument("--all", action="store_true", help="settle: every date that has results")
     ap.add_argument("--raw-dir", type=Path, default=None, help="save raw responses here (Actions artifact)")
@@ -93,6 +113,8 @@ def main(argv: list[str] | None = None) -> int:
         return _run_job(args.command, args.raw_dir, args.limit)
     if args.command == "settle":
         return _settle(args.days, args.all)
+    if args.command == "export":
+        return _export(args.days, args.all)
     if args.command == "health":
         from .health import check
         return check()

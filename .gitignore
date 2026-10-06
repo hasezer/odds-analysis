@@ -7,3 +7,4 @@ raw/
 *.sqlite
 *.duckdb
 .venv/
+_exports/
