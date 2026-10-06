@@ -22,7 +22,7 @@ DEFAULT_HEADERS = {
     "accept-language": "tr-TR,tr;q=0.9,en;q=0.8",
 }
 RETRY_STATUSES = {429, 500, 502, 503, 504}
-BACKOFF_SECONDS = (2, 4, 8, 16)
+BACKOFF_SECONDS = (2, 6)  # short: a slow endpoint must not eat the Actions budget
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class FetchResult:
 @dataclass
 class MackolikClient:
     min_interval_s: float = 1.0
-    timeout_s: float = 30.0
+    timeout_s: float = 20.0
     raw_dir: Path | None = None
     requests: int = field(default=0, init=False)
     _last_request: float = field(default=0.0, init=False)

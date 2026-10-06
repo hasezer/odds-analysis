@@ -16,6 +16,9 @@ results:
   days_back: 5              # Turkey dates today-5 .. today
   min_minutes_after_kickoff: 150
   fetch_rb_stats_if_no_corners: true
+  # Stop cleanly after this many minutes (job limit is 150): progress is saved and a follow-up run
+  # is started automatically for the remaining matches.
+  max_minutes: 110
 
 # Health
 health:

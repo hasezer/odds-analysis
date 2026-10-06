@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from datetime import datetime, timedelta
 
 from . import http as H
@@ -66,7 +67,7 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
     today = now.astimezone(TR).date()
     dates = [(today - timedelta(days=d)) for d in range(cfg.get("days_back", 5), -1, -1)]
     stats = {"dates": [], "listed": 0, "final": 0, "void": 0, "pending": 0, "skipped_done": 0,
-             "official_markets": 0, "errors": 0, "error_detail": []}
+             "official_markets": 0, "deferred": 0, "errors": 0, "error_detail": []}
     unmapped: dict[str, dict] = {}
 
     rows: dict[int, dict] = {}
@@ -98,9 +99,37 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
     def put(table: str, date: str, items: list[dict]) -> None:
         out.setdefault(table, {}).setdefault(date, []).extend(items)
 
+    def flush() -> None:
+        """Write what we have so far: a run that hits the time limit keeps its progress."""
+        for table, parts in out.items():
+            for date, items in parts.items():
+                if table == "matches":  # never overwrite snapshot metadata (first_seen etc.)
+                    old = read_partition("matches", date)
+                    have = set(old["match_id"]) if not old.empty else set()
+                    items = [i for i in items if str(i["match_id"]) not in have]
+                if items:
+                    upsert_partition(table, date, frame(items))
+        out.clear()
+
+    budget_s = cfg.get("max_minutes", 110) * 60
+    started = time.monotonic()
+    consecutive_failures = 0
+    processed = 0
+
     for mid, r in sorted(rows.items(), key=lambda kv: (kv[1]["date"], kv[1]["kickoff_local"] or "")):
         if limit is not None and stats["final"] + stats["void"] + stats["pending"] >= limit:
             break
+        if time.monotonic() - started > budget_s:
+            stats["stopped_early"] = True  # the rest is picked up by the follow-up run
+            log.warning("time budget reached; stopping with %d matches left", len(rows) - processed)
+            break
+        if consecutive_failures >= 15:
+            stats["errors"] += 1
+            stats["error_detail"].append("15 matches in a row failed - Mackolik unreachable? stopping")
+            break
+        processed += 1
+        if processed % 25 == 0:
+            flush()
         if str(mid) in done:
             stats["skipped_done"] += 1
             continue
@@ -219,17 +248,17 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
             stats["final"] += 1
             put("results", date, [result])
             put("matches", date, [m])
-        except Exception as exc:  # noqa: BLE001
-            log.exception("match %s failed", mid)
-            stats["errors"] += 1
-            stats["error_detail"].append(f"match {mid}: {exc!r}")
+            consecutive_failures = 0
+        except Exception as exc:  # noqa: BLE001 - one match must not stop the run; it is retried next run
+            log.warning("match %s deferred: %r", mid, exc)
+            stats["deferred"] += 1
+            consecutive_failures += 1
+            if len(stats["error_detail"]) < 20:
+                stats["error_detail"].append(f"match {mid}: {exc!r}")
 
-    for table, parts in out.items():
-        for date, items in parts.items():
-            if table == "matches":  # never overwrite snapshot metadata (first_seen etc.)
-                old = read_partition("matches", date)
-                have = set(old["match_id"]) if not old.empty else set()
-                items = [i for i in items if str(i["match_id"]) not in have]
-            upsert_partition(table, date, frame(items))
+    flush()
     stats["unmapped_new"] = log_unmapped(unmapped)
+    if stats["deferred"] > max(5, 0.1 * max(1, stats["final"] + stats["deferred"])):
+        stats["errors"] += 1
+        stats["error_detail"].append(f"{stats['deferred']} matches failed to fetch (deferred to next run)")
     return stats

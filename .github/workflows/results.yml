@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # to start a follow-up run when the time budget is reached
 
 concurrency:
   group: data-writer
@@ -46,6 +47,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/publish_exports.sh "export --days 7"
+      - name: Start a follow-up run if the time budget was reached
+        if: always() && hashFiles('.continue_results') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run results.yml --ref main
       - name: Upload raw responses (7 days)
         if: always()
         uses: actions/upload-artifact@v4

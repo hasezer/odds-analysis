@@ -44,6 +44,8 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
         "summary": json.dumps({k: v for k, v in stats.items() if k not in ("dates", "error_detail")}, ensure_ascii=False),
         "error_detail": " || ".join(detail)[:2000],
     }])
+    if stats.get("stopped_early"):
+        Path(".continue_results").write_text("time budget reached\n")  # the workflow starts a follow-up run
     print(json.dumps({k: v for k, v in stats.items() if k != "dates"}, ensure_ascii=False, indent=1))
     if errors:
         print(f"{errors} error(s): " + " || ".join(detail), file=sys.stderr)
