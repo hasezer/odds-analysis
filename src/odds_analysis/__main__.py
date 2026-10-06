@@ -100,7 +100,7 @@ def _export(days: int, all_dates: bool) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="odds_analysis")
-    ap.add_argument("command", choices=["snapshot", "results", "settle", "export", "health", "build-db"])
+    ap.add_argument("command", choices=["snapshot", "results", "settle", "export", "analyze", "health", "build-db"])
     ap.add_argument("--days", type=int, default=7, help="settle: match dates from today-N to today")
     ap.add_argument("--all", action="store_true", help="settle: every date that has results")
     ap.add_argument("--raw-dir", type=Path, default=None, help="save raw responses here (Actions artifact)")
@@ -115,6 +115,10 @@ def main(argv: list[str] | None = None) -> int:
         return _settle(args.days, args.all)
     if args.command == "export":
         return _export(args.days, args.all)
+    if args.command == "analyze":
+        from .analysis import analyze
+        print(json.dumps(analyze(), indent=1))
+        return 0
     if args.command == "health":
         from .health import check
         return check()

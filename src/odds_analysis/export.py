@@ -30,7 +30,7 @@ WINNERS_PER_MARKET = {"DC": 2, "HT_DC": 2}
 
 COLUMNS = [
     "date", "kickoff_local", "kickoff_utc", "weekday", "league_code", "league", "match_id", "event_code",
-    "home_team", "away_team", "mbs", "market_mbs", "market_key", "family", "line", "market_tr", "selection",
+    "home_team", "away_team", "mbs", "market_mbs", "market_id", "market_key", "family", "line", "market_tr", "selection",
     "selection_tr", "opening_odds", "opening_utc", "closing_odds", "closing_utc", "closing_min_before_ko",
     "closing_source", "odds_source", "odds_movement_pct", "implied_prob", "fair_prob", "market_margin",
     "hit", "hit_source", "hit_official", "hit_engine", "engine_only",
