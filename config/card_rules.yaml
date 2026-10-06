@@ -1,0 +1,18 @@
+# "Kart Puanı" counting rules used by the settlement engine.
+# Source: Nesine help centre, article 742 "Kart alt / üst oyununda kartlar nasıl sayılır?"
+# (also 733, 1075, 1413, 2752), fetched 2026-10-06 - quoted in PR #1.
+source: "nesine.com/yardim - help article 742 (help.nesine.com/api/v1/help/Content?id=742)"
+yellow: 1                 # "Sarı kart 1 puan"
+red: 2                    # "Direkt kırmızı kart 2 puan" / "kırmızı veya çift sarıdan kırmızı kart 2 kart"
+# "Çift sarıdan kırmızı kart 3 puan (sarı kart: 1 puan + kırmızı kart: 2 puan)" and
+# "kırmızı karta neden olan ikinci sarı kart değerlendirmeye alınmaz":
+# per player = first yellow (1) + red (2); the second yellow itself counts 0.
+second_yellow_red_total: 3
+# "Oyunda olmayanlar için gösterilen kartlar (oyundan çıkan oyuncular, ...) değerlendirmeye alınmaz"
+exclude_after_substitution: true
+# "90 dakikalık normal sürede" - extra-time cards excluded
+regulation_only: true
+# Card markets have no official result marks; they are always engine-settled.
+# Set to false to exclude card markets from analysis until you have confirmed the rule.
+include_in_analysis: true
+status: "rule from Nesine help text, interpretation pending user confirmation"

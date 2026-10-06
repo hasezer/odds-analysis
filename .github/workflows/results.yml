@@ -30,6 +30,11 @@ jobs:
         id: job
         continue-on-error: true
         run: PYTHONPATH=src python -m odds_analysis results --raw-dir raw
+      - name: Settle (last 7 match dates)
+        id: settle
+        if: always()
+        continue-on-error: true
+        run: PYTHONPATH=src python -m odds_analysis settle --days 7
       - name: Commit data
         if: always()
         run: |
@@ -43,7 +48,7 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
       - name: Fail if the job had errors
-        if: steps.job.outcome != 'success'
+        if: steps.job.outcome != 'success' || steps.settle.outcome != 'success'
         run: |
-          echo "Results job reported errors - see the 'Results' step log and data/runs.csv"
+          echo "Results or settlement reported errors - see the step logs and data/runs.csv"
           exit 1

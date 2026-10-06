@@ -131,3 +131,10 @@ def read_log(name: str, root: Path = DATA) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
     return pd.read_csv(path, dtype=str, keep_default_na=False)
+
+
+def write_log_frame(name: str, df: pd.DataFrame, root: Path = DATA) -> None:
+    """Replace data/<name>.csv with a derived table (e.g. mismatches rebuilt from settled data)."""
+    path = root / f"{name}.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False, lineterminator="\n")
