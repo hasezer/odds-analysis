@@ -30,4 +30,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: scripts/publish_exports.sh "analyze"
       - name: Commit report
-        run: scripts/commit_data.sh "reports: weekly analysis $(date -u +%Y-%m-%d)"
+        run: |
+          scripts/commit_data.sh "reports: weekly analysis $(date -u +%Y-%m-%d)"
