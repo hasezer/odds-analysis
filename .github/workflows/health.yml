@@ -1,0 +1,25 @@
+name: Health
+
+on:
+  schedule:
+    - cron: "30 */12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install pandas==2.2.3 PyYAML==6.0.2 httpx==0.28.1 selectolax==1.0.0
+      - name: Check last successful runs (fails -> GitHub emails you)
+        run: PYTHONPATH=src python -m odds_analysis health
