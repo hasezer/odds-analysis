@@ -1,0 +1,49 @@
+name: Phase 0 - endpoint check
+
+on:
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: "Finished matches to deep-check"
+        default: "15"
+  # Also runs on the Phase 0 PR so the check executes on GitHub's servers before review.
+  pull_request:
+    paths:
+      - "scripts/phase0_check.py"
+      - "src/**"
+      - ".github/workflows/phase0.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase0-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phase0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Unit tests
+        run: python -m pytest -q
+      - name: Runner public IP (for the report)
+        run: curl -s https://api.ipify.org || true
+      - name: Phase 0 checks
+        run: python scripts/phase0_check.py --out phase0_output --sample "${{ github.event.inputs.sample || '15' }}"
+      - name: Job summary
+        if: always()
+        run: cat phase0_output/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Upload results + raw responses (7 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-output
+          path: phase0_output/
+          retention-days: 7
