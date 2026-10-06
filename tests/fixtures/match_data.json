@@ -1,0 +1,508 @@
+{
+"4445150": {
+"home": "Portekiz",
+"away": "Norveç",
+"d": {
+"s": "2 - 1",
+"p": 0,
+"st": "MS",
+"ht": "1 - 1",
+"ft": "",
+"et": "",
+"pt": "",
+"time": 90
+},
+"e": [
+[
+1,
+12,
+234897,
+"Joao Cancelo",
+2,
+{}
+],
+[
+2,
+36,
+284479,
+"Kristoffer Ajer",
+1,
+{
+"d": 1,
+"astId": 290143,
+"astName": "Martin Odegaard"
+}
+],
+[
+1,
+38,
+234897,
+"Joao Cancelo",
+1,
+{
+"d": 1,
+"astId": 566252,
+"astName": "Nuno Mendes"
+}
+],
+[
+1,
+63,
+391824,
+"Diogo Dalot",
+4,
+{
+"d": 234897,
+"sub": "Joao Cancelo"
+}
+],
+[
+1,
+63,
+320334,
+"Ruben Neves",
+4,
+{
+"d": 266755,
+"sub": "Joao Palhinha"
+}
+],
+[
+2,
+67,
+476618,
+"Jörgen Strand Larsen",
+4,
+{
+"d": 460863,
+"sub": "Erling Haaland"
+}
+],
+[
+2,
+74,
+582013,
+"Oscar Bobb",
+4,
+{
+"d": 635612,
+"sub": "Antonio Nusa"
+}
+],
+[
+1,
+79,
+543105,
+"Gonçalo Ramos",
+1,
+{
+"d": 1,
+"astId": 475166,
+"astName": "Joao Felix"
+}
+],
+[
+1,
+86,
+562395,
+"Francisco Conceiçao",
+2,
+{}
+],
+[
+1,
+86,
+562395,
+"Francisco Conceiçao",
+3,
+{
+"d": 1
+}
+],
+[
+1,
+86,
+257728,
+"Bernardo Silva",
+4,
+{
+"d": 515943,
+"sub": "Vitinha"
+}
+],
+[
+2,
+87,
+562121,
+"Thelo Aasgaard",
+4,
+{
+"d": 284414,
+"sub": "Patrick Berg"
+}
+],
+[
+1,
+88,
+237813,
+"Bruno Fernandes",
+2,
+{}
+],
+[
+1,
+90,
+526519,
+"Nuno Tavares",
+4,
+{
+"d": 475166,
+"sub": "Joao Felix"
+}
+],
+[
+1,
+90,
+454713,
+"Francisco Trincao",
+4,
+{
+"d": 237813,
+"sub": "Bruno Fernandes"
+}
+]
+]
+},
+"4445151": {
+"home": "Galler",
+"away": "Danimarka",
+"d": {
+"s": "0 - 1",
+"p": 0,
+"st": "MS",
+"ht": "0 - 0",
+"ft": "",
+"et": "",
+"pt": "",
+"time": 90
+},
+"e": [
+[
+2,
+10,
+505053,
+"Andreas Skov Olsen",
+4,
+{
+"d": 244146,
+"sub": "Pierre-Emile Höjbjerg"
+}
+],
+[
+1,
+29,
+360123,
+"Liam Cullen",
+2,
+{}
+],
+[
+1,
+56,
+320338,
+"Josh Sheehan",
+4,
+{
+"d": 655846,
+"sub": "Jordan James"
+}
+],
+[
+1,
+56,
+359729,
+"Thomas Harris",
+4,
+{
+"d": 688178,
+"sub": "Louie Koumas"
+}
+],
+[
+1,
+66,
+475680,
+"Benjamin Cabango",
+2,
+{}
+],
+[
+2,
+75,
+590375,
+"Rasmus Höjlund",
+1,
+{
+"d": 2
+}
+],
+[
+1,
+76,
+238599,
+"Wes Burns",
+4,
+{
+"d": 527915,
+"sub": "Brennan Johnson"
+}
+],
+[
+1,
+76,
+684758,
+"Joel Colwill",
+4,
+{
+"d": 360123,
+"sub": "Liam Cullen"
+}
+],
+[
+2,
+77,
+635228,
+"Anton Gaaei",
+4,
+{
+"d": 432820,
+"sub": "Rasmus Kristensen"
+}
+],
+[
+1,
+80,
+483882,
+"Sorba Thomas",
+2,
+{}
+],
+[
+2,
+82,
+539201,
+"Kasper Hogh",
+4,
+{
+"d": 590375,
+"sub": "Rasmus Höjlund"
+}
+],
+[
+2,
+82,
+607263,
+"Mathias Kvistgaarden",
+4,
+{
+"d": 522416,
+"sub": "Gustav Isaksen"
+}
+],
+[
+1,
+83,
+252821,
+"Kieffer Moore",
+4,
+{
+"d": 197698,
+"sub": "Ben Davies"
+}
+],
+[
+2,
+90,
+477545,
+"Mads Hermansen",
+2,
+{}
+]
+]
+},
+"4445126": {
+"home": "Yunanistan",
+"away": "Almanya",
+"d": {
+"s": "0 - 0",
+"p": 0,
+"st": "MS",
+"ht": "0 - 0",
+"ft": "",
+"et": "",
+"pt": "",
+"time": 90
+},
+"e": [
+[
+1,
+23,
+341697,
+"Kostas Tsimikas",
+2,
+{}
+],
+[
+2,
+32,
+509245,
+"Jonathan Burkardt",
+1,
+{
+"d": 1,
+"astId": 621619,
+"astName": "Derry Lionel Scherhant"
+}
+],
+[
+2,
+36,
+348807,
+"Waldemar Anton",
+2,
+{}
+],
+[
+1,
+46,
+341700,
+"Athanasios Androutsos",
+4,
+{
+"d": 572706,
+"sub": "Alexandros Kiziridis"
+}
+],
+[
+1,
+46,
+705695,
+"Konstantinos Karetsas",
+4,
+{
+"d": 352558,
+"sub": "Vangelis Pavlidis"
+}
+],
+[
+1,
+53,
+592558,
+"Christos Zafeiris",
+2,
+{}
+],
+[
+2,
+63,
+725408,
+"Said El Mala",
+4,
+{
+"d": 785418,
+"sub": "Lennart Karl"
+}
+],
+[
+2,
+63,
+568417,
+"Nick Woltemade",
+4,
+{
+"d": 509245,
+"sub": "Jonathan Burkardt"
+}
+],
+[
+2,
+66,
+508615,
+"Philipp Treu",
+2,
+{}
+],
+[
+1,
+68,
+692623,
+"Christos Mouzakitis",
+4,
+{
+"d": 93559,
+"sub": "Dimitris Kourbelis"
+}
+],
+[
+1,
+78,
+360148,
+"Panagiotis Retsos",
+4,
+{
+"d": 443429,
+"sub": "Konstantinos Mavropanos"
+}
+],
+[
+1,
+79,
+255321,
+"Manolis Saliakas",
+2,
+{}
+],
+[
+2,
+83,
+645497,
+"Bambase Conte",
+4,
+{
+"d": 621619,
+"sub": "Derry Lionel Scherhant"
+}
+],
+[
+2,
+83,
+645409,
+"Mika Baur",
+4,
+{
+"d": 642283,
+"sub": "Tom Bischof"
+}
+],
+[
+1,
+88,
+692635,
+"Charalampos Kostoulas",
+4,
+{
+"d": 517297,
+"sub": "Fotis Ioannidis"
+}
+],
+[
+2,
+90,
+554535,
+"Malick Thiaw",
+2,
+{}
+]
+]
+}
+}

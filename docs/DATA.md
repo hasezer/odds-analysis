@@ -14,9 +14,9 @@ Build a local database whenever you want one (it is not committed):
 | `events` | goal / card / sub | results | minute, team, type, detail (`penalty`, `own_goal`, `second_yellow`, `straight_red`), assist, running score |
 | `stats` | match × source × stat | results | raw İstatistikler box: `opta` (page) or `rb` (fallback) |
 | `official` | selection | results | Nesine's own result after full time: `highlight` = selection won; `market_decided` = Nesine marked at least one selection in that market |
-| `settled` | selection | settlement (Phase 2) | hit / miss |
+| `settled` | selection | settle (after results) | `hit_official` (Nesine's mark), `hit_engine` (our rules), **`hit`** = official if Nesine marked the market, else engine; `void` for postponed/cancelled. `hit_source`: `official` / `engine` / `none` / `void`. `engine_only` = corners & cards (never officially marked). `agree` = official vs engine (1/0). `card_rule` = rule source for card markets |
 
-Logs (`data/*.csv`): `runs`, `unmapped_markets`, `score_mismatches` (list vs match page), `event_score_mismatches` (goal events don't add up to the score, e.g. a disallowed goal still listed), `extra_time_matches`, `settlement_mismatches` (Phase 2).
+Logs (`data/*.csv`): `runs`, `unmapped_markets`, `score_mismatches` (list vs match page), `event_score_mismatches` (goal events don't add up to the score, e.g. a disallowed goal still listed), `extra_time_matches`, `settlement_mismatches` (official ≠ engine, rebuilt on every settlement run).
 
 ## Market keys
 
