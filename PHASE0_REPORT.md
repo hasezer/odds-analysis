@@ -3,7 +3,7 @@
 Date: 2026-10-06. Checked from two places:
 
 1. **This development container** (cloud, not GitHub): all checks passed.
-2. **GitHub Actions runner**, workflow `Phase 0 - endpoint check` (`.github/workflows/phase0.yml`): see [GitHub Actions result](#github-actions-result) below.
+2. **GitHub Actions runner**, workflow `Phase 0 - endpoint check` (`.github/workflows/phase0.yml`): **all checks passed**. See [GitHub Actions result](#github-actions-result).
 
 You can re-run it any time from the iPad: GitHub → Actions → *Phase 0 - endpoint check* → *Run workflow*. Every run uploads `phase0-output` (summary, market catalog, all raw responses), kept for 7 days. Raw files are never committed.
 
@@ -18,7 +18,7 @@ You can re-run it any time from the iPad: GitHub → Actions → *Phase 0 - endp
 | C | Iddaa-Programi page | ✅ but weaker | Only 128 matches and **no league codes**. Recommend using A with `np=1` for upcoming matches (220 matches incl. league codes). |
 | D | Match page + 3 AJAX calls | ✅ | MS/İY score, goals with minute/assist/running score, cards (2nd yellow flagged), subs, stats. Referee/stadium only on bigger matches. |
 
-**Mackolik did not block us.** Every request returned HTTP 200 with real data and needed no retry.
+**Mackolik did not block us, from GitHub Actions or from the dev container.** Every request returned HTTP 200 with real data and needed no retry.
 
 ---
 
@@ -111,7 +111,13 @@ What this means for settlement:
 
 ## GitHub Actions result
 
-_To be filled in from the first run on this PR._
+**Passed: Mackolik does not block GitHub's servers.**
+
+- Run: [Phase 0 - endpoint check #2](https://github.com/hasezer/odds-analysis/actions/runs/37450000472) (2026-10-06 10:29 UTC, runner on a Microsoft Azure IP). All 13 checks passed. About 110 requests to Mackolik, every one **HTTP 200 on the first attempt** with no retries, in about 3 minutes at 1 request/sec.
+- The results are the same as in the dev container: same window (01.10 → 08.10 per date; 1,359 matches with `d=-1`), Portekiz–Norveç parsed exactly, 89 markets in the finished popup with 55 highlighted, and the same 15/15 deep sample coverage. On GitHub the `w` parameter test also confirmed it is ignored.
+- 98 distinct Nesine market names were seen. They are listed in `market_catalog.csv` inside the run's `phase0-output` artifact, together with every raw response (7 days).
+- Run #1 was cancelled halfway because I pushed a second commit. It had also received only HTTP 200 responses up to that point.
+- Note: the workflow runs on `workflow_dispatch` (manual), and also on this PR so the check could run before your review.
 
 ---
 
