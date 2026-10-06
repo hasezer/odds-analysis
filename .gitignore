@@ -8,3 +8,4 @@ raw/
 *.duckdb
 .venv/
 _exports/
+.continue_results
