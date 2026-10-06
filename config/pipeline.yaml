@@ -7,7 +7,7 @@ snapshot:
   # and again in the run just before its kickoff: every run fetches the matches that kick off
   # before the next scheduled run (+ buffer), so the last fetch before kickoff = closing.
   # The 22:00 UTC run therefore covers night kickoffs until 06:00 UTC. Keeps Actions minutes low.
-  buffer_minutes: 20
+  buffer_minutes: 40        # runs start at :07 and can be delayed: fetch everything kicking off before next run + 40 min
   # Extra re-snapshots of matches further ahead (0 = off). Each hour costs Actions minutes.
   resnapshot_horizon_hours: 0
 

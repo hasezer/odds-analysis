@@ -3,7 +3,7 @@ name: Results
 on:
   schedule:
     # 05:00 UTC: collect results for every date still in Mackolik's ~4.5-day window
-    - cron: "0 5 * * *"
+    - cron: "4 5 * * *"   # 05:04 UTC (off the top of the hour, which GitHub often drops)
   workflow_dispatch:
 
 permissions:

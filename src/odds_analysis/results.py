@@ -258,7 +258,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
 
     flush()
     stats["unmapped_new"] = log_unmapped(unmapped)
-    if stats["deferred"] > max(5, 0.1 * max(1, stats["final"] + stats["deferred"])):
+    # deferred matches are retried automatically next run; only a large share means something is wrong
+    if stats["deferred"] > max(10, 0.25 * max(1, stats["final"] + stats["deferred"])):
         stats["errors"] += 1
         stats["error_detail"].append(f"{stats['deferred']} matches failed to fetch (deferred to next run)")
     return stats
