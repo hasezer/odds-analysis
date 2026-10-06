@@ -12,8 +12,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("ODDS_DATA_DIR", ROOT / "data"))
 CONFIG = ROOT / "config"
-EXPORTS = ROOT / "exports"
-REPORTS = ROOT / "reports"
+EXPORTS = Path(os.environ.get("ODDS_EXPORTS_DIR", ROOT / "exports"))
+REPORTS = Path(os.environ.get("ODDS_REPORTS_DIR", ROOT / "reports"))
 
 TR = timezone(timedelta(hours=3))  # Turkey has no DST since 2016
 UTC = timezone.utc

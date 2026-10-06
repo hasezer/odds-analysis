@@ -14,9 +14,9 @@ Build a local database whenever you want one (it is not committed):
 | `events` | goal / card / sub | results | minute, team, type, detail (`penalty`, `own_goal`, `second_yellow`, `straight_red`), assist, running score |
 | `stats` | match × source × stat | results | raw İstatistikler box: `opta` (page) or `rb` (fallback) |
 | `official` | selection | results | Nesine's own result after full time: `highlight` = selection won; `market_decided` = Nesine marked at least one selection in that market |
-| `settled` | selection | settlement (Phase 2) | hit / miss |
+| `settled` | selection | settle (after results) | `hit_official` (Nesine's mark), `hit_engine` (our rules), **`hit`** = official if Nesine marked the market, else engine; `void` for postponed/cancelled. `hit_source`: `official` / `engine` / `none` / `void`. `engine_only` = corners & cards (never officially marked). `agree` = official vs engine (1/0). `card_rule` = rule source for card markets |
 
-Logs (`data/*.csv`): `runs`, `unmapped_markets`, `score_mismatches` (list vs match page), `event_score_mismatches` (goal events don't add up to the score, e.g. a disallowed goal still listed), `extra_time_matches`, `settlement_mismatches` (Phase 2).
+Logs (`data/*.csv`): `runs`, `unmapped_markets`, `score_mismatches` (list vs match page), `event_score_mismatches` (goal events don't add up to the score, e.g. a disallowed goal still listed), `extra_time_matches`, `settlement_mismatches` (official ≠ engine, rebuilt on every settlement run).
 
 ## Market keys
 
@@ -28,3 +28,21 @@ Turkish names are kept in `market_tr` / `selection_tr`. `market_key` / `selectio
 For some event codes the odds popup (B) returns an **older match** that once had the same code. This happened for about 6% of upcoming matches and about 23% of finished ones. Every popup is therefore checked: its `iddaa_code` must equal the event code and its start time must match the kickoff (±6 h).
 - **Snapshots:** if the check fails, the program's own "Tümü" data is used instead (`command=morebets&mac=<match_id>`, keyed by match id). Its prices are identical to B and the market names are mapped to B's, but it has fewer markets (no player or special markets) → `source = morebets`.
 - **Results:** if the check fails, that match has no official marks and no post-match prices (`results.official_status = popup_other_match:<code>`). It is settled by the engine only.
+
+## Exports (branch `exports`)
+
+One row per match × market × selection:
+
+| Column | Meaning |
+|---|---|
+| `opening_odds` / `opening_utc` | first price we saw (empty if we never snapshotted the match) |
+| `closing_odds` / `closing_utc` | last price before kickoff; `closing_utc` = time of the last fetch before kickoff |
+| `closing_min_before_ko` | how long before kickoff the closing price was taken |
+| `closing_source` | `snapshot`, or `post_match` (price shown after full time, used for backfilled matches) |
+| `odds_source` | `popup` or `morebets` |
+| `odds_movement_pct` | closing / opening − 1, in % (negative = shortened) |
+| `implied_prob` | 1 / closing price |
+| `fair_prob` | implied probability with the margin removed proportionally, only for mutually exclusive markets with every selection priced (DC counts as 2 winners) |
+| `market_margin` | overround of that market (sum of implied probabilities / winners − 1) |
+| `hit`, `hit_source`, `hit_official`, `hit_engine`, `engine_only` | see `settled` above |
+| `ht_*`, `ft_*`, `corners_*`, `card_pts_*` | match facts; card points use `config/card_rules.yaml` |

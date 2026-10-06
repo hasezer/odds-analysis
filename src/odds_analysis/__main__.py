@@ -50,9 +50,59 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
     return 1 if errors else 0
 
 
+def _settle(days: int, all_dates: bool) -> int:
+    from datetime import timedelta
+
+    from .config import DATA, TR
+    from .settle import settle_dates
+
+    started = time.monotonic()
+    run_at = iso(now_utc())
+    if all_dates:
+        dates = sorted(p.name[:10] for p in (DATA / "results").glob("*.csv.gz"))
+    else:
+        today = now_utc().astimezone(TR).date()
+        dates = [(today - timedelta(days=d)).isoformat() for d in range(days, -1, -1)]
+    try:
+        stats = settle_dates(dates)
+        error = None
+    except Exception as exc:  # noqa: BLE001
+        logging.exception("settlement crashed")
+        stats, error = {}, repr(exc)
+    append_log("runs", [{"run_at": run_at, "job": "settle", "dates": " ".join(stats.get("dates", [])),
+                         "matches": "", "errors": 1 if error else 0, "requests": 0,
+                         "duration_s": round(time.monotonic() - started),
+                         "summary": json.dumps({k: v for k, v in stats.items() if k != "dates"}),
+                         "error_detail": error or ""}])
+    print(json.dumps(stats, indent=1))
+    return 1 if error else 0
+
+
+def _dates(days: int, all_dates: bool, table: str = "results") -> list[str]:
+    from datetime import timedelta
+
+    from .config import DATA, TR
+
+    if all_dates:
+        return sorted(p.name[:10] for p in (DATA / table).glob("*.csv.gz"))
+    today = now_utc().astimezone(TR).date()
+    return [(today - timedelta(days=d)).isoformat() for d in range(days, -1, -1)]
+
+
+def _export(days: int, all_dates: bool) -> int:
+    from .config import load
+    from .export import export
+
+    stats = export(_dates(days, all_dates, "settled"), load("pipeline").get("exports", {}).get("keep_daily_xlsx_days", 60))
+    print(json.dumps(stats, indent=1))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="odds_analysis")
-    ap.add_argument("command", choices=["snapshot", "results", "health", "build-db"])
+    ap.add_argument("command", choices=["snapshot", "results", "settle", "export", "analyze", "health", "build-db"])
+    ap.add_argument("--days", type=int, default=7, help="settle: match dates from today-N to today")
+    ap.add_argument("--all", action="store_true", help="settle: every date that has results")
     ap.add_argument("--raw-dir", type=Path, default=None, help="save raw responses here (Actions artifact)")
     ap.add_argument("--limit", type=int, default=None, help="results: process at most N matches (testing)")
     ap.add_argument("--db", type=Path, default=Path("odds.sqlite"))
@@ -61,6 +111,14 @@ def main(argv: list[str] | None = None) -> int:
     logging.getLogger("httpx").setLevel(logging.WARNING)
     if args.command in ("snapshot", "results"):
         return _run_job(args.command, args.raw_dir, args.limit)
+    if args.command == "settle":
+        return _settle(args.days, args.all)
+    if args.command == "export":
+        return _export(args.days, args.all)
+    if args.command == "analyze":
+        from .analysis import analyze
+        print(json.dumps(analyze(), indent=1))
+        return 0
     if args.command == "health":
         from .health import check
         return check()
