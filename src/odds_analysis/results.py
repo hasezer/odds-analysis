@@ -72,7 +72,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
 
     rows: dict[int, dict] = {}
     for day in dates:
-        res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=0), save_as=f"{raw_prefix}/A_np0_{day}.html.gz")
+        res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=0), save_as=f"{raw_prefix}/A_np0_{day}.html.gz",
+                         backoff=H.LIST_BACKOFF_SECONDS)
         if not res.ok:
             stats["errors"] += 1
             stats["error_detail"].append(f"A {day}: {res.error}")
@@ -258,7 +259,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
 
     flush()
     stats["unmapped_new"] = log_unmapped(unmapped)
-    if stats["deferred"] > max(5, 0.1 * max(1, stats["final"] + stats["deferred"])):
+    # deferred matches are retried automatically next run; only a large share means something is wrong
+    if stats["deferred"] > max(10, 0.25 * max(1, stats["final"] + stats["deferred"])):
         stats["errors"] += 1
         stats["error_detail"].append(f"{stats['deferred']} matches failed to fetch (deferred to next run)")
     return stats

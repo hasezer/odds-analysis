@@ -9,8 +9,8 @@ Runs entirely on GitHub Actions and uses only data collected by this project.
 
 | Workflow | When (UTC) | What |
 |---|---|---|
-| Snapshot odds | 06:00, then every 2 h 08:00–22:00 | upcoming matches + all Nesine markets → `data/matches`, `data/odds` |
-| Results | 05:00 | finished matches in the ~4.5-day archive → `data/results`, `events`, `stats`, `official`; then settlement (`data/settled`) and exports |
+| Snapshot odds | 06:07, then every 2 h 08:07–22:07 | upcoming matches + all Nesine markets → `data/matches`, `data/odds` |
+| Results | 05:04 | finished matches in the ~4.5-day archive → `data/results`, `events`, `stats`, `official`; then settlement (`data/settled`) and exports |
 | Weekly analysis | Mondays 07:37 | `reports/YYYY-MM-DD.md` (+ charts), `reports/findings.md`, `exports/analysis_summary.csv` |
 | Health | every 12 h | fails (GitHub emails you) if no successful results run in 48 h or snapshot in 12 h |
 | Phase 0 - endpoint check | manual | re-verifies every Mackolik endpoint |
