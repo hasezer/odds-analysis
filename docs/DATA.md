@@ -28,3 +28,21 @@ Turkish names are kept in `market_tr` / `selection_tr`. `market_key` / `selectio
 For some event codes the odds popup (B) returns an **older match** that once had the same code. This happened for about 6% of upcoming matches and about 23% of finished ones. Every popup is therefore checked: its `iddaa_code` must equal the event code and its start time must match the kickoff (±6 h).
 - **Snapshots:** if the check fails, the program's own "Tümü" data is used instead (`command=morebets&mac=<match_id>`, keyed by match id). Its prices are identical to B and the market names are mapped to B's, but it has fewer markets (no player or special markets) → `source = morebets`.
 - **Results:** if the check fails, that match has no official marks and no post-match prices (`results.official_status = popup_other_match:<code>`). It is settled by the engine only.
+
+## Exports (branch `exports`)
+
+One row per match × market × selection:
+
+| Column | Meaning |
+|---|---|
+| `opening_odds` / `opening_utc` | first price we saw (empty if we never snapshotted the match) |
+| `closing_odds` / `closing_utc` | last price before kickoff; `closing_utc` = time of the last fetch before kickoff |
+| `closing_min_before_ko` | how long before kickoff the closing price was taken |
+| `closing_source` | `snapshot`, or `post_match` (price shown after full time, used for backfilled matches) |
+| `odds_source` | `popup` or `morebets` |
+| `odds_movement_pct` | closing / opening − 1, in % (negative = shortened) |
+| `implied_prob` | 1 / closing price |
+| `fair_prob` | implied probability with the margin removed proportionally, only for mutually exclusive markets with every selection priced (DC counts as 2 winners) |
+| `market_margin` | overround of that market (sum of implied probabilities / winners − 1) |
+| `hit`, `hit_source`, `hit_official`, `hit_engine`, `engine_only` | see `settled` above |
+| `ht_*`, `ft_*`, `corners_*`, `card_pts_*` | match facts; card points use `config/card_rules.yaml` |

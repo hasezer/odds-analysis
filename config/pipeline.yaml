@@ -21,3 +21,7 @@ results:
 health:
   max_hours_without_results: 48
   max_hours_without_snapshot: 12
+
+# Exports (exports/)
+exports:
+  keep_daily_xlsx_days: 60   # older daily .xlsx files are deleted from git (rebuildable from data/)

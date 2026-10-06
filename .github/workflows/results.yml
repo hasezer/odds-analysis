@@ -38,6 +38,13 @@ jobs:
       - name: Commit data
         if: always()
         run: scripts/commit_data.sh "data: results $(date -u +%Y-%m-%dT%H:%MZ)"
+      - name: Publish exports (branch 'exports')
+        id: export
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/publish_exports.sh "export --days 7"
       - name: Upload raw responses (7 days)
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,7 +54,7 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
       - name: Fail if the job had errors
-        if: steps.job.outcome != 'success' || steps.settle.outcome != 'success'
+        if: steps.job.outcome != 'success' || steps.settle.outcome != 'success' || steps.export.outcome != 'success'
         run: |
-          echo "Results or settlement reported errors - see the step logs and data/runs.csv"
+          echo "Results, settlement or export reported errors - see the step logs and data/runs.csv"
           exit 1
