@@ -109,3 +109,10 @@ def test_odds_popup_nesine_only():
     ms2 = pop["outcomes"][2]
     assert (ms2["selection"], ms2["odds"], ms2["highlight"], ms2["market_type_id"]) == ("2", 1.87, True, 1)
     assert pop["outcomes"][4]["odds"] is None
+
+
+def test_match_data_tolerates_js_escapes():
+    text = MATCH_DATA.replace('"Diogo Dalot"', r'"T\'Khoy Morton"')
+    assert "\\'" in text
+    md = parse_match_data(text)
+    assert any(e["player"] == "T'Khoy Morton" for e in md["events"])

@@ -1,0 +1,23 @@
+# Pipeline settings. Times are UTC unless noted; match dates/kickoffs from Mackolik lists are Turkey time (UTC+3).
+
+# Snapshots (endpoint A np=1 per date + endpoint B per match)
+snapshot:
+  days_ahead: 10            # request A for today .. today+10 (Turkey date)
+  # A match's odds are fetched (B popup) when it is seen for the first time (opening),
+  # and again in the run just before its kickoff: every run fetches the matches that kick off
+  # before the next scheduled run (+ buffer), so the last fetch before kickoff = closing.
+  # The 22:00 UTC run therefore covers night kickoffs until 06:00 UTC. Keeps Actions minutes low.
+  buffer_minutes: 20
+  # Extra re-snapshots of matches further ahead (0 = off). Each hour costs Actions minutes.
+  resnapshot_horizon_hours: 0
+
+# Results (05:00 UTC): every date still in Mackolik's rolling window
+results:
+  days_back: 5              # Turkey dates today-5 .. today
+  min_minutes_after_kickoff: 150
+  fetch_rb_stats_if_no_corners: true
+
+# Health
+health:
+  max_hours_without_results: 48
+  max_hours_without_snapshot: 12

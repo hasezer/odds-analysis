@@ -6,12 +6,6 @@ on:
       sample:
         description: "Finished matches to deep-check"
         default: "15"
-  # Also runs on the Phase 0 PR so the check executes on GitHub's servers before review.
-  pull_request:
-    paths:
-      - "scripts/phase0_check.py"
-      - "src/**"
-      - ".github/workflows/phase0.yml"
 
 permissions:
   contents: read

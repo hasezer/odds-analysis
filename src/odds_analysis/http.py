@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import logging
 import time
 from dataclasses import dataclass, field
@@ -45,6 +46,7 @@ class MackolikClient:
     min_interval_s: float = 1.0
     timeout_s: float = 30.0
     raw_dir: Path | None = None
+    requests: int = field(default=0, init=False)
     _last_request: float = field(default=0.0, init=False)
     _client: httpx.Client = field(init=False)
 
@@ -81,6 +83,7 @@ class MackolikClient:
         for attempt in range(len(BACKOFF_SECONDS) + 1):
             attempts = attempt + 1
             self._throttle()
+            self.requests += 1
             try:
                 resp = self._client.get(url, headers=headers)
                 status, text, last_error = resp.status_code, resp.text, None
@@ -95,7 +98,12 @@ class MackolikClient:
         if status is not None and status != 200 and last_error is None:
             last_error = f"HTTP {status}"
         if self.raw_dir and save_as:
-            (self.raw_dir / save_as).write_text(text, encoding="utf-8")
+            path = self.raw_dir / save_as
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if save_as.endswith(".gz"):
+                path.write_bytes(gzip.compress(text.encode("utf-8"), mtime=0))
+            else:
+                path.write_text(text, encoding="utf-8")
         return FetchResult(url, status, text, time.monotonic() - start, attempts, last_error)
 
 

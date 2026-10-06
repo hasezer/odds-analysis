@@ -1,0 +1,48 @@
+name: Results
+
+on:
+  schedule:
+    # 05:00 UTC: collect results for every date still in Mackolik's ~4.5-day window
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-writer
+  cancel-in-progress: false
+
+jobs:
+  results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Results
+        id: job
+        continue-on-error: true
+        run: PYTHONPATH=src python -m odds_analysis results --raw-dir raw
+      - name: Commit data
+        if: always()
+        run: scripts/commit_data.sh "data: results $(date -u +%Y-%m-%dT%H:%MZ)"
+      - name: Upload raw responses (7 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-results-${{ github.run_id }}
+          path: raw/
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Fail if the job had errors
+        if: steps.job.outcome != 'success'
+        run: |
+          echo "Results job reported errors - see the 'Results' step log and data/runs.csv"
+          exit 1

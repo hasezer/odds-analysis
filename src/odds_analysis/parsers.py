@@ -207,6 +207,15 @@ EVENT_TYPES = {1: "goal", 2: "yellow", 3: "red", 4: "sub", 7: "missed_penalty"}
 GOAL_DETAIL = {1: "normal", 2: "penalty", 3: "own_goal"}
 
 
+def _js_json(text: str):
+    """MatchData is a JS object literal (Match.js uses eval): tolerate JS-only escapes like \\'."""
+    text = text.lstrip("\ufeff")
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return json.loads(re.sub(r"(?<!\\)\\'", "'", text))
+
+
 def parse_match_data(text: str) -> dict:
     """D via /Match/MatchData.aspx?t=dtl (the JSON Match.js renders into the page).
 
@@ -214,7 +223,7 @@ def parse_match_data(text: str) -> dict:
     For goals `team` is the side credited with the goal (own goals included), so the
     running score is computed exactly like Match.js does.
     """
-    data = json.loads(text.lstrip("﻿"))
+    data = _js_json(text)
     d = data.get("d") or {}
     events = []
     h = a = 0
