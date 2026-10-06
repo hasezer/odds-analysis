@@ -92,16 +92,24 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     stats = {"dates": [], "matches_listed": 0, "fetched": 0, "odds_rows": 0, "errors": 0, "error_detail": []}
 
     rows: dict[int, dict] = {}
-    for offset in range(cfg.get("days_ahead", 10) + 1):
-        day = today + timedelta(days=offset)
-        res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=1), save_as=f"{raw_prefix}/A_np1_{day}.html.gz")
-        if not res.ok:
-            stats["errors"] += 1
-            stats["error_detail"].append(f"A {day}: {res.error}")
-            continue
-        for r in parse_day_list(res.text):
-            rows.setdefault(r["mackolik_match_id"], r)
-        stats["dates"].append(day.isoformat())
+    days = [today + timedelta(days=o) for o in range(cfg.get("days_ahead", 10) + 1)]
+    for attempt in (1, 2):  # failed dates get one more round at the end
+        failed = []
+        for day in days:
+            res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=1), save_as=f"{raw_prefix}/A_np1_{day}.html.gz",
+                             backoff=H.LIST_BACKOFF_SECONDS)
+            if not res.ok:
+                failed.append((day, res.error))
+                continue
+            for r in parse_day_list(res.text):
+                rows.setdefault(r["mackolik_match_id"], r)
+            stats["dates"].append(day.isoformat())
+        days = [d for d, _ in failed]
+        if not days:
+            break
+    for day, err in failed:
+        stats["errors"] += 1
+        stats["error_detail"].append(f"A {day}: {err}")
     match_rows = [match_row(r, snap) for r in rows.values() if r["date"]]
     stats["matches_listed"] = len(match_rows)
 
@@ -132,9 +140,10 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     for m, reason in todo:
         try:
             pop, source = fetch_odds(client, m, raw_prefix)
-        except Exception as exc:  # noqa: BLE001
-            stats["errors"] += 1
-            stats["error_detail"].append(f"odds {m['event_code']}: {exc}")
+        except Exception as exc:  # noqa: BLE001 - the match is fetched again by the next run
+            stats["deferred"] = stats.get("deferred", 0) + 1
+            if len(stats["error_detail"]) < 20:
+                stats["error_detail"].append(f"odds {m['event_code']}: {exc}")
             continue
         stats["fetched"] += 1
         stats["morebets_fallback"] = stats.get("morebets_fallback", 0) + (source == "morebets")
@@ -154,4 +163,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     for date, s in snaps.items():
         upsert_partition("snapshots", date, frame(s))
     stats["unmapped_new"] = log_unmapped(unmapped)
+    deferred = stats.get("deferred", 0)
+    if deferred > max(10, 0.25 * max(1, len(todo))):
+        stats["errors"] += 1
+        stats["error_detail"].append(f"{deferred} of {len(todo)} odds fetches failed (Mackolik errors)")
     return stats

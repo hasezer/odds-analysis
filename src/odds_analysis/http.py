@@ -23,6 +23,8 @@ DEFAULT_HEADERS = {
 }
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 BACKOFF_SECONDS = (2, 6)  # short: a slow endpoint must not eat the Actions budget
+# Day lists are few and every run depends on them: be patient (Mackolik returns bursts of 500/502).
+LIST_BACKOFF_SECONDS = (5, 15, 30, 60)
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +74,8 @@ class MackolikClient:
             time.sleep(wait)
         self._last_request = time.monotonic()
 
-    def get(self, path: str, *, referer: str | None = None, save_as: str | None = None) -> FetchResult:
+    def get(self, path: str, *, referer: str | None = None, save_as: str | None = None,
+            backoff: tuple[int, ...] | None = None) -> FetchResult:
         url = path if path.startswith("http") else f"{BASE}/{path.lstrip('/')}"
         headers = {"referer": referer} if referer else None
         start = time.monotonic()
@@ -80,7 +83,8 @@ class MackolikClient:
         status: int | None = None
         text = ""
         attempts = 0
-        for attempt in range(len(BACKOFF_SECONDS) + 1):
+        delays = BACKOFF_SECONDS if backoff is None else backoff
+        for attempt in range(len(delays) + 1):
             attempts = attempt + 1
             self._throttle()
             self.requests += 1
@@ -92,9 +96,9 @@ class MackolikClient:
                 last_error = f"HTTP {status}"
             except httpx.HTTPError as exc:
                 last_error = f"{type(exc).__name__}: {exc}"
-            if attempt < len(BACKOFF_SECONDS):
-                log.warning("retry %s after %s (%s)", url, BACKOFF_SECONDS[attempt], last_error)
-                time.sleep(BACKOFF_SECONDS[attempt])
+            if attempt < len(delays):
+                log.warning("retry %s after %s (%s)", url, delays[attempt], last_error)
+                time.sleep(delays[attempt])
         if status is not None and status != 200 and last_error is None:
             last_error = f"HTTP {status}"
         if self.raw_dir and save_as:

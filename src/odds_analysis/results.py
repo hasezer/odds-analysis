@@ -72,7 +72,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
 
     rows: dict[int, dict] = {}
     for day in dates:
-        res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=0), save_as=f"{raw_prefix}/A_np0_{day}.html.gz")
+        res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=0), save_as=f"{raw_prefix}/A_np0_{day}.html.gz",
+                         backoff=H.LIST_BACKOFF_SECONDS)
         if not res.ok:
             stats["errors"] += 1
             stats["error_detail"].append(f"A {day}: {res.error}")
