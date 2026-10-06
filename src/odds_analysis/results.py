@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from . import http as H
 from .config import TR, iso, load, now_utc
 from .markets import normalize_market, normalize_selection
-from .parsers import parse_day_list, parse_match_data, parse_match_page, parse_odds_popup, parse_stats_box
+from .parsers import parse_day_list, parse_match_data, parse_match_page, parse_odds_popup, parse_stats_box, popup_matches
 from .rows import log_unmapped, match_row, odds_rows
 from .storage import append_log, frame, read_partition, upsert_partition
 
@@ -181,8 +181,13 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
             official = 0
             if r["event_code"]:
                 b = client.get(H.odds_popup_path(r["event_code"]), save_as=f"{raw_prefix}/B_{r['event_code']}.json.gz")
-                if b.ok:
-                    pop = parse_odds_popup(b.text)
+                pop = parse_odds_popup(b.text) if b.ok else None
+                if pop is not None and not popup_matches(pop, r["event_code"], m["kickoff_utc"]):
+                    # the popup resolved this event code to an older match: no official marks, no post-match odds
+                    result["official_status"] = f"popup_other_match:{pop['match'] and pop['match'].get('iddaa_code')}"
+                    stats["popup_mismatch"] = stats.get("popup_mismatch", 0) + 1
+                elif pop is not None:
+                    result["official_status"] = "ok"
                     result["b_status"] = pop["match"] and pop["match"]["status"]
                     off = []
                     by_market: dict = {}
@@ -203,11 +208,11 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
                     put("official", date, off)
                     post = odds_rows(pop, event_code=r["event_code"], match_id=mid, snapshot_utc=fetched,
                                      home=r["home_team"], away=r["away_team"], unmapped=unmapped)
-                    put("odds", date, [{**p, "snapshot_type": "post_match"} for p in post])
+                    put("odds", date, [{**p, "snapshot_type": "post_match", "source": "popup"} for p in post])
                 else:
                     raise RuntimeError(f"popup {r['event_code']}: {b.error}")  # retry the match next run
             result["official_markets"] = official
-            if r["event_code"] and official == 0 and now - ko < timedelta(hours=36):
+            if result.get("official_status") == "ok" and official == 0 and now - ko < timedelta(hours=36):
                 stats["pending"] += 1  # Nesine has not marked results yet: retry next run
                 continue
             stats["official_markets"] += official

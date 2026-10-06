@@ -116,3 +116,35 @@ def test_match_data_tolerates_js_escapes():
     assert "\\'" in text
     md = parse_match_data(text)
     assert any(e["player"] == "T'Khoy Morton" for e in md["events"])
+
+
+def test_popup_must_be_our_match():
+    from odds_analysis.parsers import popup_matches
+    pop = parse_odds_popup(POPUP)  # iddaa_code 3179478, start 2026-10-04 18:45 UTC
+    assert popup_matches(pop, "3179478", "2026-10-04T18:45:00Z")
+    assert not popup_matches(pop, "3261583", "2026-10-04T18:45:00Z")   # code resolved to another match
+    assert not popup_matches(pop, "3179478", "2026-10-09T18:45:00Z")   # same code, different date
+
+
+MOREBETS = (
+    '{Match:"Hırvatistan - İspanya",Event:{"EventId":3185400,"Markets":['
+    '{"MarketId":83450710,"MarketNo":15827,"MarketType":{"Id":268,"Name":"Handikaplı Maç Sonucu ({{SOV}})"},"MBS":1,"SOV":1.0,'
+    '"Outcomes":[{"OutcomeNo":1,"OutcomeName":"1","Odd":3.11},{"OutcomeNo":2,"OutcomeName":"X","Odd":3.62},{"OutcomeNo":3,"OutcomeName":"2","Odd":1.58}]},'
+    '{"MarketId":83450740,"MarketNo":15849,"MarketType":{"Id":155,"Name":"{{SOV}} Alt/Üst"},"MBS":1,"SOV":4.5,'
+    '"Outcomes":[{"OutcomeNo":1,"OutcomeName":"Alt","Odd":1.15},{"OutcomeNo":2,"OutcomeName":"Üst","Odd":1.0}]},'
+    '{"MarketId":83966457,"MarketNo":12,"MarketType":{"Id":301,"Name":"({{SOV}}) Kart Alt/Üst"},"MBS":1,"SOV":2.5,'
+    '"Outcomes":[{"OutcomeNo":1,"OutcomeName":"Alt","Odd":2.4},{"OutcomeNo":2,"OutcomeName":"Üst","Odd":1.26}]},'
+    '{"MarketId":83450721,"MarketNo":15884,"MarketType":{"Id":48,"Name":"Daha Çok Gol Olacak Yarı"},"MBS":1,"SOV":0.0,'
+    '"Outcomes":[{"OutcomeNo":1,"OutcomeName":"1.Y","Odd":2.66},{"OutcomeNo":2,"OutcomeName":"Eşit","Odd":3.7}]}]}}'
+)
+
+
+def test_morebets_maps_to_popup_names():
+    from odds_analysis.parsers import parse_morebets
+    mb = parse_morebets(MOREBETS)
+    assert mb["match"]["iddaa_code"] == "3185400"
+    names = [o["market_name"] for o in mb["outcomes"]]
+    assert names[0] == "Hnd. MS (1:0)"
+    assert "4,5 Alt/Üst" in names and "2,5 Kart Puanı Alt/Üst" in names and "En Çok Gol Olacak Yarı" in names
+    assert [o["odds"] for o in mb["outcomes"] if o["market_name"] == "4,5 Alt/Üst"] == [1.15, None]  # 1.0 = closed
+    assert mb["outcomes"][-2]["selection"] == "1. Yarı"

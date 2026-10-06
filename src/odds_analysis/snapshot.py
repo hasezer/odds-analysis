@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 from . import http as H
 from .config import TR, iso, load, now_utc
-from .parsers import parse_day_list, parse_odds_popup
+from .parsers import parse_day_list, parse_morebets, parse_odds_popup, popup_matches
 from .rows import log_unmapped, match_row, odds_rows
 from .storage import frame, read_partition, upsert_partition
 
@@ -65,6 +65,25 @@ def changed_rows(new: list[dict], existing) -> list[dict]:
     return out
 
 
+def fetch_odds(client: H.MackolikClient, m: dict, raw_prefix: str) -> tuple[dict, str]:
+    """Odds popup (B) if it really is this match, else the program's morebets data for the match id."""
+    res = client.get(H.odds_popup_path(m["event_code"]), save_as=f"{raw_prefix}/B_{m['event_code']}.json.gz")
+    if not res.ok:
+        raise RuntimeError(f"popup {res.error}")
+    pop = parse_odds_popup(res.text)
+    if pop["match"] and popup_matches(pop, m["event_code"], m["kickoff_utc"]):
+        return pop, "popup"
+    log.info("popup for %s resolved to another match (%s) - using morebets", m["event_code"],
+             pop["match"] and pop["match"].get("iddaa_code"))
+    res = client.get(H.morebets_path(m["match_id"]), save_as=f"{raw_prefix}/MB_{m['match_id']}.json.gz")
+    if not res.ok:
+        raise RuntimeError(f"morebets {res.error}")
+    mb = parse_morebets(res.text)
+    if mb["match"]["iddaa_code"] not in (None, str(m["event_code"])):
+        raise RuntimeError(f"morebets event {mb['match']['iddaa_code']} != {m['event_code']}")
+    return mb, "morebets"
+
+
 def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     cfg = load("pipeline")["snapshot"]
     now = now_utc()
@@ -111,22 +130,21 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     new_odds: dict[str, list[dict]] = {}
     snaps: dict[str, list[dict]] = {}
     for m, reason in todo:
-        res = client.get(H.odds_popup_path(m["event_code"]), save_as=f"{raw_prefix}/B_{m['event_code']}.json.gz")
         try:
-            if not res.ok:
-                raise RuntimeError(res.error)
-            pop = parse_odds_popup(res.text)
+            pop, source = fetch_odds(client, m, raw_prefix)
         except Exception as exc:  # noqa: BLE001
             stats["errors"] += 1
-            stats["error_detail"].append(f"B {m['event_code']}: {exc}")
+            stats["error_detail"].append(f"odds {m['event_code']}: {exc}")
             continue
         stats["fetched"] += 1
-        rows_ = odds_rows(pop, event_code=m["event_code"], match_id=m["match_id"], snapshot_utc=snap,
-                          home=m["home_team"], away=m["away_team"], unmapped=unmapped)
+        stats["morebets_fallback"] = stats.get("morebets_fallback", 0) + (source == "morebets")
+        rows_ = [{**r, "source": source} for r in odds_rows(
+            pop, event_code=m["event_code"], match_id=m["match_id"], snapshot_utc=snap,
+            home=m["home_team"], away=m["away_team"], unmapped=unmapped)]
         new_odds.setdefault(m["date"], []).extend(rows_)
         snaps.setdefault(m["date"], []).append({
             "snapshot_utc": snap, "event_code": m["event_code"], "match_id": m["match_id"], "reason": reason,
-            "kickoff_utc": m["kickoff_utc"], "status": pop["match"] and pop["match"]["status"],
+            "kickoff_utc": m["kickoff_utc"], "status": pop["match"] and pop["match"]["status"], "source": source,
             "selections": len(rows_), "with_odds": sum(r["odds"] is not None for r in rows_)})
 
     for date, rows_ in new_odds.items():

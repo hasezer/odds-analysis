@@ -311,3 +311,73 @@ def parse_match_page(html: str) -> dict:
         "attendance": int(attendance.group(1).replace(".", "")) if attendance else None,
         "stats": parse_stats_box(stats_html.html) if stats_html is not None else {},
     }
+
+
+def _tr_num(x: float) -> str:
+    return f"{x:g}".replace(".", ",")
+
+
+def _morebets_market_name(name: str, type_id: int | None, sov: float | None) -> str:
+    """morebets names -> the names used by the odds popup (so both sources normalize identically)."""
+    n = name.strip()
+    if type_id == 268 or n.startswith("Handikaplı Maç Sonucu"):
+        h = int(sov or 0)
+        return f"Hnd. MS ({h}:0)" if h >= 0 else f"Hnd. MS (0:{-h})"
+    if sov is not None:
+        n = n.replace("{{SOV}}", _tr_num(sov))
+    n = re.sub(r"^Maç Sonucu ve \((\d+,\d)\) Alt/Üst$", r"MS ve \1 Alt/Üst", n)
+    n = re.sub(r"\((\d+,\d)\) (Korner|Kart) Alt/Üst", r"\1 \2 Alt/Üst", n)
+    n = n.replace("Kart Alt/Üst", "Kart Puanı Alt/Üst") if type_id == 301 else n
+    n = n.replace("Evsahibi", "Ev Sahibi")
+    n = {"Daha Çok Gol Olacak Yarı": "En Çok Gol Olacak Yarı",
+         "Ev Sahibi İki Yarıda da Gol": "Ev Sahibi İki Yarıda da Gol Atar",
+         "Deplasman İki Yarıda da Gol": "Deplasman İki Yarıda da Gol Atar"}.get(n, n)
+    return n
+
+
+_MOREBETS_SEL = {"1.Y": "1. Yarı", "2.Y": "2. Yarı", "Atar": "Evet", "Atamaz": "Hayır"}
+
+
+def parse_morebets(text: str) -> dict:
+    """command=morebets&mac=<match_id>: the program's own 'Tümü' data, keyed by match id (always the right match).
+
+    Fewer markets than the odds popup and no result marks; odds of 1.0 mean closed -> NULL.
+    Returns the same shape as parse_odds_popup().
+    """
+    t = re.sub(r"^\s*\{\s*Match\s*:", '{"Match":', text.lstrip("\ufeff"))
+    t = re.sub(r",\s*Event\s*:", ',"Event":', t, count=1)
+    data = json.loads(t)
+    ev = data.get("Event") or {}
+    rows = []
+    for mk in ev.get("Markets") or []:
+        mt = mk.get("MarketType") or {}
+        type_id = mt.get("Id")
+        sov = mk.get("SOV")
+        name = _morebets_market_name(mt.get("Name") or mk.get("Name") or "", type_id, sov)
+        for o in mk.get("Outcomes") or []:
+            sel = (o.get("OutcomeName") or "").replace("{{SOV}}", _tr_num(sov or 0)).strip()
+            sel = _MOREBETS_SEL.get(sel, re.sub(r"^(\d+(?:-\d+|\+)) Gol$", r"\1", sel))
+            odd = o.get("Odd")
+            rows.append({
+                "market_id": mk.get("MarketId"), "market_code": str(mk.get("MarketNo")), "market_type_id": type_id,
+                "market_name": name, "mbs": mk.get("MBS"), "line": sov if sov else None,
+                "handicap_value": None, "handicap_team": None, "name_secondary": None,
+                "selection": sel, "selection_key": str(o.get("OutcomeNo")),
+                "odds": None if odd in (None, 1, 1.0) else float(odd), "highlight": False,
+            })
+    meta = {"id": None, "status": None, "is_awarded": None, "start_time": None,
+            "iddaa_code": str(ev.get("EventId")) if ev.get("EventId") else None, "bookies": ["Nesine"], "match": data.get("Match")}
+    return {"match": meta, "outcomes": rows, "fetched_utc": None, "nesine_found": True, "source": "morebets"}
+
+
+def popup_matches(popup: dict, event_code: str, kickoff_utc: str | None, tolerance_hours: float = 6) -> bool:
+    """The odds popup sometimes resolves an event code to an OLD match (code reuse): verify it is ours."""
+    m = popup.get("match") or {}
+    if str(m.get("iddaa_code")) != str(event_code):
+        return False
+    if kickoff_utc and m.get("start_time"):
+        st = datetime.fromisoformat(m["start_time"].replace(" ", "T") + "+00:00")
+        ko = datetime.fromisoformat(kickoff_utc.replace("Z", "+00:00"))
+        if abs((st - ko).total_seconds()) > tolerance_hours * 3600:
+            return False
+    return True

@@ -123,6 +123,11 @@ def odds_popup_path(event_code: str | int) -> str:
 PROGRAM_PATH = "Iddaa-Programi"  # Endpoint C
 
 
+def morebets_path(match_id: int | str) -> str:
+    """The program's 'Tümü' data keyed by mackolik match id (fallback when the popup resolves the wrong match)."""
+    return f"AjaxHandlers/IddaaHandler.aspx?command=morebets&mac={match_id}&type=ByDate"
+
+
 def match_page_path(match_id: int | str) -> str:
     """Endpoint D: match detail page (header, stadium, referee, server-rendered stats)."""
     return f"Match/Default.aspx?id={match_id}"
