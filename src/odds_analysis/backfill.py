@@ -18,6 +18,7 @@ import re
 import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
+from datetime import time as dtime
 
 import pandas as pd
 
@@ -37,6 +38,7 @@ PROGRESS = DATA / "backfill_progress.csv"
 README = ROOT / "README.md"
 FIRST_SEASON = 2019
 BUDGET_CHECK_S = 15 * 60
+RESULTS_WINDOW = (dtime(4, 50), dtime(6, 0))  # UTC; the results run starts at 05:04
 
 
 # ---------------------------------------------------------------- state
@@ -135,6 +137,17 @@ def run(c: H.MackolikClient) -> dict:
     deadline = started + cfg.get("max_job_minutes", 100) * 60
     now = datetime.now(UTC).replace(microsecond=0)
     stats = defaultdict(int, {"dates": [], "error_detail": []})
+    # the daily results run (05:04 UTC) must not wait behind a backfill job: stop by 04:50, don't start until 06:00
+    if RESULTS_WINDOW[0] <= now.time() < RESULTS_WINDOW[1]:
+        stats["quiet"] = True
+        stats["note"] = "results window (04:50-06:00 UTC): the 06:17 schedule continues"
+        return dict(stats)
+    cut = now.replace(hour=RESULTS_WINDOW[0].hour, minute=RESULTS_WINDOW[0].minute, second=0)
+    if cut <= now:
+        cut += timedelta(days=1)
+    if (cut - now).total_seconds() < deadline - started:
+        deadline = started + (cut - now).total_seconds()
+        stats["quiet"] = True  # this job stops for the results run: no follow-up job, the 06:17 schedule continues
     allow = budget.allowance(now)
     stats["budget"] = allow
     if not allow["ok"]:

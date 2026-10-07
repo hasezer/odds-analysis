@@ -6,6 +6,7 @@ on:
     # Actions minutes left drop below daily_reserve (config/backfill.yaml). The schedule restarts a stopped chain.
     - cron: "17 23 * * *"
     - cron: "17 1 * * *"
+    - cron: "17 6 * * *"   # after the 05:04 results run (backfill jobs leave 04:50-06:00 UTC free for it)
   workflow_dispatch:
 
 permissions:
