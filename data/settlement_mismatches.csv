@@ -67,3 +67,7 @@ date,match_id,event_code,market_key,market_tr,line,selection_tr,selection,hit_of
 2026-10-04,4563463,3179993,HT_OU_0.5,"1. Yarı 0,5 Alt/Üst",0.5,Üst,over,1,0
 2026-10-04,4563463,3179993,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Alt,under,0,1
 2026-10-04,4563463,3179993,HT_TEAM_OU_away_0.5,"1. Yarı Deplasman 0,5 Alt/Üst",0.5,Üst,over,1,0
+2026-10-06,4546661,3223868,ODD_EVEN,Tek/Çift,,Tek,odd,0,1
+2026-10-06,4546661,3223868,ODD_EVEN,Tek/Çift,,Çift,even,1,0
+2026-10-06,4546661,3223868,OU_2.5,"2,5 Alt/Üst",2.5,Alt,under,1,0
+2026-10-06,4546661,3223868,OU_2.5,"2,5 Alt/Üst",2.5,Üst,over,0,1
