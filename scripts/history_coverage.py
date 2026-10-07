@@ -35,11 +35,27 @@ from odds_analysis import http as H
 from odds_analysis.parsers import parse_odds_popup
 
 TR_OFFSET = dt.timedelta(hours=3)
-ODDS_START = "2019-08-01"  # first day with iddaa codes in the date listing
+ODDS_START = "2019-09-01"  # iddaa codes start 2019-08-01 but are thin during August 2019
 
 
 def tr_date(utc: str) -> str:
     return (dt.datetime.fromisoformat(utc) + TR_OFFSET).date().isoformat()
+
+
+def pick_day(played: list[dict]) -> str:
+    """Busiest matchday in the middle of the season and inside the odds history.
+
+    The final round is avoided (Nesine offers fewer markets when all matches kick off together), as are the first
+    weeks of history (August 2019).
+    """
+    all_days = sorted({tr_date(m["utc"]) for m in played})
+    lo, hi = len(all_days) // 10, len(all_days) - max(1, len(all_days) // 10)
+    middle = set(all_days[lo:hi]) or set(all_days)
+    days = collections.Counter(tr_date(m["utc"]) for m in played)
+    for pool in ({d for d in middle if d >= ODDS_START}, {d for d in all_days if d >= ODDS_START}, set(all_days)):
+        if pool:
+            return max(sorted(pool), key=lambda d: days[d])
+    raise ValueError("no played matches")
 
 
 def listing(c: H.MackolikClient, date: str) -> dict | None:
@@ -113,10 +129,7 @@ def main() -> int:
                        "dates": sorted(m["utc"][:10] for m in ms), "listing": None, "samples": []}
                 played = [m for m in ms if m["status"] == "Played"]
                 if played:
-                    # busiest matchday, preferring days inside the odds history (2019 calendar-year seasons)
-                    days = collections.Counter(tr_date(m["utc"]) for m in played)
-                    in_hist = collections.Counter({d: n for d, n in days.items() if d >= ODDS_START})
-                    day = (in_hist or days).most_common(1)[0][0]
+                    day = pick_day(played)
                     data = listing(c, day)
                     if data is not None:
                         lm = [m for m in (data.get("matches") or {}).values()

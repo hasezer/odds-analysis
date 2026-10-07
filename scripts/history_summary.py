@@ -63,7 +63,7 @@ def main() -> int:
 
     out.append("### Per league\n")
     out.append("| League | First season with Nesine odds | Listed with odds (sampled matchday) | "
-               "Avg markets per match by season (popup) | Events | Corners | Cards |")
+               "Markets per match by season (popup, median) | Events | Corners | Cards |")
     out.append("|---|---|---|---|---|---|---|")
     season_rows: list[str] = []
     for lg in leagues:
@@ -77,11 +77,13 @@ def main() -> int:
             lst = r.get("listing") or {}
             coded += lst.get("with_code", 0)
             listed += lst.get("league_matches", 0)
+            # popup market counts: matchday sample + random matches of the season (history_leagues.py)
             mkts = [x["markets"] for x in samples if x.get("markets")]
+            mkts += [x["popup_markets"] for x in extra.get(key, []) if x.get("popup_same_match") and x.get("popup_markets")]
             if mkts and first is None:
                 first = s
             if mkts:
-                mk_by_season.append(f"{label(s)}: {round(statistics.mean(mkts))}")
+                mk_by_season.append(f"{label(s)}: {round(statistics.median(mkts))}")
             all_s = r["samples"] + extra.get(key, [])
             for x in all_s:
                 n_s += 1
