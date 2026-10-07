@@ -69,3 +69,15 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-07T21:27:07Z,backfill,match,n0omm3uwr2hffz1coxiuehhw,n0omm3uwr2hffz1coxiuehhw,1,RuntimeError('statistics page failed')
 2026-10-07T21:27:07Z,backfill,match,dcf6494frwox1tuq607nktj4k,dcf6494frwox1tuq607nktj4k,1,RuntimeError('statistics page failed')
 2026-10-07T21:27:07Z,backfill,match,dbtpkmv3uu7uqdyd7artvq044,dbtpkmv3uu7uqdyd7artvq044,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,1mh0tbcgc9lrxk0kt5kpjli50,1mh0tbcgc9lrxk0kt5kpjli50,4,"WrongMatch('popup 3125887 shows None, not 1mh0tbcgc9lrxk0kt5kpjli50; no fallback had the match')"
+2026-10-07T23:09:19Z,backfill,match,1jk2nl0flt8bb8mvxb4vvaf4k,1jk2nl0flt8bb8mvxb4vvaf4k,3,"WrongMatch('popup 3125843 shows None, not 1jk2nl0flt8bb8mvxb4vvaf4k; no fallback had the match')"
+2026-10-07T23:09:19Z,backfill,match,aa23klqog8kr1fxe4h1rixhqs,aa23klqog8kr1fxe4h1rixhqs,3,"WrongMatch('popup 3210451 shows None, not aa23klqog8kr1fxe4h1rixhqs; no fallback had the match')"
+2026-10-07T23:09:19Z,backfill,match,71gd82o5fcewilgjp27s3mhp0,71gd82o5fcewilgjp27s3mhp0,2,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,1h391qywl0td133h0yn04y5uc,1h391qywl0td133h0yn04y5uc,2,"WrongMatch('popup 3110198 shows dkfojx2svujwsheovl7jm03ys, not 1h391qywl0td133h0yn04y5uc; no fallback had the match')"
+2026-10-07T23:09:19Z,backfill,match,9g5wxa30w6yr5rapgssrad990,9g5wxa30w6yr5rapgssrad990,2,"WrongMatch('popup 3089870 shows eca44isxvb2oawqrl4oan8zro, not 9g5wxa30w6yr5rapgssrad990; no fallback had the match')"
+2026-10-07T23:09:19Z,backfill,match,1hrx0cqpya92eeyy9nxbzp5as,1hrx0cqpya92eeyy9nxbzp5as,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,9yz2l2qkb1wwto0kybehrwp3o,9yz2l2qkb1wwto0kybehrwp3o,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,16bfw6cmercsmanf4zm4286qc,16bfw6cmercsmanf4zm4286qc,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,75x10qjvovwfd72z7mr2epzis,75x10qjvovwfd72z7mr2epzis,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,3ewh1drf3mm32mosbi0dcy9sk,3ewh1drf3mm32mosbi0dcy9sk,1,RuntimeError('statistics page failed')
+2026-10-07T23:09:19Z,backfill,match,d9v3yc64dcokoxc5vrlk7dc7o,d9v3yc64dcokoxc5vrlk7dc7o,1,RuntimeError('statistics page failed')
