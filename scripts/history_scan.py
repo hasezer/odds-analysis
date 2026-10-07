@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from odds_analysis import http as H  # noqa: E402
+from odds_analysis import http as H
 
 WWW = "https://www.mackolik.com"
 

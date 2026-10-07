@@ -15,8 +15,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from odds_analysis import http as H  # noqa: E402
-from odds_analysis.parsers import parse_odds_popup  # noqa: E402
+from odds_analysis import http as H
+from odds_analysis.parsers import parse_odds_popup
 
 WWW = "https://www.mackolik.com"
 BIG = {("İspanya", "LaLiga"), ("İngiltere", "Premier League"), ("İngiltere", "Premier Lig"), ("İtalya", "Serie A"),
@@ -44,7 +44,7 @@ def market_names(c: H.MackolikClient, uuid: str) -> list[str]:
     if not r.ok:
         return []
     h = json.loads(r.text).get("data", {}).get("html", "")
-    return [re.sub(r"\s+", " ", x).strip() for x in re.findall(r'__header-text">(.*?)<', h, re.S)]
+    return [re.sub(r"\s+", " ", x).strip() for x in re.findall(r'__header-text">(.*?)<', h, re.DOTALL)]
 
 
 def popup(c: H.MackolikClient, code: int) -> dict:
