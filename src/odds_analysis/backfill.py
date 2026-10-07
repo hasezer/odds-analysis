@@ -101,15 +101,19 @@ def build_index(c: H.MackolikClient, state: dict, deadline: float, stats: dict) 
 # ---------------------------------------------------------------- dates
 
 def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItems, stats: dict, now: datetime,
-                 unsettleable: dict, deadline: float = float("inf")) -> tuple[set[tuple[str, str]], bool]:
-    """All matches of the 26 leagues on one Turkish date. Returns the touched (season, league_id) partitions and
-    whether the date is complete (False: the job deadline came first; the matches done so far are saved)."""
+                 unsettleable: dict, deadline: float = float("inf"),
+                 only: set[str] | None = None) -> tuple[set[tuple[str, str]], bool]:
+    """All matches of the 26 leagues on one Turkish date (or only the match ids in `only`: retries of failed
+    matches). Returns the touched (season, league_id) partitions and whether the date is complete (False: the job
+    deadline came first; the matches done so far are saved)."""
     day_stats = {"dates": [], "error_detail": []}
     matches = daily.list_matches(c, [d], failures, day_stats)
     if not day_stats["dates"]:
         raise RuntimeError(f"date listing {d} failed")
     collected, touched, day_lists, todo = [], set(), {}, []
     for m in matches:
+        if only is not None and m["match_id"] not in only:
+            continue
         fx = index.get(m["match_id"])
         if fx is not None:  # season and stage from the fixture page
             m["season"] = fx["season"]
@@ -197,11 +201,17 @@ def run(c: H.MackolikClient) -> dict:
     newest = today - timedelta(days=cfg.get("newest_offset_days", 6))
     oldest = date.fromisoformat(cfg.get("oldest_date", "2019-08-01"))
     cursor = date.fromisoformat(state["next_date"]) if state.get("next_date") else newest
-    retry = sorted({i["match_date"] for i in failures.pending("match") + failures.pending("listing")
-                    if i.get("match_date")}, reverse=True)
+    # retries: a failed date listing redoes the whole date, a failed match only that match
+    retry: dict[str, set[str] | None] = {}
+    for i in failures.pending("listing"):
+        if i.get("match_date"):
+            retry[i["match_date"]] = None
+    for i in failures.pending("match"):
+        if i.get("match_date") and retry.get(i["match_date"], set()) is not None:
+            retry.setdefault(i["match_date"], set()).add(i["match_id"] or i["key"])
     touched: set[tuple[str, str]] = set()
     last_budget = time.monotonic()
-    queue = [date.fromisoformat(d) for d in retry]
+    queue = [(date.fromisoformat(d), retry[d]) for d in sorted(retry, reverse=True)]
     while True:
         if time.monotonic() > deadline:
             stats["stopped"] = "job time limit"
@@ -212,19 +222,20 @@ def run(c: H.MackolikClient) -> dict:
             if not allow["ok"]:
                 stats["paused"] = f"minutes left {allow['left']} < daily_reserve {allow['reserve']}"
                 break
+        only = None
         if queue:
-            d, is_retry = queue.pop(0), True
+            (d, only), is_retry = queue.pop(0), True
         elif cursor >= oldest:
             d, is_retry = cursor, False
         else:
             stats["finished"] = True
             break
         try:
-            t, complete = process_date(c, d, index, failures, stats, now, unsettleable, deadline)
+            t, complete = process_date(c, d, index, failures, stats, now, unsettleable, deadline, only)
             touched |= t
             if not complete:  # the date is redone by the next job (upserts make that safe)
                 if is_retry:
-                    queue.insert(0, d)
+                    queue.insert(0, (d, only))
                 stats["stopped"] = "job time limit"
                 break
             stats["dates"].append(d.isoformat())
@@ -235,8 +246,11 @@ def run(c: H.MackolikClient) -> dict:
             cursor = d - timedelta(days=1)
             state["next_date"] = cursor.isoformat()
             save_state(state)
-    for d in queue:  # retries not reached in this job stay queued
-        failures.add("listing", d.isoformat(), "retry not reached yet", match_date=d.isoformat())
+    for d, only in queue:  # retries not reached in this job stay queued
+        if only is None:
+            failures.add("listing", d.isoformat(), "retry not reached yet", match_date=d.isoformat())
+        for mid in sorted(only or ()):
+            failures.add("match", mid, "retry not reached yet", match_id=mid, match_date=d.isoformat())
     for season, lid in sorted(touched):
         flat.rebuild(season, lid)
     stats["failed_items"] = failures.finish()
