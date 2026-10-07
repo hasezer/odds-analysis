@@ -9,3 +9,4 @@ raw/
 .venv/
 _exports/
 .continue_results
+.touched_partitions

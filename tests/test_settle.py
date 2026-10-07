@@ -8,7 +8,7 @@ import pytest
 
 from odds_analysis.markets import normalize_market, normalize_selection
 from odds_analysis.parsers import parse_match_data
-from odds_analysis.results import events_complete, ft90
+from odds_analysis.settle import events_complete, ft90
 from odds_analysis.settle import Ctx, build_ctx, card_points, engine
 
 FIX = Path(__file__).parent / "fixtures"

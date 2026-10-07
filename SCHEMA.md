@@ -224,7 +224,7 @@ Rebuilt automatically from the tables above, never edited by hand (`src/odds_ana
 | in_default_analysis | false for `season_type = special` and anything not `settled` |
 
 **Exports** (`exports/<season>/`):
-- `oranlar_<season>.xlsx`: **one row per match** and one sheet per league. Columns: Tarih, Saat, Ev Sahibi, Deplasman, İY, MS, Korner, Sarı Kart, Kırmızı Kart, then the closing odds of the 45 markets in the order of `config/markets.yaml` (`MS 1`, `MS X`, `MS 2`, `ÇŞ 1-X`, …, `2,5 Alt`, `2,5 Üst`, …, `Skor 2-1`). **Winning odds are filled green.** About 380 rows × 130–170 columns per league.
+- `oranlar_<season>.xlsx`: **one row per match with closing odds** (upcoming matches appear once their closing snapshot is taken) and one sheet per league. Columns: Tarih, Saat, Ev Sahibi, Deplasman, İY, MS, Korner, Sarı Kart, Kırmızı Kart, then the closing odds of the 45 markets in the order of `config/markets.yaml` (`MS 1`, `MS X`, `MS 2`, `ÇŞ 1-X`, …, `2,5 Alt`, `2,5 Üst`, …, `Skor 2-1`). **Winning odds are filled green.** About 380 rows × 130–170 columns per league.
 - `<league_id>.csv.gz`: the full `analysis_flat` (one row per selection) for analysis tools.
 
 ## Data quality checks — `data/quality.csv`
@@ -322,6 +322,8 @@ How the spec is applied:
 - `round` holds Mackolik's stage name;
 - `referee` is NULL in history.
 
-## Not yet switched over
+## Status
 
-This PR adds the structure and the code that writes it. The daily jobs still write the old CSV tables. In the next phase they move to these tables, and the data collected so far (since 2026-10-06) is converted. The backfill writes these tables from its first run.
+The daily jobs write these tables since PR "Daily collection on SCHEMA.md". The odds snapshots collected before
+(2026-10-06 →) were converted once (26 leagues, 45 markets; `src/odds_analysis/migrate.py`); the old CSV tables were
+removed (git history keeps them). The backfill writes these tables from its first run.

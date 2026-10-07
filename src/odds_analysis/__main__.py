@@ -1,4 +1,7 @@
-"""CLI: python -m odds_analysis {snapshot,results,health,build-db} [--raw-dir DIR]"""
+"""CLI: python -m odds_analysis {snapshot,results,export,health,analyze} [--raw-dir DIR]
+
+snapshot / results / export work on the SCHEMA.md tables (src/odds_analysis/daily.py, flat.py).
+"""
 
 from __future__ import annotations
 
@@ -15,23 +18,26 @@ from .runs import run_status
 from .storage import append_log
 
 
-def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
+def _run_job(job: str, raw_dir: Path | None, limit: int | None = None, full: bool | None = None) -> int:
     started = time.monotonic()
     run_at = iso(now_utc())
     stats: dict = {}
     crash = None
     with H.MackolikClient(raw_dir=raw_dir) as client:
         try:
+            from . import daily, migrate
+
             if job == "snapshot":
-                from .snapshot import run
-                stats = run(client)
+                if migrate.legacy_present():  # one time: convert the pre-SCHEMA.md CSV tables
+                    logging.info("migration: %s", migrate.migrate(client))
+                stats = daily.snapshot_run(client, full=full)
             else:
-                from .results import run
-                stats = run(client, limit=limit)
+                stats = daily.results_run(client, limit=limit)
+                Path(".touched_partitions").write_text(json.dumps(stats.get("touched", [])))
         except Exception as exc:  # noqa: BLE001
             logging.exception("job crashed")
             crash = repr(exc)
-        requests, calls, failed = client.requests, client.calls, client.failed
+    requests, calls, failed = client.requests, client.calls, client.failed
     # requests skipped because Mackolik was unreachable count as failed ones
     calls, failed = calls + stats.get("not_tried", 0), failed + stats.get("not_tried", 0)
     errors = stats.get("errors", 0) + (1 if crash else 0)
@@ -53,6 +59,7 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
         "summary": json.dumps({k: v for k, v in stats.items() if k not in ("dates", "error_detail")}, ensure_ascii=False),
         "error_detail": " || ".join(detail)[:2000],
     }])
+    _log_run(job, run_at, status, requests, errors, stats.get("saved", 0), stats, detail)
     if stats.get("stopped_early"):
         Path(".continue_results").write_text("time budget reached\n")  # the workflow starts a follow-up run
     print(json.dumps({k: v for k, v in stats.items() if k != "dates"}, ensure_ascii=False, indent=1))
@@ -67,82 +74,66 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
     return 0
 
 
-def _settle(days: int, all_dates: bool) -> int:
-    from datetime import timedelta
+def _log_run(job: str, run_at: str, status: str, requests: int, errors: int, saved: int, stats: dict, detail: list) -> None:
+    """The SCHEMA.md runs table (data/runs.csv stays the human-readable log)."""
+    from . import store
 
-    from .config import DATA, TR
-    from .settle import settle_dates
-
-    started = time.monotonic()
-    run_at = iso(now_utc())
-    if all_dates:
-        dates = sorted(p.name[:10] for p in (DATA / "results").glob("*.csv.gz"))
-    else:
-        today = now_utc().astimezone(TR).date()
-        dates = [(today - timedelta(days=d)).isoformat() for d in range(days, -1, -1)]
-    try:
-        stats = settle_dates(dates)
-        error = None
-    except Exception as exc:  # noqa: BLE001
-        logging.exception("settlement crashed")
-        stats, error = {}, repr(exc)
-    append_log("runs", [{"run_at": run_at, "job": "settle", "dates": " ".join(stats.get("dates", [])),
-                         "matches": "", "errors": 1 if error else 0, "requests": 0,
-                         "status": "failed" if error else "ok",
-                         "duration_s": round(time.monotonic() - started),
-                         "summary": json.dumps({k: v for k, v in stats.items() if k != "dates"}),
-                         "error_detail": error or ""}])
-    print(json.dumps(stats, indent=1))
-    return 1 if error else 0
+    notes = json.dumps({k: v for k, v in stats.items() if k in ("matches_listed", "fetched", "listed", "final", "void",
+                                                                   "deferred", "failed_items", "morebets_fallback")})
+    store.upsert("runs", [{"run_id": f"{job}-{run_at}", "job": job, "started_at_utc": run_at,
+                           "finished_at_utc": iso(now_utc()), "status": status, "requests": requests,
+                           "errors": errors, "matches_saved": saved,
+                           "notes": (notes + (" | " + " || ".join(detail)[:500] if detail else ""))}])
 
 
-def _dates(days: int, all_dates: bool, table: str = "results") -> list[str]:
-    from datetime import timedelta
+def _export(seasons: list[str]) -> int:
+    """exports/<season>/: oranlar_<season>.xlsx + <league_id>.csv.gz for the current season of every league,
+    the seasons the last results run touched, and --season values."""
+    from datetime import date
 
-    from .config import DATA, TR
+    from . import flat
+    from .leagues import competitions, season_for
 
-    if all_dates:
-        return sorted(p.name[:10] for p in (DATA / table).glob("*.csv.gz"))
-    today = now_utc().astimezone(TR).date()
-    return [(today - timedelta(days=d)).isoformat() for d in range(days, -1, -1)]
-
-
-def _export(days: int, all_dates: bool) -> int:
-    from .config import load
-    from .export import export
-
-    stats = export(_dates(days, all_dates, "settled"), load("pipeline").get("exports", {}).get("keep_daily_xlsx_days", 60))
-    print(json.dumps(stats, indent=1))
+    today = date.today()
+    wanted: dict[str, set[str]] = {}
+    for comp in competitions().values():
+        if not comp.special:
+            wanted.setdefault(season_for(comp, today), set()).add(comp.league["league_id"])
+    touched = Path(".touched_partitions")
+    for item in json.loads(touched.read_text()) if touched.exists() else []:
+        lid, season = item.split(" ", 1)
+        wanted.setdefault(season, set()).add(lid)
+    for season in seasons:
+        wanted.setdefault(season, set()).update(c.league["league_id"] for c in competitions().values())
+    out = {}
+    for season, lids in sorted(wanted.items()):
+        for lid in sorted(lids):
+            flat.rebuild(season, lid)
+        out[season] = [str(p) for p in flat.export(season, sorted(lids))]
+    print(json.dumps(out, indent=1, ensure_ascii=False))
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="odds_analysis")
-    ap.add_argument("command", choices=["snapshot", "results", "settle", "export", "analyze", "health", "build-db"])
-    ap.add_argument("--days", type=int, default=7, help="settle: match dates from today-N to today")
-    ap.add_argument("--all", action="store_true", help="settle: every date that has results")
+    ap.add_argument("command", choices=["snapshot", "results", "export", "analyze", "health"])
     ap.add_argument("--raw-dir", type=Path, default=None, help="save raw responses here (Actions artifact)")
     ap.add_argument("--limit", type=int, default=None, help="results: process at most N matches (testing)")
-    ap.add_argument("--db", type=Path, default=Path("odds.sqlite"))
+    ap.add_argument("--full", action="store_true", default=None, help="snapshot: list every day ahead (default: morning run)")
+    ap.add_argument("--season", action="append", default=[], help="export: also export this season (e.g. 2025/26)")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
     if args.command in ("snapshot", "results"):
-        return _run_job(args.command, args.raw_dir, args.limit)
-    if args.command == "settle":
-        return _settle(args.days, args.all)
+        return _run_job(args.command, args.raw_dir, args.limit, args.full)
     if args.command == "export":
-        return _export(args.days, args.all)
+        return _export(args.season)
     if args.command == "analyze":
         from .analysis import analyze
         print(json.dumps(analyze(), indent=1))
         return 0
-    if args.command == "health":
-        from .health import check
-        return check()
-    from .build_db import build
-    build(args.db)
-    return 0
+    from .health import check
+    return check()
 
 
 if __name__ == "__main__":

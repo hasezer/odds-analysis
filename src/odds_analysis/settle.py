@@ -387,3 +387,17 @@ def write_mismatch_log(root: Path = DATA) -> int:
             "hit_official", "hit_engine"]
     write_log_frame("settlement_mismatches", bad.reindex(columns=cols).sort_values(["date", "match_id", "market_key"]), root)
     return len(bad)
+
+
+# arsiv MatchData helpers (used to build engine contexts from arsiv match data; kept for the engine tests)
+def ft90(md: dict) -> tuple[int, int] | None:
+    """Score after 90 minutes: d.ft when filled (extra-time matches), else d.s."""
+    return md["ft_field"] or md["score"]
+
+
+def events_complete(md: dict, score: tuple[int, int] | None) -> bool:
+    if score is None:
+        return False
+    goals = [e for e in md["events"] if e["type"] == "goal" and (md["et"] is None or (e["minute"] or 0) <= 90)]
+    h = sum(e["team"] == "home" for e in goals)
+    return (h, len(goals) - h) == tuple(score)

@@ -6,6 +6,7 @@ corner/card totals, closing and opening odds, implied/fair probability, market m
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -14,7 +15,7 @@ from . import store
 from .catalog import OVERLAP, selected_markets
 from .config import DATA, ROOT
 
-EXPORTS = ROOT / "exports"
+EXPORTS = Path(os.environ.get("ODDS_EXPORTS_DIR", ROOT / "exports"))
 MARKET = ["match_id", "market_type_id", "line", "handicap_home", "handicap_away"]
 SELECTION = MARKET + ["selection_key"]
 NO_MARGIN_FAMILIES = {"player", "special"}  # selections are separate yes-bets, not one market summing to 100 %
@@ -115,7 +116,9 @@ def export(season: str, league_ids: list[str], root: Path = DATA, out: Path = EX
         path = d / f"{lid}.csv.gz"
         csv.to_csv(path, index=False, compression={"method": "gzip", "mtime": 0}, lineterminator="\n")
         paths.append(path)
-        sheets[lid] = match_view(df)
+        view = match_view(df)
+        if not view[0].empty:  # a league without finished matches yet gets no sheet
+            sheets[lid] = view
     if sheets:
         xlsx = d / f"oranlar_{store.season_path(season)}.xlsx"
         write_view(sheets, xlsx)
@@ -172,7 +175,9 @@ def match_view(flat: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
         "Sarı Kart": m["yellow_cards_total"] if "yellow_cards_total" in m else None,
         "Kırmızı Kart": m["red_cards_total"] if "red_cards_total" in m else None,
     }, index=m.index).join(odds.reindex(columns=cols))
-    return view.reset_index(drop=True), hits.reindex(index=m.index, columns=cols).reset_index(drop=True)
+    keep = odds.reindex(index=m.index, columns=cols).notna().any(axis=1).to_numpy()  # matches with closing odds only
+    return (view[keep].reset_index(drop=True),
+            hits.reindex(index=m.index, columns=cols)[keep].reset_index(drop=True))
 
 
 def write_view(sheets: dict[str, tuple[pd.DataFrame, pd.DataFrame]], path: Path) -> None:

@@ -10,18 +10,19 @@ if git ls-remote --exit-code --heads origin exports >/dev/null 2>&1; then
   mkdir -p _exports && git archive FETCH_HEAD | tar -x -C _exports
 fi
 mkdir -p _exports/exports
+# files of the pre-SCHEMA.md exports (removed 2026-10)
+rm -rf _exports/exports/daily _exports/exports/monthly _exports/exports/all_settled.csv.gz
 ODDS_EXPORTS_DIR="$PWD/_exports/exports" PYTHONPATH=src python -m odds_analysis $args
 cat > _exports/README.md <<'MD'
 # Exports (rebuilt automatically – this branch has no history)
 
-- `exports/daily/YYYY-MM-DD.xlsx` – one sheet per match date (last 60 days), sheets `selections` and `matches`
-- `exports/all_settled.csv.gz` – every settled selection (newest months that fit under 45 MB)
-- `exports/monthly/YYYY-MM.csv.gz` – full history by month
-- `exports/analysis_summary.csv` – compact per-segment table from the weekly analysis
+Per season (`exports/<season>/`, e.g. `exports/2026-27/`):
+- `oranlar_<season>.xlsx` – **one row per match**, one sheet per league: date, teams, HT/FT score, corners, cards and
+  Nesine's closing odds of the 45 collected markets; winning odds are green
+- `<league_id>.csv.gz` – every selection (analysis_flat: opening/closing odds, probabilities, margin, hit, status)
 
-Columns are described in `docs/DATA.md` on the main branch.
-MD
-cd _exports
+Columns are described in `SCHEMA.md` on the main branch.
+MDcd _exports
 git init -q -b exports
 git config user.name "odds-bot"
 git config user.email "odds-bot@users.noreply.github.com"
