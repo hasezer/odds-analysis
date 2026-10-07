@@ -39,14 +39,14 @@ See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_R
 ## Backfill progress
 
 <!-- backfill-progress:start -->
-_Updated 2026-10-07 14:35 UTC by the Backfill workflow (newest dates first)._
+_Updated 2026-10-07 16:22 UTC by the Backfill workflow (newest dates first)._
 
-**153 of 63,824 matches (0.2 %)** · next date to process: 2026-09-19
+**280 of 63,824 matches (0.4 %)** · next date to process: 2026-09-17
 
 | Season | Matches | Done | % |
 |---|---|---|---|
-| 2026/27 | 1,336 | 100 | 7 % |
-| 2026 | 1,254 | 53 | 4 % |
+| 2026/27 | 1,336 | 216 | 16 % |
+| 2026 | 1,254 | 64 | 5 % |
 | 2025/26 | 6,884 | 0 | 0 % |
 | 2025 | 2,050 | 0 | 0 % |
 | 2024/25 | 6,960 | 0 | 0 % |
@@ -64,5 +64,5 @@ _Updated 2026-10-07 14:35 UTC by the Backfill workflow (newest dates first)._
 
 Per league and season: [`data/backfill_progress.csv`](data/backfill_progress.csv).
 
-Actions minutes this month: **428 used of 2,000**, 1,572 left; the backfill pauses below the daily reserve of 900. Daily jobs used 61.1 min/day over the last 7 days (≈ 1,833/month).
+Actions minutes this month: **547 used of 2,000**, 1,453 left; the backfill pauses below the daily reserve of 900. Daily jobs used 61.7 min/day over the last 7 days (≈ 1,851/month).
 <!-- backfill-progress:end -->
