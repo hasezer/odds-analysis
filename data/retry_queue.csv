@@ -1,5 +1,15 @@
 job,kind,key,match_id,match_date,kickoff_utc,first_failed_utc,last_failed_utc,attempts,last_error
-backfill,match,19ay0a7r9ceki8sen2gdy505w,19ay0a7r9ceki8sen2gdy505w,2026-09-19,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,RuntimeError('statistics page failed')
-backfill,match,1mh0tbcgc9lrxk0kt5kpjli50,1mh0tbcgc9lrxk0kt5kpjli50,2026-09-14,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,"WrongMatch('popup 3125887 shows None, not 1mh0tbcgc9lrxk0kt5kpjli50; no fallback had the match')"
-backfill,match,1sau030b50h9h6honhyuept78,1sau030b50h9h6honhyuept78,2026-09-19,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,RuntimeError('statistics page failed')
+backfill,match,1jk2nl0flt8bb8mvxb4vvaf4k,1jk2nl0flt8bb8mvxb4vvaf4k,2026-09-12,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,"WrongMatch('popup 3125843 shows None, not 1jk2nl0flt8bb8mvxb4vvaf4k; no fallback had the match')"
+backfill,match,1mh0tbcgc9lrxk0kt5kpjli50,1mh0tbcgc9lrxk0kt5kpjli50,2026-09-14,,2026-10-07T18:04:54Z,2026-10-07T19:46:00Z,2,"WrongMatch('popup 3125887 shows None, not 1mh0tbcgc9lrxk0kt5kpjli50; no fallback had the match')"
+backfill,match,3fo1nqc2bf7v5c1gv841rurkk,3fo1nqc2bf7v5c1gv841rurkk,2026-09-04,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 502')
+backfill,match,3g5ugaw3enrrrxjyyif4e5kpg,3g5ugaw3enrrrxjyyif4e5kpg,2026-09-04,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 502')
+backfill,match,3h3xrex9svcxmycoye3oxjlsk,3h3xrex9svcxmycoye3oxjlsk,2026-09-04,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 502')
+backfill,match,3irp1wzltptmj7wf55s1zbeok,3irp1wzltptmj7wf55s1zbeok,2026-09-09,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('statistics page failed')
+backfill,match,3kl89cdcjzfopszzbmv1rm2ok,3kl89cdcjzfopszzbmv1rm2ok,2026-09-12,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('statistics page failed')
+backfill,match,79r3pdqdczg9upc1fvq1gc7pw,79r3pdqdczg9upc1fvq1gc7pw,2026-09-04,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 500')
+backfill,match,82git40r8cpzqdpkeq24iftp0,82git40r8cpzqdpkeq24iftp0,2026-09-11,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 500')
+backfill,match,aa23klqog8kr1fxe4h1rixhqs,aa23klqog8kr1fxe4h1rixhqs,2026-09-08,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,"WrongMatch('popup 3210451 shows None, not aa23klqog8kr1fxe4h1rixhqs; no fallback had the match')"
+backfill,match,ajerbtplc6doqa6gzlhff4sus,ajerbtplc6doqa6gzlhff4sus,2026-09-10,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('statistics page failed')
+backfill,match,akexqtwyudxghh1zzebn1a590,akexqtwyudxghh1zzebn1a590,2026-09-10,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('statistics page failed')
+backfill,match,ddof9wiaezgaj44gkg9rk3a50,ddof9wiaezgaj44gkg9rk3a50,2026-09-04,,2026-10-07T19:46:00Z,2026-10-07T19:46:00Z,1,RuntimeError('popup HTTP 502')
 results,match,4495164,4495164,2026-10-04,2026-10-04T10:00:00Z,2026-10-07T11:33:46Z,2026-10-07T11:33:46Z,1,JSONDecodeError('Invalid control character at: line 1 column 682 (char 681)')
