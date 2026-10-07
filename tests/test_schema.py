@@ -195,3 +195,14 @@ def test_match_view(tmp_path):
     assert bool(hits.iloc[0]["MS 1"]) and not bool(hits.iloc[0]["MS X"])
     paths = flat.export("2025/26", ["ENG-1"], root=tmp_path, out=tmp_path / "exp")
     assert [p.name for p in paths] == ["ENG-1.csv.gz", "oranlar_2025-26.xlsx"]
+
+
+def test_mixed_new_and_stored_rows(tmp_path):
+    """Rows read back from storage (with meta columns) and new rows (without) in one upsert."""
+    store.upsert("odds", [odds()], root=tmp_path, ingested_at=T0)
+    old = store.read("odds", root=tmp_path).to_dict("records")
+    store.upsert("odds", old + [odds(selection_key="UNDER", selection_name_tr="Alt")], root=tmp_path,
+                 ingested_at=datetime(2026, 10, 8, tzinfo=UTC))
+    df = store.read("odds", root=tmp_path).set_index("selection_key")
+    assert df.loc["OVER", "ingested_at_utc"] == T0 and df.loc["UNDER", "ingested_at_utc"] > T0
+    assert set(df["schema_version"]) == {1}

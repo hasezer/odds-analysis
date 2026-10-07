@@ -123,8 +123,10 @@ def to_arrow(table: Table, rows: pd.DataFrame | list[dict], *, ingested_at: date
             raise SchemaError(f"{table.name}: column {col.name} is required")
         else:
             raw = [None] * n
-        if col.name == "ingested_at_utc":
+        if col.name == "ingested_at_utc":  # rows merged from storage keep theirs, new rows get this run's
             raw = [stamp if _missing(v) else v for v in raw]
+        if col.name == "schema_version":
+            raw = [SCHEMA_VERSION] * n
         try:
             vals = [_value(col, v) for v in raw]
         except SchemaError as exc:
