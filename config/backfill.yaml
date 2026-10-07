@@ -1,0 +1,13 @@
+# Backfill of the 26 leagues from the start of the odds history (2019-08-01) to the days the daily results job
+# covers, newest first. Runs as the "Backfill" workflow (private repo: every Actions minute counts).
+
+# GitHub Actions minutes included per month (2,000 now; 3,000 with GitHub Student Pro / Pro).
+monthly_minutes: 2000
+# Minutes kept for the daily jobs (snapshots, results, health, tests). The backfill pauses as soon as
+# monthly_minutes - used_this_month < daily_reserve. Update after measuring a week of real daily usage
+# (shown in the README backfill section).
+daily_reserve: 900
+
+oldest_date: "2019-08-01"   # first day with iddaa codes in the date listing
+newest_offset_days: 6       # stop 6 days before today: the daily results job covers the last 5 days
+max_job_minutes: 100        # one job; the workflow limit is 120

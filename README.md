@@ -13,6 +13,7 @@ only data collected by this project. The data structure is described in [SCHEMA.
 | Snapshot odds | 06:07, then every 2 h 08:07–22:07 | upcoming matches (www.mackolik.com) + Nesine odds (arsiv popup): opening, price changes, closing → `data/matches`, `data/odds` |
 | Results | 05:04 | finished matches of the last 5 days: score, events, statistics, Nesine's final odds + winner marks → `data/events`, `stats`, `odds`, `settlements`, `analysis_flat`; quality checks; exports |
 | Weekly analysis | paused | moves to the new tables in its own PR |
+| Backfill | 23:17 and 01:17 (≤ 100 min each) | history 2019-08 → 6 days ago, newest dates first, same processing as Results; pauses itself when the month's Actions minutes left drop below `daily_reserve` (`config/backfill.yaml`) |
 | Health | every 12 h | fails (GitHub emails you) if no successful (ok or partial) results run in 48 h or snapshot in 12 h |
 | Phase 0 - endpoint check | manual | re-verifies every Mackolik endpoint |
 
@@ -34,3 +35,9 @@ In GitHub, open a file → *View raw* to download it.
 **Weekly reports:** [`reports/`](reports/). The running log of patterns that held up on newer data is [`reports/findings.md`](reports/findings.md). For a compact table to upload to a Claude chat, use `analysis_summary.csv` on the exports branch.
 
 See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_REPORT.md) for the history research and [PHASE0_REPORT.md](PHASE0_REPORT.md) for the endpoint research.
+
+## Backfill progress
+
+<!-- backfill-progress:start -->
+Not started yet: the first job builds the fixture index of every league season.
+<!-- backfill-progress:end -->

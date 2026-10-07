@@ -143,3 +143,24 @@ def test_wrong_popup_falls_back_to_morebets_of_previous_day(monkeypatch):
     assert (source, meta["id"], len(outcomes)) == ("morebets", 4475858, 1)
     assert any("d=03.10.2026" in p for p in calls) and any("d=02.10.2026" in p for p in calls)
     assert calls[-1].endswith("mac=4475858&type=ByDate")
+
+
+def test_past_date_falls_back_to_new_site_markets(monkeypatch):
+    """Past dates are no longer in the arsiv lists: the new site's markets (keyed by match uuid) are used."""
+    from odds_analysis import http as H
+    from odds_analysis import ingest, parsers, www
+
+    class Client:
+        def get(self, path, **kw):
+            if "oddspopup" in path:
+                return H.FetchResult(path, 200, json.dumps({"data": {"matches": [{"uuid": "OLD"}]}}), 0, 1)
+            return H.FetchResult(path, 200, "", 0, 1)
+
+    monkeypatch.setattr(parsers, "parse_day_list", lambda text: [])
+    monkeypatch.setattr(www, "market_outcomes", lambda c, uuid: [{"market_name": "Maç Sonucu", "market_type_id": "1",
+                                                                  "selection": "1", "odds": 2.0, "mbs": 1, "highlight": False}])
+    match = {"match_id": "u1", "iddaa_event_code": "777", "kickoff_local_tr": "2023-03-04T19:00:00+03:00",
+             "kickoff_utc": datetime(2023, 3, 4, 16, tzinfo=UTC)}
+    outcomes, source, meta = ingest.fetch_outcomes(Client(), match, {}, np=0)
+    rows, _ = ingest.odds_rows_from(match, outcomes, price_type="closing_history", source=source)
+    assert (source, meta, rows[0]["source"], rows[0]["selection_key"]) == ("new", {}, "new", "1")

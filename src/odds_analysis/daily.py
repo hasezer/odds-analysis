@@ -172,9 +172,9 @@ def snapshot_run(c: H.MackolikClient, *, full: bool | None = None) -> dict:
             save_matches([m])
         if reason == "closing":
             store.relabel_odds(m["season"], m["league_id"], {m["match_id"]}, old="closing_snapshot", new="intraday_snapshot")
-            rows, outs = ingest.odds_rows_from(m, outcomes, price_type="closing_snapshot", captured_at=now)
+            rows, outs = ingest.odds_rows_from(m, outcomes, price_type="closing_snapshot", captured_at=now, source=source)
         else:
-            rows, outs = ingest.odds_rows_from(m, outcomes, price_type="opening_snapshot", captured_at=now)
+            rows, outs = ingest.odds_rows_from(m, outcomes, price_type="opening_snapshot", captured_at=now, source=source)
             rows = [_typed(r, latest) for r in rows]
             rows = [r for r in rows if r is not None]
         stats["odds_rows"] += len(rows)
@@ -277,15 +277,20 @@ def results_run(c: H.MackolikClient, *, limit: int | None = None) -> dict:
 
 
 def process_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetime, unsettleable: set[str]) -> None:
-    """One finished (or void) match: events, statistics, Nesine's final odds + winner marks, settlements."""
+    """One finished (or void) match: collect its rows and write them."""
+    write_rows(collect_finished(c, m, day_lists, now, unsettleable))
+
+
+def collect_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetime, unsettleable: set[str]) -> dict:
+    """Rows of one finished (or void) match: events, statistics, Nesine's final odds + winner marks, settlements.
+    Returns {"matches": [...], "markets": [(outs, season)], "odds": [...], ...} with partition columns set."""
     part = {"season": m["season"], "league_id": m["league_id"]}
     if m["status"] != "finished":  # postponed / cancelled / abandoned: every stored selection is void
-        save_matches([m])
         o = store.read("odds", **part)
         o = o[o["match_id"] == m["match_id"]].drop_duplicates(SELECTION) if not o.empty else o
-        store.upsert("settlements", [{**{k: _k(r[k]) for k in SELECTION}, "match_id": m["match_id"], "status": "void",
-                                      "settled_at_utc": now, **part} for r in o.to_dict("records")])
-        return
+        return {"matches": [m], "settlements": [{**{k: _k(r[k]) for k in SELECTION}, "match_id": m["match_id"],
+                                                  "status": "void", "settled_at_utc": now, **part}
+                                                 for r in o.to_dict("records")]}
     ke = www.key_events(c, m["match_id"])
     if ke is None:
         raise RuntimeError("key events failed")
@@ -294,16 +299,29 @@ def process_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetim
     if page is None:  # request failed: retry the whole match next run (corners would stay unsettled otherwise)
         raise RuntimeError("statistics page failed")
     stats = ingest.stats_rows(m["match_id"], page, events)
-    if page:
-        m["stadium"] = ingest.stadium(page) or m.get("stadium")
+    m["stadium"] = ingest.stadium(page) or m.get("stadium")
     ingest.apply_extra_time(m, events)
-    outcomes, _source, meta = ingest.fetch_outcomes(c, m, day_lists, np=0)
+    outcomes, source, meta = ingest.fetch_outcomes(c, m, day_lists, np=0)
     if meta.get("id"):
         m["arsiv_match_id"] = str(meta["id"])
-    odds, outs = ingest.odds_rows_from(m, outcomes, price_type="closing_history")
+    odds, outs = ingest.odds_rows_from(m, outcomes, price_type="closing_history", source=source)
     ctx = ingest.engine_ctx(m, events, stats)
     sets = ingest.settlement_rows(m, outs, ctx, now, unsettleable_families=unsettleable)
-    save_matches([m])
-    save_markets(outs, m["season"])
-    for name, rows in (("odds", odds), ("events", events), ("stats", stats), ("settlements", sets)):
-        store.upsert(name, [{**r, **part} for r in rows])
+    return {"matches": [m], "markets": [(outs, m["season"])],
+            **{name: [{**r, **part} for r in rows]
+               for name, rows in (("odds", odds), ("events", events), ("stats", stats), ("settlements", sets))}}
+
+
+def write_rows(*collected: dict) -> None:
+    """Write the rows of one or more collect_finished() results (one write per table and partition)."""
+    merged: dict[str, list] = defaultdict(list)
+    for c in collected:
+        for k, v in c.items():
+            merged[k].extend(v)
+    if merged["matches"]:
+        save_matches(merged["matches"])
+    for outs, season in merged["markets"]:
+        save_markets(outs, season)
+    for name in ("odds", "events", "stats", "settlements"):
+        if merged[name]:
+            store.upsert(name, merged[name])
