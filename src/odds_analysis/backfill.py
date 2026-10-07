@@ -108,12 +108,8 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
     matches = daily.list_matches(c, [d], failures, day_stats)
     if not day_stats["dates"]:
         raise RuntimeError(f"date listing {d} failed")
-    collected, touched, day_lists = [], set(), {}
-    complete = True
+    collected, touched, day_lists, todo = [], set(), {}, []
     for m in matches:
-        if time.monotonic() > deadline:
-            complete = False
-            break
         fx = index.get(m["match_id"])
         if fx is not None:  # season and stage from the fixture page
             m["season"] = fx["season"]
@@ -124,14 +120,38 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
             collected.append({"matches": [m]})  # no Nesine odds: the match is still stored (coverage)
             stats["no_odds"] += 1
             continue
-        try:
-            collected.append(daily.collect_finished(c, m, day_lists, now, unsettleable[(m["league_id"], m["season"])]))
-            stats["final" if m["status"] == "finished" else "void"] += 1
-        except Exception as exc:  # noqa: BLE001 - logged; retried by the next backfill job
-            stats["deferred"] += 1
-            failures.add("match", m["match_id"], repr(exc), match_id=m["match_id"], match_date=d.isoformat())
-            if len(stats["error_detail"]) < 20:
-                stats["error_detail"].append(f"match {m['match_id']}: {exc!r}")
+        todo.append(m)
+    # Mackolik often answers HTTP 500/502 for a page for ~20 s. Instead of sleeping 5/15/45 s on every such answer,
+    # the first pass makes one attempt per request and moves on; the matches that failed get a second pass at the
+    # end of the date with the normal retries and backoff. Only failures of the second pass count as failed.
+    complete, default_delays = True, getattr(c, "retry_delays", H.BACKOFF_SECONDS)
+    try:
+        for first_pass in (True, False):
+            c.retry_delays, again = (() if first_pass else default_delays), []
+            for m in todo:
+                if time.monotonic() > deadline:
+                    complete = False
+                    break
+                failed_before = getattr(c, "failed", 0)
+                try:
+                    collected.append(daily.collect_finished(c, m, day_lists, now,
+                                                            unsettleable[(m["league_id"], m["season"])]))
+                    stats["final" if m["status"] == "finished" else "void"] += 1
+                except Exception as exc:  # noqa: BLE001 - logged; retried by the next backfill job
+                    if first_pass:
+                        c.failed = failed_before
+                        again.append(m)
+                        continue
+                    stats["deferred"] += 1
+                    failures.add("match", m["match_id"], repr(exc), match_id=m["match_id"], match_date=d.isoformat())
+                    if len(stats["error_detail"]) < 20:
+                        stats["error_detail"].append(f"match {m['match_id']}: {exc!r}")
+            stats["second_pass"] += len(again) if first_pass else 0
+            todo = again
+            if not complete or not todo:
+                break
+    finally:
+        c.retry_delays = default_delays
     daily.write_rows(*collected)
     return touched, complete
 
