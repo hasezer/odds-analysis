@@ -15,3 +15,7 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-07T14:37:02Z,backfill,match,1tmqpjhpo63jtsvlktlbuegpg,1tmqpjhpo63jtsvlktlbuegpg,1,RuntimeError('statistics page failed')
 2026-10-07T14:37:02Z,backfill,match,d6hjj5tazn7lx078qs6fexous,d6hjj5tazn7lx078qs6fexous,1,RuntimeError('statistics page failed')
 2026-10-07T14:37:02Z,backfill,match,d651aagw3ru0kun3268jtslqs,d651aagw3ru0kun3268jtslqs,1,RuntimeError('key events failed')
+2026-10-07T16:23:44Z,backfill,match,dj9ihrmj4udnfd79s9psakp3o,dj9ihrmj4udnfd79s9psakp3o,1,RuntimeError('popup ReadTimeout: The read operation timed out')
+2026-10-07T16:23:44Z,backfill,match,3lwu6rvrug0mxvvx6q4g4bllg,3lwu6rvrug0mxvvx6q4g4bllg,1,RuntimeError('statistics page failed')
+2026-10-07T16:23:44Z,backfill,match,1v7ij4ui137fb7ys1bwn1553o,1v7ij4ui137fb7ys1bwn1553o,1,RuntimeError('statistics page failed')
+2026-10-07T16:23:44Z,backfill,match,5zhengemt8vwp08k56d004v10,5zhengemt8vwp08k56d004v10,1,RuntimeError('statistics page failed')
