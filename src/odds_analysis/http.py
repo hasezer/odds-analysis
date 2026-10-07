@@ -75,7 +75,7 @@ class MackolikClient:
         self._last_request = time.monotonic()
 
     def get(self, path: str, *, referer: str | None = None, save_as: str | None = None,
-            backoff: tuple[int, ...] | None = None) -> FetchResult:
+            backoff: tuple[int, ...] | None = None, follow_redirects: bool = False) -> FetchResult:
         url = path if path.startswith("http") else f"{BASE}/{path.lstrip('/')}"
         headers = {"referer": referer} if referer else None
         start = time.monotonic()
@@ -89,7 +89,7 @@ class MackolikClient:
             self._throttle()
             self.requests += 1
             try:
-                resp = self._client.get(url, headers=headers)
+                resp = self._client.get(url, headers=headers, follow_redirects=follow_redirects)
                 status, text, last_error = resp.status_code, resp.text, None
                 if status not in RETRY_STATUSES:
                     break

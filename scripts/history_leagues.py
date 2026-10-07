@@ -70,7 +70,7 @@ def check_match(c: H.MackolikClient, uuid: str) -> dict:
     if mk:
         r = c.get(f"{WWW}/ajax/iddaa/markets/soccer/all/{uuid}?template=all", backoff=(5,))
         if r.ok:
-            m = re.search(r"slipParams[^0-9]*(\d+)\.\d+\$", html.unescape(r.text).replace("\\", ""))
+            m = re.search(r"iddaa\\?/detail\\?/(\d+)", r.text)  # Nesine deep link carries the iddaa event code
             code = int(m[1]) if m else None
     res["iddaa_code"] = code
     if code:
@@ -90,7 +90,7 @@ def check_match(c: H.MackolikClient, uuid: str) -> dict:
         res["goal_events"] = sum(e.get("type") == "goal" for e in ev)
         res["card_events"] = sum(e.get("type") == "card" for e in ev)
         res["sub_events"] = sum(e.get("type") == "substitute" for e in ev)
-    r = c.get(f"{WWW}/mac/x/istatistik/{uuid}", backoff=(5,))
+    r = c.get(f"{WWW}/mac/x/istatistik/{uuid}", backoff=(5,), follow_redirects=True)  # 301 -> real slug
     if r.ok:
         t = html.unescape(re.sub(r"<[^>]+>", " ", r.text))
         mc = re.search(r"Korner\s+(\d+)\s+(\d+)", t)
