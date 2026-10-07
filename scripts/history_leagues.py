@@ -28,9 +28,7 @@ from odds_analysis.parsers import parse_odds_popup
 
 WWW = "https://www.mackolik.com"
 ROOT = Path(__file__).resolve().parents[1]
-MATCH_RE = re.compile(r'"raw":\{"match":\{"id":(\d+),"uuid":"([a-z0-9]+)".*?"round":\{[^}]*?"name":"([^"]*)"'
-                      r'.*?"date_time_utc":"([^"]+)","match_time":"[^"]*","status":"([^"]+)","fts_A":(-?\d+|null),'
-                      r'"fts_B":(-?\d+|null),"hts_A":(-?\d+|null),"hts_B":(-?\d+|null)')
+RAW_KEY = '"raw":{"match":{'  # each fixture carries its source row as a JSON object
 
 
 def season_labels(league: dict) -> list[str]:
@@ -47,15 +45,19 @@ def season_matches(c: H.MackolikClient, slug: str, cid: str, label: str) -> list
     if not r.ok:  # redirects are not followed: a wrong slug/season is simply "not ok"
         return []
     s = html.unescape(r.text)
+    dec = json.JSONDecoder()
     out, seen = [], set()
-    for m in MATCH_RE.finditer(s):
-        if m[2] in seen:
+    pos = s.find(RAW_KEY)
+    while pos != -1:  # raw_decode is linear; a regex over the ~4 MB page backtracked for minutes
+        m = dec.raw_decode(s, pos + len('"raw":'))[0]["match"]
+        pos = s.find(RAW_KEY, pos + 1)
+        if m["uuid"] in seen:
             continue
-        seen.add(m[2])
-        stage = json.loads(f'"{m[3]}"') if "\\u" in m[3] else m[3]
-        out.append({"id": int(m[1]), "uuid": m[2], "stage": stage, "utc": m[4], "status": m[5],
-                    "ft": None if m[6] == "null" else (int(m[6]), int(m[7])),
-                    "ht": None if m[8] == "null" else (int(m[8]), int(m[9]))})
+        seen.add(m["uuid"])
+        fa, fb, ha, hb = m.get("fts_A"), m.get("fts_B"), m.get("hts_A"), m.get("hts_B")
+        out.append({"id": m["id"], "uuid": m["uuid"], "stage": (m.get("round") or {}).get("name"),
+                    "utc": m["date_time_utc"], "status": m["status"],
+                    "ft": None if fa is None else (fa, fb), "ht": None if ha is None else (ha, hb)})
     return out
 
 
