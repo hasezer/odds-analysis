@@ -162,7 +162,8 @@ Settlement rules (`config/pipeline.yaml` → `settlement`):
 - **Unsettleable:** Belgium 2019/20 corner markets (no corner statistics for that season), and any selection whose data is missing (e.g. the statistics page failed every retry).
 
 ### 7. events — `data/events/season=…/league=…/`
-Key: `match_id, event_order`.
+Key: `match_id, event_order`. Since 2026-10-07 only collected for matches that went to extra time (to get the score
+after 90 minutes): the key events settle none of the 45 collected markets.
 
 | Column | Type | Notes |
 |---|---|---|
@@ -181,7 +182,7 @@ One row per team. Key: `match_id, team_side`.
 |---|---|---|
 | **match_id**, **team_side** | string | |
 | corners, yellow_cards, shots, shots_on_target, fouls, offsides, crosses | int | statistics page; no "Sarı Kart" row = 0 yellow cards (checked against the key events) |
-| red_cards, second_yellows | int | counted from the key events (red includes second-yellow reds) |
+| red_cards, second_yellows | int | counted from the key events (red includes second-yellow reds); NULL when the key events were not collected |
 | possession_pct | float | |
 | **stats_source** | string | `opta` \| `rb` (arsiv pages, daily pipeline) \| `new` (www.mackolik.com) |
 

@@ -291,10 +291,14 @@ def collect_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetim
         return {"matches": [m], "settlements": [{**{k: _k(r[k]) for k in SELECTION}, "match_id": m["match_id"],
                                                   "status": "void", "settled_at_utc": now, **part}
                                                  for r in o.to_dict("records")]}
-    ke = www.key_events(c, m["match_id"])
-    if ke is None:
-        raise RuntimeError("key events failed")
-    events = ingest.event_rows(m["match_id"], ke)
+    # The key events (goal/card minutes, substitutions) settle none of the collected markets and are the least
+    # reliable page; they are only fetched when the match went to extra time, to get the score after 90 minutes.
+    events = []
+    if ingest.went_to_extra_time(m):
+        ke = www.key_events(c, m["match_id"])
+        if ke is None:
+            raise RuntimeError("key events failed")
+        events = ingest.event_rows(m["match_id"], ke)
     page = www.stats_page(c, m["match_id"])
     if page is None:  # request failed: retry the whole match next run (corners would stay unsettled otherwise)
         raise RuntimeError("statistics page failed")
