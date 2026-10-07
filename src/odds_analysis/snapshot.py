@@ -14,10 +14,12 @@ from . import http as H
 from .config import TR, iso, load, now_utc
 from .parsers import parse_day_list, parse_morebets, parse_odds_popup, popup_matches
 from .rows import log_unmapped, match_row, odds_rows
+from .runs import FailedItems
 from .storage import frame, read_partition, upsert_partition
 
 log = logging.getLogger(__name__)
 RUN_HOURS_UTC = [6, 8, 10, 12, 14, 16, 18, 20, 22]  # keep in sync with .github/workflows/snapshot.yml
+MAX_FAILURES_IN_A_ROW = 10  # then the remaining popups are queued for the next run
 
 
 def next_run_after(now: datetime, hours: list[int] = RUN_HOURS_UTC) -> datetime:
@@ -84,12 +86,30 @@ def fetch_odds(client: H.MackolikClient, m: dict, raw_prefix: str) -> tuple[dict
     return mb, "morebets"
 
 
+def add_retries(todo: list[tuple[dict, str]], pending: list[dict], listed: list[dict], now: datetime) -> int:
+    """Popups that failed in an earlier run are fetched again (if the match is still listed and not started)."""
+    have = {str(m["event_code"]) for m, _ in todo}
+    by_code = {str(m["event_code"]): m for m in listed if m["event_code"]}
+    added = 0
+    for item in pending:
+        m = by_code.get(str(item["key"]))
+        if m is None or str(item["key"]) in have:
+            continue
+        if datetime.fromisoformat(m["kickoff_utc"].replace("Z", "+00:00")) <= now:
+            continue
+        todo.append((m, "retry"))
+        have.add(str(item["key"]))
+        added += 1
+    return added
+
+
 def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     cfg = load("pipeline")["snapshot"]
     now = now_utc()
     snap = iso(now)
     today = now.astimezone(TR).date()
     stats = {"dates": [], "matches_listed": 0, "fetched": 0, "odds_rows": 0, "errors": 0, "error_detail": []}
+    failures = FailedItems("snapshot", snap)
 
     rows: dict[int, dict] = {}
     days = [today + timedelta(days=o) for o in range(cfg.get("days_ahead", 10) + 1)]
@@ -107,8 +127,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
         days = [d for d, _ in failed]
         if not days:
             break
-    for day, err in failed:
-        stats["errors"] += 1
+    for day, err in failed:  # the next run requests every date again
+        failures.add("day_list", day.isoformat(), err, match_date=day.isoformat())
         stats["error_detail"].append(f"A {day}: {err}")
     match_rows = [match_row(r, snap) for r in rows.values() if r["date"]]
     stats["matches_listed"] = len(match_rows)
@@ -133,18 +153,29 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
             known |= set(df["event_code"])
 
     todo = select_for_fetch(match_rows, known, now, cfg)
+    stats["retried"] = add_retries(todo, failures.pending("odds"), match_rows, now)
     log.info("listed %d matches, fetching %d popups", len(match_rows), len(todo))
     unmapped: dict[str, dict] = {}
     new_odds: dict[str, list[dict]] = {}
     snaps: dict[str, list[dict]] = {}
+    in_a_row = 0
     for m, reason in todo:
+        if in_a_row >= MAX_FAILURES_IN_A_ROW:  # Mackolik is down: don't spend the job's time limit on retries
+            failures.add("odds", m["event_code"], "not tried: Mackolik unreachable", match_id=m["match_id"],
+                         match_date=m["date"], kickoff_utc=m["kickoff_utc"])
+            stats["not_tried"] = stats.get("not_tried", 0) + 1
+            continue
         try:
             pop, source = fetch_odds(client, m, raw_prefix)
-        except Exception as exc:  # noqa: BLE001 - the match is fetched again by the next run
+        except Exception as exc:  # noqa: BLE001 - logged and fetched again by the next run
+            in_a_row += 1
             stats["deferred"] = stats.get("deferred", 0) + 1
+            failures.add("odds", m["event_code"], repr(exc), match_id=m["match_id"], match_date=m["date"],
+                         kickoff_utc=m["kickoff_utc"])
             if len(stats["error_detail"]) < 20:
                 stats["error_detail"].append(f"odds {m['event_code']}: {exc}")
             continue
+        in_a_row = 0
         stats["fetched"] += 1
         stats["morebets_fallback"] = stats.get("morebets_fallback", 0) + (source == "morebets")
         rows_ = [{**r, "source": source} for r in odds_rows(
@@ -163,8 +194,8 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "snapshot") -> dict:
     for date, s in snaps.items():
         upsert_partition("snapshots", date, frame(s))
     stats["unmapped_new"] = log_unmapped(unmapped)
-    deferred = stats.get("deferred", 0)
-    if deferred > max(10, 0.25 * max(1, len(todo))):
-        stats["errors"] += 1
-        stats["error_detail"].append(f"{deferred} of {len(todo)} odds fetches failed (Mackolik errors)")
+    stats["failed_items"] = failures.finish()
+    # "saved nothing": no match could be listed, or popups were due and none was saved
+    stats["due"] = len(todo) if match_rows else 1
+    stats["saved"] = stats["fetched"] if match_rows else 0
     return stats

@@ -11,6 +11,7 @@ from pathlib import Path
 
 from . import http as H
 from .config import iso, now_utc
+from .runs import run_status
 from .storage import append_log
 
 
@@ -30,9 +31,13 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
         except Exception as exc:  # noqa: BLE001
             logging.exception("job crashed")
             crash = repr(exc)
-        requests = client.requests
+        requests, calls, failed = client.requests, client.calls, client.failed
+    # requests skipped because Mackolik was unreachable count as failed ones
+    calls, failed = calls + stats.get("not_tried", 0), failed + stats.get("not_tried", 0)
     errors = stats.get("errors", 0) + (1 if crash else 0)
     detail = stats.get("error_detail", [])[:20] + ([crash] if crash else [])
+    status = run_status(calls=calls, failed=failed, saved=stats.get("saved", 0), due=stats.get("due", 0),
+                        crashed=crash is not None, item_errors=errors + stats.get("failed_items", 0))
     append_log("runs", [{
         "run_at": run_at,
         "job": job,
@@ -40,6 +45,10 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
         "matches": stats.get("fetched", stats.get("final", 0)),
         "errors": errors,
         "requests": requests,
+        "status": status,
+        "calls": calls,
+        "failed_requests": failed,
+        "failed_items": stats.get("failed_items", 0),
         "duration_s": round(time.monotonic() - started),
         "summary": json.dumps({k: v for k, v in stats.items() if k not in ("dates", "error_detail")}, ensure_ascii=False),
         "error_detail": " || ".join(detail)[:2000],
@@ -47,9 +56,15 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None) -> int:
     if stats.get("stopped_early"):
         Path(".continue_results").write_text("time budget reached\n")  # the workflow starts a follow-up run
     print(json.dumps({k: v for k, v in stats.items() if k != "dates"}, ensure_ascii=False, indent=1))
-    if errors:
-        print(f"{errors} error(s): " + " || ".join(detail), file=sys.stderr)
-    return 1 if errors else 0
+    share = f"{failed}/{calls} requests failed after retries"
+    if status == "failed":
+        print(f"::error title={job} failed::{share}; saved {stats.get('saved', 0)} of {stats.get('due', 0)} due. "
+              + " || ".join(detail)[:900], file=sys.stderr)
+        return 1
+    if status == "partial":  # visible in the Actions summary, but the run stays green; failed items are retried next run
+        print(f"::warning title={job} partial::{share}; {stats.get('failed_items', 0)} item(s) logged in "
+              "data/failed_items.csv and queued for the next run", file=sys.stderr)
+    return 0
 
 
 def _settle(days: int, all_dates: bool) -> int:
@@ -73,6 +88,7 @@ def _settle(days: int, all_dates: bool) -> int:
         stats, error = {}, repr(exc)
     append_log("runs", [{"run_at": run_at, "job": "settle", "dates": " ".join(stats.get("dates", [])),
                          "matches": "", "errors": 1 if error else 0, "requests": 0,
+                         "status": "failed" if error else "ok",
                          "duration_s": round(time.monotonic() - started),
                          "summary": json.dumps({k: v for k, v in stats.items() if k != "dates"}),
                          "error_detail": error or ""}])
