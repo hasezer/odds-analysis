@@ -118,12 +118,15 @@ def main() -> int:
             for label in season_labels(lg):
                 if (lg["key"], label) in done:
                     continue
+                comp = next((x for x in lg.get("extra") or [] if x["season"] == label), mk)
                 page_label = label
-                ms = season_matches(c, mk["slug"], mk["competition_id"], label)
-                if not ms and lg["calendar_year"] and "-" not in label:  # e.g. Argentina 2019/20 Superliga
-                    page_label = f"{label}-{int(label) + 1}"
-                    ms = season_matches(c, mk["slug"], mk["competition_id"], page_label)
-                rec = {"league": lg["key"], "season": label, "page_label": page_label, "matches": len(ms),
+                ms = season_matches(c, comp["slug"], comp["competition_id"], label)
+                fallback = f"{label}-{int(label) + 1}" if "-" not in label else None
+                if not ms and lg["calendar_year"] and fallback and fallback not in season_labels(lg):
+                    # e.g. Argentina's 2019/20 Superliga is filed as "2019-2020"
+                    page_label = fallback
+                    ms = season_matches(c, comp["slug"], comp["competition_id"], page_label)
+                rec = {"league": lg["key"], "season": label, "competition": comp.get("name", lg["name"]), "page_label": page_label, "matches": len(ms),
                        "played": sum(m["status"] == "Played" for m in ms),
                        "stages": dict(collections.Counter(m["stage"] for m in ms)),
                        "dates": sorted(m["utc"][:10] for m in ms), "listing": None, "samples": []}
@@ -133,7 +136,7 @@ def main() -> int:
                     data = listing(c, day)
                     if data is not None:
                         lm = [m for m in (data.get("matches") or {}).values()
-                              if m.get("competitionId") == mk["competition_id"]]
+                              if m.get("competitionId") == comp["competition_id"]]
                         coded = [m for m in lm if m.get("iddaaCode")]
                         rec["listing"] = {"date": day, "league_matches": len(lm), "with_code": len(coded)}
                         for m in rng.sample(coded, min(a.per_season, len(coded))):

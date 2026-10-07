@@ -19,6 +19,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 ODDS_START = "2019-08-01"  # first day with iddaa codes in the date listing
+TODAY = "2026-10-07"  # matches before this day are history; later ones come from the daily pipeline
 
 # Per-request cost measured during the investigation (compressed bytes, seconds incl. the 1 req/s throttle).
 REQ = {"popup": (10_000, 1.3), "events": (1_500, 1.1), "stats": (37_000, 1.1)}
@@ -61,16 +62,16 @@ def main() -> int:
     out: list[str] = []
     plan: list[tuple[str, str, str, int, set]] = []  # (season end, league, season, matches with odds, match days)
 
-    out.append("### Per league\n")
+    out.append("### Summary per league\n")
     out.append("| League | First season with Nesine odds | Listed with odds (sampled matchday) | "
-               "Markets per match by season (popup, median) | Events | Corners | Cards |")
+               "Markets per match by season (popup, median) | Events | Corners | Cards (stats page) |")
     out.append("|---|---|---|---|---|---|---|")
     season_rows: list[str] = []
     for lg in leagues:
         first = None
         coded = listed = 0
         mk_by_season = []
-        ev = co = ca = n_s = 0
+        ev = co = ca = n_s = n_e = 0
         for key, r in sorted(((k, v) for k, v in cov.items() if k[0] == lg["key"]), key=lambda kv: kv[0][1]):
             s = key[1]
             samples = [x for x in r["samples"] if x.get("popup_same_match")]
@@ -84,31 +85,39 @@ def main() -> int:
                 first = s
             if mkts:
                 mk_by_season.append(f"{label(s)}: {round(statistics.median(mkts))}")
-            all_s = r["samples"] + extra.get(key, [])
-            for x in all_s:
-                n_s += 1
-                ev += bool(x.get("events"))
-                co += x.get("corners") is not None
-                ca += (x.get("yellow_cards") or x.get("yellow_cards_stat")) is not None or bool(x.get("card_events"))
+            # only pages that loaded count (a transient 502 during the probe is not missing data)
+            for x in r["samples"] + extra.get(key, []):
+                if "events" in x:
+                    n_e += 1
+                    ev += bool(x["events"])
+                if "corners" in x:
+                    n_s += 1
+                    co += x["corners"] is not None
+                    # no "Sarı Kart" row = no yellow card; key events list every card as well
+                    ca += (x.get("yellow_cards") or x.get("yellow_cards_stat")) is not None or "events" in x
             # matches the backfill would fetch: played, on/after the first listing day with codes, scaled by the
             # share of the league's matches that carried an iddaa code on the sampled matchday
-            dates = r.get("dates") or []
+            dates = [d for d in r.get("dates") or [] if d < TODAY]
             in_window = sum(d >= ODDS_START for d in dates)
             share = (lst.get("with_code", 0) / lst["league_matches"]) if lst.get("league_matches") else 0
             with_odds = round(in_window * share) if mkts or share else 0
             if with_odds:
                 days_tr = {d for d in dates if d >= ODDS_START}
                 plan.append((max(dates), lg["name"], label(s), with_odds, days_tr))
-            stages = {k: v for k, v in (r.get("stages") or {}).items() if k not in ("Normal Sezon", "1. Tur", "2. Tur")}
-            season_rows.append(f"| {lg['name']} | {label(s)} | {r['matches']} | {with_odds} | "
+            stages = {k: v for k, v in (r.get("stages") or {}).items()  # the extra stages only (playoffs, groups)
+                      if k not in ("Normal Sezon", "1. Tur", "2. Tur") and v != r["matches"]}
+            name = r.get("competition") or lg["name"]
+            season_rows.append(f"| {name} | {label(s)} | {r['matches']} | {with_odds} | "
                                f"{', '.join(f'{k} ({v})' for k, v in stages.items()) or '–'} |")
         out.append(f"| {lg['name']} | {label(first) if first else 'none found'} | {pct(coded, listed)} | "
-                   f"{' · '.join(mk_by_season) or '–'} | {pct(ev, n_s)} | {pct(co, n_s)} | {pct(ca, n_s)} |")
+                   f"{' · '.join(mk_by_season) or '–'} | {pct(ev, n_e)} | {pct(co, n_s)} | {pct(ca, n_s)} |")
 
-    out.append("\n### Matches per season (fixture pages; playoff stages included)\n")
-    out.append("| League | Season | Matches listed | Est. matches with Nesine odds | Extra stages |")
+    out.append("\n<details><summary>Matches per season (fixture pages; playoff stages included)</summary>\n")
+    out.append("| League | Season | Matches (incl. not yet played) | Est. matches with Nesine odds, played by "
+               f"{TODAY} | Extra stages |")
     out.append("|---|---|---|---|---|")
     out += season_rows
+    out.append("\n</details>")
 
     total = sum(p[3] for p in plan)
     # one date listing per day on which any of the leagues played (gives uuid, iddaa code, score)
@@ -123,24 +132,42 @@ def main() -> int:
     out.append(f"- Time at 1 request/second: **{req / 3600:.1f} h**; with measured latency: **{secs / 3600:.1f} h**")
     out.append(f"- Transferred (compressed): **{gb:.1f} GB**")
     out.append(f"- Parquet size: **~{total * PARQUET_KB_PER_MATCH / 1024:.0f} MB**")
+    # option (b): the current and the previous season of every league only
+    recent: dict[str, list] = collections.defaultdict(list)
+    for p in sorted(plan, key=lambda p: p[0], reverse=True):
+        recent[p[1]].append(p)
+    two = [p for ps in recent.values() for p in ps[:2]]
+    n2, d2 = sum(p[3] for p in two), len(set().union(*(p[4] for p in two)))
+    h2 = (n2 * per_req_s + d2 * LISTING[1]) / 3600
+    out.append(f"- Only the last 2 seasons per league: **{n2:,}** matches, **{3 * n2 + d2:,}** requests, "
+               f"~{h2:.1f} h, {(n2 * per_req_b + d2 * LISTING[0]) / 1e9:.1f} GB")
 
     out.append(f"\n### Chunk plan, newest season first ({a.budget} Actions minutes per month for backfill)\n")
-    out.append("| Month | Seasons (league – season, matches) | Matches | Minutes |")
+    out.append("| Month | Seasons | Matches | Minutes |")
     out.append("|---|---|---|---|")
     plan.sort(key=lambda p: p[0], reverse=True)
+    per_label = collections.Counter(p[2] for p in plan)
+
+    def describe(items: list[tuple[str, str]]) -> str:
+        by_label: dict[str, list[str]] = collections.defaultdict(list)
+        for name, lab in items:
+            by_label[lab].append(name)
+        return "; ".join(f"{lab}: all ({len(ns)})" if len(ns) == per_label[lab] else f"{lab}: {', '.join(ns)}"
+                         for lab, ns in by_label.items())
+
     month, used, items, n, seen = 1, 0.0, [], 0, set()
     per_match_min = per_req_s / 60 * 1.1  # +10% for retries and job overhead
     for p in plan:
         need = p[3] * per_match_min + len(p[4] - seen) * LISTING[1] / 60
         seen |= p[4]
         if used + need > a.budget and items:
-            out.append(f"| {month} | {'; '.join(items)} | {n:,} | {math.ceil(used)} |")
+            out.append(f"| {month} | {describe(items)} | {n:,} | {math.ceil(used)} |")
             month, used, items, n = month + 1, 0.0, [], 0
         used += need
         n += p[3]
-        items.append(f"{p[1]} {p[2]} ({p[3]})")
+        items.append((p[1], p[2]))
     if items:
-        out.append(f"| {month} | {'; '.join(items)} | {n:,} | {math.ceil(used)} |")
+        out.append(f"| {month} | {describe(items)} | {n:,} | {math.ceil(used)} |")
     print("\n".join(out))
     return 0
 

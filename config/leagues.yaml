@@ -10,6 +10,7 @@
 #                           international break). The pipeline fills them automatically - never guess them.
 # calendar_year           : season label "2024" (true) or "2024/25" (false)
 # split_from              : first season of a league that moved to an autumn-spring calendar
+# extra                   : another new-API competition that stands in for the league in one season
 
 leagues:
   - {key: NED_EERSTE_DIVISIE, name: "Netherlands Eerste Divisie", country: Netherlands, tier: 2, calendar_year: false,
@@ -89,4 +90,7 @@ leagues:
      arsiv: {code: null, id: null}}
   - {key: JPN_J1_LEAGUE, name: "Japan J1 League", country: Japan, tier: 1, calendar_year: true, split_from: [2026],
      mackolik: {competition_id: 8o5tv5viv4hy1qg9jp94k7ayb, code: JJL, slug: japonya-j1-lig},
+     # spring 2026 (Feb-Jun): the J1 clubs played a one-off transition league before the switch to autumn-spring
+     extra: [{season: "2026", name: "J1 100 Year Vision League", competition_id: 1okgv7alq5gggbccv5r9p63v8,
+              code: JJ1YVL, slug: japonya-j1-100-year-vision-lig}],
      arsiv: {code: null, id: null}}
