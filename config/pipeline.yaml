@@ -20,7 +20,13 @@ results:
   # is started automatically for the remaining matches.
   max_minutes: 110
 
-# Health
+# Run status: a run is "failed" if more than this share of its requests still fail after the retries
+# (5 s / 15 s / 45 s) or it saves no match although matches were due; some failed requests = "partial"
+# (failed items go to data/failed_items.csv and data/retry_queue.csv and are retried by the next run).
+runs:
+  max_failed_share: 0.20
+
+# Health (ok and partial runs count as successful)
 health:
   max_hours_without_results: 48
   max_hours_without_snapshot: 12

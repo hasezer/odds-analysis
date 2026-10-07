@@ -19,6 +19,7 @@ from .config import TR, iso, load, now_utc
 from .markets import normalize_market, normalize_selection
 from .parsers import parse_day_list, parse_match_data, parse_match_page, parse_odds_popup, parse_stats_box, popup_matches
 from .rows import log_unmapped, match_row, odds_rows
+from .runs import FailedItems
 from .storage import append_log, frame, read_partition, upsert_partition
 
 log = logging.getLogger(__name__)
@@ -68,6 +69,7 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
     dates = [(today - timedelta(days=d)) for d in range(cfg.get("days_back", 5), -1, -1)]
     stats = {"dates": [], "listed": 0, "final": 0, "void": 0, "pending": 0, "skipped_done": 0,
              "official_markets": 0, "deferred": 0, "errors": 0, "error_detail": []}
+    failures = FailedItems("results", fetched)  # deferred matches stay unfinished and are retried next run
     unmapped: dict[str, dict] = {}
 
     rows: dict[int, dict] = {}
@@ -75,7 +77,7 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
         res = client.get(H.day_list_path(day.strftime("%d.%m.%Y"), np=0), save_as=f"{raw_prefix}/A_np0_{day}.html.gz",
                          backoff=H.LIST_BACKOFF_SECONDS)
         if not res.ok:
-            stats["errors"] += 1
+            failures.add("day_list", day.isoformat(), res.error, match_date=day.isoformat())
             stats["error_detail"].append(f"A {day}: {res.error}")
             continue
         stats["dates"].append(day.isoformat())
@@ -253,14 +255,15 @@ def run(client: H.MackolikClient, *, raw_prefix: str = "results", limit: int | N
         except Exception as exc:  # noqa: BLE001 - one match must not stop the run; it is retried next run
             log.warning("match %s deferred: %r", mid, exc)
             stats["deferred"] += 1
+            failures.add("match", mid, repr(exc), match_id=mid, match_date=r["date"], kickoff_utc=m["kickoff_utc"])
             consecutive_failures += 1
             if len(stats["error_detail"]) < 20:
                 stats["error_detail"].append(f"match {mid}: {exc!r}")
 
     flush()
     stats["unmapped_new"] = log_unmapped(unmapped)
-    # deferred matches are retried automatically next run; only a large share means something is wrong
-    if stats["deferred"] > max(10, 0.25 * max(1, stats["final"] + stats["deferred"])):
-        stats["errors"] += 1
-        stats["error_detail"].append(f"{stats['deferred']} matches failed to fetch (deferred to next run)")
+    stats["failed_items"] = failures.finish()
+    # "saved nothing": no day list could be read, or matches were due and none was saved
+    stats["saved"] = stats["final"] + stats["void"]
+    stats["due"] = stats["saved"] + stats["deferred"] if stats["dates"] else 1
     return stats
