@@ -39,5 +39,30 @@ See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_R
 ## Backfill progress
 
 <!-- backfill-progress:start -->
-Not started yet: the first job builds the fixture index of every league season.
+_Updated 2026-10-07 14:35 UTC by the Backfill workflow (newest dates first)._
+
+**153 of 63,824 matches (0.2 %)** · next date to process: 2026-09-19
+
+| Season | Matches | Done | % |
+|---|---|---|---|
+| 2026/27 | 1,336 | 100 | 7 % |
+| 2026 | 1,254 | 53 | 4 % |
+| 2025/26 | 6,884 | 0 | 0 % |
+| 2025 | 2,050 | 0 | 0 % |
+| 2024/25 | 6,960 | 0 | 0 % |
+| 2024 | 2,103 | 0 | 0 % |
+| 2023/24 | 7,061 | 0 | 0 % |
+| 2023 | 2,029 | 0 | 0 % |
+| 2022/23 | 6,976 | 0 | 0 % |
+| 2022 | 1,996 | 0 | 0 % |
+| 2021/22 | 7,016 | 0 | 0 % |
+| 2021 | 1,973 | 0 | 0 % |
+| 2020/21 | 7,050 | 0 | 0 % |
+| 2020 | 1,744 | 0 | 0 % |
+| 2019/20 | 6,471 | 0 | 0 % |
+| 2019 | 921 | 0 | 0 % |
+
+Per league and season: [`data/backfill_progress.csv`](data/backfill_progress.csv).
+
+Actions minutes this month: **428 used of 2,000**, 1,572 left; the backfill pauses below the daily reserve of 900. Daily jobs used 61.1 min/day over the last 7 days (≈ 1,833/month).
 <!-- backfill-progress:end -->

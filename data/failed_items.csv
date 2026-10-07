@@ -1,2 +1,5 @@
 logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-07T11:33:46Z,results,match,4495164,4495164,1,JSONDecodeError('Invalid control character at: line 1 column 682 (char 681)')
+2026-10-07T12:41:32Z,backfill,match,3oezwb4beel1a2jdx0uqf5clw,3oezwb4beel1a2jdx0uqf5clw,1,RuntimeError('statistics page failed')
+2026-10-07T12:41:32Z,backfill,match,diyxqgnvenksrl97xezpjifis,diyxqgnvenksrl97xezpjifis,1,RuntimeError('key events failed')
+2026-10-07T12:41:32Z,backfill,match,1rrp04ydt1ahgykgayqyp1lw4,1rrp04ydt1ahgykgayqyp1lw4,1,RuntimeError('key events failed')
