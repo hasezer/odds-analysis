@@ -1,0 +1,96 @@
+# The 26 leagues covered by backfill and daily collection (top divisions unless stated).
+# Included: regular season + the league's own playoff / relegation-playoff stages (they are stages of the same
+# competition in the new mackolik.com API, e.g. Ligue 1 "Play-Out Final"). Cups are excluded.
+#
+# mackolik.competition_id : id in the new www.mackolik.com API (stable across seasons; livescores "competitionId")
+# mackolik.code           : new-API competition code (NOT the same as the arsiv code)
+# mackolik.slug           : URL slug for /puan-durumu/<slug>/<season>/fikstur/<competition_id>
+# arsiv.code / arsiv.id   : arsiv.mackolik.com iddaa list league code and popLeague id. Verified by joining both
+#                           systems on the iddaa code of the same match; null = not seen yet (the arsiv window was an
+#                           international break). The pipeline fills them automatically - never guess them.
+# calendar_year           : season label "2024" (true) or "2024/25" (false)
+# split_from              : first season of a league that moved to an autumn-spring calendar
+# extra                   : another new-API competition that stands in for the league in one season
+
+leagues:
+  - {key: NED_EERSTE_DIVISIE, name: "Netherlands Eerste Divisie", country: Netherlands, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 1gwajyt0pk2jm5fx5mu36v114, code: HED, slug: hollanda-eerste-divisie},
+     arsiv: {code: HOL2, id: 120}}
+  - {key: GER_2_BUNDESLIGA, name: "Germany 2. Bundesliga", country: Germany, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 722fdbecxzcq9788l6jqclzlw, code: A2B, slug: almanya-2-bundesliga},
+     arsiv: {code: null, id: null}}
+  - {key: NOR_ELITESERIEN, name: "Norway Eliteserien", country: Norway, tier: 1, calendar_year: true,
+     mackolik: {competition_id: 9ynnnx1qmkizq1o3qr3v0nsuk, code: NE, slug: "norve%C3%A7-eliteserien"},
+     arsiv: {code: null, id: null}}
+  - {key: NED_EREDIVISIE, name: "Netherlands Eredivisie", country: Netherlands, tier: 1, calendar_year: false,
+     mackolik: {competition_id: akmkihra9ruad09ljapsm84b3, code: HE, slug: hollanda-eredivisie},
+     arsiv: {code: null, id: null}}
+  - {key: ESP_LA_LIGA_2, name: "Spain La Liga 2", country: Spain, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 3is4bkgf3loxv9qfg3hm8zfqb, code: "İL2", slug: ispanya-laliga-2},
+     arsiv: {code: "İS2", id: 21}}
+  - {key: ARG_LIGA_PROFESIONAL, name: "Argentina Liga Profesional", country: Argentina, tier: 1, calendar_year: true,
+     mackolik: {competition_id: 581t4mywybx21wcpmpykhyzr3, code: APL, slug: arjantin-premier-lig},
+     arsiv: {code: ARJ, id: 12434}}
+  - {key: FRA_LIGUE_2, name: "France Ligue 2", country: France, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 4w7x0s5gfs5abasphlha5de8k, code: FL2, slug: fransa-ligue-2},
+     arsiv: {code: null, id: null}}
+  - {key: ITA_SERIE_B, name: "Italy Serie B", country: Italy, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 8ey0ww2zsosdmwr8ehsorh6t7, code: "İSB", slug: italya-serie-b},
+     arsiv: {code: null, id: null}}
+  - {key: BRA_SERIE_A, name: "Brazil Serie A", country: Brazil, tier: 1, calendar_year: true,
+     mackolik: {competition_id: scf9p4y91yjvqvg5jndxzhxj, code: BSA, slug: brezilya-serie-a},
+     arsiv: {code: BR1, id: 83}}
+  - {key: GER_BUNDESLIGA, name: "Germany Bundesliga", country: Germany, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 6by3h89i2eykc341oz7lv1ddd, code: AB, slug: almanya-bundesliga},
+     arsiv: {code: null, id: null}}
+  - {key: SUI_SUPER_LEAGUE, name: "Switzerland Super League", country: Switzerland, tier: 1, calendar_year: false,
+     mackolik: {competition_id: e0lck99w8meo9qoalfrxgo33o, code: "İSPL", slug: "isvi%C3%A7re-s%C3%BCper-lig"},
+     arsiv: {code: null, id: null}}
+  - {key: BEL_PRO_LEAGUE, name: "Belgium Jupiler Pro League", country: Belgium, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 4zwgbb66rif2spcoeeol2motx, code: BPL, slug: "bel%C3%A7ika-pro-lig"},
+     arsiv: {code: null, id: null}}
+  - {key: USA_MLS, name: "USA MLS", country: USA, tier: 1, calendar_year: true,
+     mackolik: {competition_id: 287tckirbfj9nb8ar2k9r60vn, code: AM, slug: abd-mls},
+     arsiv: {code: ABD, id: 87}}
+  - {key: ENG_PREMIER_LEAGUE, name: "England Premier League", country: England, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 2kwbbcootiqqgmrzs6o5inle5, code: "İPL", slug: ingiltere-premier-lig},
+     arsiv: {code: null, id: null}}
+  - {key: TUR_SUPER_LIG, name: "Turkey Süper Lig", country: Turkey, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 482ofyysbdbeoxauk19yg7tdt, code: TTSPL, slug: "t%C3%BCrkiye-trendyol-s%C3%BCper-lig"},
+     arsiv: {code: null, id: null}}
+  - {key: ENG_CHAMPIONSHIP, name: "England Championship", country: England, tier: 2, calendar_year: false,
+     mackolik: {competition_id: 7ntvbsyq31jnzoqoa8850b9b8, code: "İC", slug: ingiltere-championship},
+     arsiv: {code: null, id: null}}
+  - {key: AUT_BUNDESLIGA, name: "Austria Bundesliga", country: Austria, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 5c96g1zm7vo5ons9c42uy2w3r, code: AB, slug: avusturya-bundesliga},
+     arsiv: {code: null, id: null}}
+  - {key: DEN_SUPERLIGA, name: "Denmark Superliga", country: Denmark, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 29actv1ohj8r10kd9hu0jnb0n, code: DSPL, slug: "danimarka-s%C3%BCper-lig"},
+     arsiv: {code: null, id: null}}
+  - {key: SCO_PREMIERSHIP, name: "Scotland Premiership", country: Scotland, tier: 1, calendar_year: false,
+     mackolik: {competition_id: e21cf135btr8t3upw0vl6n6x0, code: "İP", slug: "isko%C3%A7ya-premiership"},
+     arsiv: {code: null, id: null}}
+  - {key: POR_PRIMEIRA_LIGA, name: "Portugal Primeira Liga", country: Portugal, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 8yi6ejjd1zudcqtbn07haahg6, code: PPL, slug: portekiz-premier-lig},
+     arsiv: {code: null, id: null}}
+  - {key: ESP_LA_LIGA, name: "Spain La Liga", country: Spain, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 34pl8szyvrbwcmfkuocjm3r6t, code: "İL", slug: ispanya-laliga},
+     arsiv: {code: null, id: null}}
+  - {key: ITA_SERIE_A, name: "Italy Serie A", country: Italy, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 1r097lpxe0xn03ihb7wi98kao, code: "İSA", slug: italya-serie-a},
+     arsiv: {code: null, id: null}}
+  - {key: FRA_LIGUE_1, name: "France Ligue 1", country: France, tier: 1, calendar_year: false,
+     mackolik: {competition_id: dm5ka0os1e3dxcp3vh05kmp33, code: FL1, slug: fransa-ligue-1},
+     arsiv: {code: null, id: null}}
+  - {key: MEX_LIGA_MX, name: "Mexico Liga MX", country: Mexico, tier: 1, calendar_year: false,
+     mackolik: {competition_id: 2hsidwomhjsaaytdy9u5niyi4, code: MLM, slug: meksika-liga-mx},
+     arsiv: {code: null, id: null}}
+  - {key: KSA_PRO_LEAGUE, name: "Saudi Pro League", country: Saudi Arabia, tier: 1, calendar_year: false,
+     mackolik: {competition_id: ea0h6cf3bhl698hkxhpulh2zz, code: SPL, slug: suudi-arabistan-pro-lig},
+     arsiv: {code: null, id: null}}
+  - {key: JPN_J1_LEAGUE, name: "Japan J1 League", country: Japan, tier: 1, calendar_year: true, split_from: [2026],
+     mackolik: {competition_id: 8o5tv5viv4hy1qg9jp94k7ayb, code: JJL, slug: japonya-j1-lig},
+     # spring 2026 (Feb-Jun): the J1 clubs played a one-off transition league before the switch to autumn-spring
+     extra: [{season: "2026", name: "J1 100 Year Vision League", competition_id: 1okgv7alq5gggbccv5r9p63v8,
+              code: JJ1YVL, slug: japonya-j1-100-year-vision-lig}],
+     arsiv: {code: null, id: null}}
