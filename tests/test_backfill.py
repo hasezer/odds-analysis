@@ -90,6 +90,10 @@ SCENARIO = textwrap.dedent('''
     out = {"run": backfill.run(C())}
     from collections import defaultdict
     from odds_analysis.runs import FailedItems
+    st = defaultdict(int)
+    out["only_other"] = backfill.process_date(C(), D1, {}, FailedItems("t", "x"), st, datetime.now(UTC), {},
+                                              only={"zzz"})  # a retry of another match: match "a" is not redone
+    out["only_other_stats"] = dict(st)
     out["past_deadline"] = backfill.process_date(C(), D1, {}, FailedItems("t", "x"), defaultdict(int), datetime.now(UTC),
                                                  {}, deadline=0)
     out["seen_delays"] = seen_delays
@@ -113,6 +117,7 @@ def test_backfill_scenario(tmp_path):
     assert out["state"] == "2026-09-25"  # both dates done, newest first
     assert out["matches"] == ["a", "b"]  # the match without Nesine odds is stored too
     assert out["settled"] == 3
+    assert out["only_other"] == ["set()", True] and out["only_other_stats"].get("final", 0) == 0 and "no_odds" not in out["only_other_stats"]
     assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
     assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]
