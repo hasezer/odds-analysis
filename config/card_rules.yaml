@@ -14,5 +14,5 @@ exclude_after_substitution: true
 regulation_only: true
 # Card markets have no official result marks; they are always engine-settled.
 # Set to false to exclude card markets from analysis until you have confirmed the rule.
-include_in_analysis: true
+include_in_analysis: false   # user decision 2026-10-07: excluded until the rule is confirmed
 status: "rule from Nesine help text, interpretation pending user confirmation"

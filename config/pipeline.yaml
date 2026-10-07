@@ -28,3 +28,12 @@ health:
 # Exports (exports/)
 exports:
   keep_daily_xlsx_days: 60   # older daily .xlsx files are deleted from git (rebuildable from data/)
+
+# Settlement rules for the SCHEMA.md tables (settlements.status)
+settlement:
+  # Nesine's Kart Puanı rule is not confirmed yet: these markets are settled by the engine but stored as
+  # status "unverified" and kept out of default analyses (all card markets are, see flat.py)
+  unverified_markets: [CARD_POINTS_OU, HT_CARD_POINTS_OU, MOST_CARD_POINTS]
+  # seasons where Mackolik has no data for a family: its markets are "unsettleable"
+  unsettleable:
+    - {league_id: BEL-1, season: "2019/20", families: [corners]}   # no corner statistics for that season
