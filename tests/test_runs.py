@@ -63,3 +63,29 @@ def test_retries_500_502_with_5_15_45(monkeypatch):
     r = c.get("x")
     assert not r.ok and r.error == "HTTP 502" and r.attempts == 4
     assert (c.calls, c.failed, sleeps) == (1, 1, [5, 15, 45])
+
+
+def test_client_starts_at_most_one_request_per_interval_across_threads():
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from odds_analysis import http as H
+
+    starts = []
+
+    class Slow:
+        def get(self, url, **kw):
+            starts.append(time.monotonic())
+            time.sleep(0.15)  # slow answers: several requests are in flight at once
+            return type("R", (), {"status_code": 502 if "bad" in url else 200, "text": "x"})()
+
+    c = H.MackolikClient(min_interval_s=0.05)
+    c._client = Slow()
+    with ThreadPoolExecutor(4) as pool:
+        list(pool.map(lambda i: c.get(f"https://x/{i}"), range(12)))
+    gaps = [b - a for a, b in zip(starts, starts[1:])]
+    assert len(starts) == 12 and min(gaps) >= 0.045
+    assert max(starts) - min(starts) < 12 * 0.15  # overlapping: faster than one at a time
+    with c.quick():
+        assert not c.get("https://x/bad").ok  # one attempt, no backoff sleep
+    assert (c.calls, c.requests, c.failed, c.soft_failed) == (13, 13, 0, 1)

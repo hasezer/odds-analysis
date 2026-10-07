@@ -1,10 +1,15 @@
-"""Polite HTTP client for arsiv.mackolik.com: fixed headers, <=1 request/sec, retries with backoff."""
+"""Polite HTTP client for arsiv.mackolik.com: fixed headers, <=1 request/sec, retries with backoff.
+
+Thread-safe: several threads may share one client (the backfill keeps a few slow requests in flight); requests still
+start at most once per second in total."""
 
 from __future__ import annotations
 
 import gzip
 import logging
+import threading
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -53,8 +58,11 @@ class MackolikClient:
     requests: int = field(default=0, init=False)  # HTTP attempts, retries included
     calls: int = field(default=0, init=False)  # logical requests (get() calls)
     failed: int = field(default=0, init=False)  # logical requests that still failed after all retries
+    soft_failed: int = field(default=0, init=False)  # failed in quick mode (the caller retries them later)
     _last_request: float = field(default=0.0, init=False)
     _client: httpx.Client = field(init=False)
+    _lock: threading.Lock = field(init=False, default_factory=threading.Lock)
+    _local: threading.local = field(init=False, default_factory=threading.local)
 
     def __post_init__(self) -> None:
         self._client = httpx.Client(
@@ -73,10 +81,21 @@ class MackolikClient:
         self.close()
 
     def _throttle(self) -> None:
-        wait = self.min_interval_s - (time.monotonic() - self._last_request)
-        if wait > 0:
-            time.sleep(wait)
-        self._last_request = time.monotonic()
+        with self._lock:  # one start per min_interval_s across all threads
+            wait = self.min_interval_s - (time.monotonic() - self._last_request)
+            if wait > 0:
+                time.sleep(wait)
+            self._last_request = time.monotonic()
+
+    @contextmanager
+    def quick(self):
+        """In this thread: one attempt per request without backoff, failures counted as soft_failed (the caller
+        retries them later with the normal backoff)."""
+        self._local.quick = True
+        try:
+            yield
+        finally:
+            self._local.quick = False
 
     def get(self, path: str, *, referer: str | None = None, save_as: str | None = None,
             backoff: tuple[int, ...] | None = None, follow_redirects: bool = False) -> FetchResult:
@@ -87,12 +106,15 @@ class MackolikClient:
         status: int | None = None
         text = ""
         attempts = 0
-        delays = self.retry_delays if backoff is None else backoff
-        self.calls += 1
+        quick = getattr(self._local, "quick", False)
+        delays = (() if quick else self.retry_delays) if backoff is None else backoff
+        with self._lock:
+            self.calls += 1
         for attempt in range(len(delays) + 1):
             attempts = attempt + 1
             self._throttle()
-            self.requests += 1
+            with self._lock:
+                self.requests += 1
             try:
                 resp = self._client.get(url, headers=headers, follow_redirects=follow_redirects)
                 status, text, last_error = resp.status_code, resp.text, None
@@ -107,7 +129,11 @@ class MackolikClient:
         if status is not None and status != 200 and last_error is None:
             last_error = f"HTTP {status}"
         if last_error is not None:
-            self.failed += 1
+            with self._lock:
+                if quick:
+                    self.soft_failed += 1
+                else:
+                    self.failed += 1
         if self.raw_dir and save_as:
             path = self.raw_dir / save_as
             path.parent.mkdir(parents=True, exist_ok=True)

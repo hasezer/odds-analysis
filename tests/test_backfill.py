@@ -65,7 +65,7 @@ SCENARIO = textwrap.dedent('''
         return {"competitions": {}, "matches": {"a": mk("a", 11)} if d == D1 else {"b": mk("b", None)} if d == D2 else {}}
     seen_delays = []
     def fetch(c, m, day_lists, np):
-        seen_delays.append(list(c.retry_delays))
+        seen_delays.append(getattr(c._local, "quick", False))
         if len(seen_delays) == 1:
             raise RuntimeError("popup HTTP 502")  # first pass: one attempt, no waiting; the second pass succeeds
         return [{"market_name": "Maç Sonucu", "market_type_id": 1, "selection": s, "odds": v, "mbs": 1, "highlight": s == "1"}
@@ -74,7 +74,7 @@ SCENARIO = textwrap.dedent('''
     www.key_events = lambda c, u: [{"type": "goal", "subType": "goal", "position": "home", "timeMin": "70", "score": "1-0", "periodId": 2}]
     www.stats_page = lambda c, u: "Genel İstatistikler Korner 5 3 Oyuncu İstatistikleri"
     budget.allowance = lambda now=None, running_minutes=0: {"used": 10, "left": 1990, "reserve": 900, "monthly": 2000, "ok": True, "daily_usage_7d": None}
-    cfg = {"monthly_minutes": 2000, "daily_reserve": 900, "oldest_date": "2026-09-26", "newest_offset_days": 0, "max_job_minutes": 5}
+    cfg = {"monthly_minutes": 2000, "daily_reserve": 900, "oldest_date": "2026-09-26", "newest_offset_days": 0, "max_job_minutes": 5, "parallel_requests": 2}
     real_load = backfill.load
     backfill.load = lambda name: cfg if name == "backfill" else real_load(name)
     class FixedDate(date):
@@ -86,7 +86,8 @@ SCENARIO = textwrap.dedent('''
     backfill.README.write_text("# x\\n")
     soon = (datetime.now(UTC) + timedelta(hours=12)).replace(second=0, microsecond=0)
     backfill.RESULTS_WINDOW = (soon.time(), (soon + timedelta(minutes=1)).time())  # never hit by the test, whatever its clock
-    class C: pass
+    from odds_analysis import http as H
+    C = H.MackolikClient  # fetches are all replaced above: no request leaves the test
     out = {"run": backfill.run(C())}
     from collections import defaultdict
     from odds_analysis.runs import FailedItems
@@ -113,7 +114,7 @@ def test_backfill_scenario(tmp_path):
     out = json.loads(r.stdout.strip().splitlines()[-1])
     assert out["run"]["finished"] and out["run"]["final"] == 1 and out["run"]["no_odds"] == 1
     assert out["run"]["second_pass"] == 1 and out["run"]["deferred"] == 0
-    assert out["seen_delays"] == [[], [5, 15, 45]]
+    assert out["seen_delays"] == [True, False]  # first pass quick (no backoff), second pass with the normal retries
     assert out["state"] == "2026-09-25"  # both dates done, newest first
     assert out["matches"] == ["a", "b"]  # the match without Nesine odds is stored too
     assert out["settled"] == 3
