@@ -101,14 +101,19 @@ def build_index(c: H.MackolikClient, state: dict, deadline: float, stats: dict) 
 # ---------------------------------------------------------------- dates
 
 def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItems, stats: dict, now: datetime,
-                 unsettleable: dict) -> set[tuple[str, str]]:
-    """All matches of the 26 leagues on one Turkish date. Returns the touched (season, league_id) partitions."""
+                 unsettleable: dict, deadline: float = float("inf")) -> tuple[set[tuple[str, str]], bool]:
+    """All matches of the 26 leagues on one Turkish date. Returns the touched (season, league_id) partitions and
+    whether the date is complete (False: the job deadline came first; the matches done so far are saved)."""
     day_stats = {"dates": [], "error_detail": []}
     matches = daily.list_matches(c, [d], failures, day_stats)
     if not day_stats["dates"]:
         raise RuntimeError(f"date listing {d} failed")
     collected, touched, day_lists = [], set(), {}
+    complete = True
     for m in matches:
+        if time.monotonic() > deadline:
+            complete = False
+            break
         fx = index.get(m["match_id"])
         if fx is not None:  # season and stage from the fixture page
             m["season"] = fx["season"]
@@ -128,7 +133,7 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
             if len(stats["error_detail"]) < 20:
                 stats["error_detail"].append(f"match {m['match_id']}: {exc!r}")
     daily.write_rows(*collected)
-    return touched
+    return touched, complete
 
 
 def run(c: H.MackolikClient) -> dict:
@@ -195,7 +200,13 @@ def run(c: H.MackolikClient) -> dict:
             stats["finished"] = True
             break
         try:
-            touched |= process_date(c, d, index, failures, stats, now, unsettleable)
+            t, complete = process_date(c, d, index, failures, stats, now, unsettleable, deadline)
+            touched |= t
+            if not complete:  # the date is redone by the next job (upserts make that safe)
+                if is_retry:
+                    queue.insert(0, d)
+                stats["stopped"] = "job time limit"
+                break
             stats["dates"].append(d.isoformat())
         except Exception as exc:  # noqa: BLE001 - the date is retried by the next job
             failures.add("listing", d.isoformat(), repr(exc), match_date=d.isoformat())

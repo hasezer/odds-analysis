@@ -22,7 +22,8 @@ Per season (`exports/<season>/`, e.g. `exports/2026-27/`):
 - `<league_id>.csv.gz` – every selection (analysis_flat: opening/closing odds, probabilities, margin, hit, status)
 
 Columns are described in `SCHEMA.md` on the main branch.
-MDcd _exports
+MD
+cd _exports
 git init -q -b exports
 git config user.name "odds-bot"
 git config user.email "odds-bot@users.noreply.github.com"
