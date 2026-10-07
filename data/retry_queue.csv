@@ -1,6 +1,5 @@
 job,kind,key,match_id,match_date,kickoff_utc,first_failed_utc,last_failed_utc,attempts,last_error
-backfill,match,1v7ij4ui137fb7ys1bwn1553o,1v7ij4ui137fb7ys1bwn1553o,2026-09-19,,2026-10-07T16:23:44Z,2026-10-07T16:23:44Z,1,RuntimeError('statistics page failed')
-backfill,match,3lwu6rvrug0mxvvx6q4g4bllg,3lwu6rvrug0mxvvx6q4g4bllg,2026-09-19,,2026-10-07T16:23:44Z,2026-10-07T16:23:44Z,1,RuntimeError('statistics page failed')
-backfill,match,5zhengemt8vwp08k56d004v10,5zhengemt8vwp08k56d004v10,2026-09-18,,2026-10-07T16:23:44Z,2026-10-07T16:23:44Z,1,RuntimeError('statistics page failed')
-backfill,match,dj9ihrmj4udnfd79s9psakp3o,dj9ihrmj4udnfd79s9psakp3o,2026-09-19,,2026-10-07T16:23:44Z,2026-10-07T16:23:44Z,1,RuntimeError('popup ReadTimeout: The read operation timed out')
+backfill,match,19ay0a7r9ceki8sen2gdy505w,19ay0a7r9ceki8sen2gdy505w,2026-09-19,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,RuntimeError('statistics page failed')
+backfill,match,1mh0tbcgc9lrxk0kt5kpjli50,1mh0tbcgc9lrxk0kt5kpjli50,2026-09-14,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,"WrongMatch('popup 3125887 shows None, not 1mh0tbcgc9lrxk0kt5kpjli50; no fallback had the match')"
+backfill,match,1sau030b50h9h6honhyuept78,1sau030b50h9h6honhyuept78,2026-09-19,,2026-10-07T18:04:54Z,2026-10-07T18:04:54Z,1,RuntimeError('statistics page failed')
 results,match,4495164,4495164,2026-10-04,2026-10-04T10:00:00Z,2026-10-07T11:33:46Z,2026-10-07T11:33:46Z,1,JSONDecodeError('Invalid control character at: line 1 column 682 (char 681)')

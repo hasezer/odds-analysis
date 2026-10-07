@@ -19,3 +19,6 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-07T16:23:44Z,backfill,match,3lwu6rvrug0mxvvx6q4g4bllg,3lwu6rvrug0mxvvx6q4g4bllg,1,RuntimeError('statistics page failed')
 2026-10-07T16:23:44Z,backfill,match,1v7ij4ui137fb7ys1bwn1553o,1v7ij4ui137fb7ys1bwn1553o,1,RuntimeError('statistics page failed')
 2026-10-07T16:23:44Z,backfill,match,5zhengemt8vwp08k56d004v10,5zhengemt8vwp08k56d004v10,1,RuntimeError('statistics page failed')
+2026-10-07T18:04:54Z,backfill,match,19ay0a7r9ceki8sen2gdy505w,19ay0a7r9ceki8sen2gdy505w,1,RuntimeError('statistics page failed')
+2026-10-07T18:04:54Z,backfill,match,1sau030b50h9h6honhyuept78,1sau030b50h9h6honhyuept78,1,RuntimeError('statistics page failed')
+2026-10-07T18:04:54Z,backfill,match,1mh0tbcgc9lrxk0kt5kpjli50,1mh0tbcgc9lrxk0kt5kpjli50,1,"WrongMatch('popup 3125887 shows None, not 1mh0tbcgc9lrxk0kt5kpjli50; no fallback had the match')"
