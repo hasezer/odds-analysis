@@ -9,8 +9,18 @@ from .config import load, now_utc
 from .storage import read_log
 
 
+def succeeded(runs):
+    """ok and partial runs count as successful (partial = a few failed items, retried by the next run).
+    Rows logged before the status column existed: no errors = success."""
+    errors_ok = runs["errors"].replace("", "0").astype(int) == 0
+    if "status" not in runs:
+        return errors_ok
+    status = runs["status"].fillna("")
+    return status.isin(["ok", "partial"]) | ((status == "") & errors_ok)
+
+
 def last_success(runs, job: str) -> datetime | None:
-    ok = runs[(runs["job"] == job) & (runs["errors"].astype(int) == 0)] if not runs.empty else runs
+    ok = runs[(runs["job"] == job) & succeeded(runs)] if not runs.empty else runs
     if ok.empty:
         return None
     return max(datetime.fromisoformat(t.replace("Z", "+00:00")) for t in ok["run_at"])

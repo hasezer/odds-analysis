@@ -22,9 +22,10 @@ DEFAULT_HEADERS = {
     "accept-language": "tr-TR,tr;q=0.9,en;q=0.8",
 }
 RETRY_STATUSES = {429, 500, 502, 503, 504}
-BACKOFF_SECONDS = (2, 6)  # short: a slow endpoint must not eat the Actions budget
-# Day lists are few and every run depends on them: be patient (Mackolik returns bursts of 500/502).
-LIST_BACKOFF_SECONDS = (5, 15, 30, 60)
+# Mackolik returns bursts of 500/502: 3 retries after 5, 15 and 45 seconds. A request that still fails is logged
+# by the job and retried in the next run (see retry.py).
+BACKOFF_SECONDS = (5, 15, 45)
+LIST_BACKOFF_SECONDS = BACKOFF_SECONDS
 
 log = logging.getLogger(__name__)
 
@@ -48,7 +49,9 @@ class MackolikClient:
     min_interval_s: float = 1.0
     timeout_s: float = 20.0
     raw_dir: Path | None = None
-    requests: int = field(default=0, init=False)
+    requests: int = field(default=0, init=False)  # HTTP attempts, retries included
+    calls: int = field(default=0, init=False)  # logical requests (get() calls)
+    failed: int = field(default=0, init=False)  # logical requests that still failed after all retries
     _last_request: float = field(default=0.0, init=False)
     _client: httpx.Client = field(init=False)
 
@@ -84,6 +87,7 @@ class MackolikClient:
         text = ""
         attempts = 0
         delays = BACKOFF_SECONDS if backoff is None else backoff
+        self.calls += 1
         for attempt in range(len(delays) + 1):
             attempts = attempt + 1
             self._throttle()
@@ -101,6 +105,8 @@ class MackolikClient:
                 time.sleep(delays[attempt])
         if status is not None and status != 200 and last_error is None:
             last_error = f"HTTP {status}"
+        if last_error is not None:
+            self.failed += 1
         if self.raw_dir and save_as:
             path = self.raw_dir / save_as
             path.parent.mkdir(parents=True, exist_ok=True)
