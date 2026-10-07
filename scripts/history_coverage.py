@@ -35,6 +35,7 @@ from odds_analysis import http as H
 from odds_analysis.parsers import parse_odds_popup
 
 TR_OFFSET = dt.timedelta(hours=3)
+ODDS_START = "2019-08-01"  # first day with iddaa codes in the date listing
 
 
 def tr_date(utc: str) -> str:
@@ -112,7 +113,10 @@ def main() -> int:
                        "dates": sorted(m["utc"][:10] for m in ms), "listing": None, "samples": []}
                 played = [m for m in ms if m["status"] == "Played"]
                 if played:
-                    day = collections.Counter(tr_date(m["utc"]) for m in played).most_common(1)[0][0]
+                    # busiest matchday, preferring days inside the odds history (2019 calendar-year seasons)
+                    days = collections.Counter(tr_date(m["utc"]) for m in played)
+                    in_hist = collections.Counter({d: n for d, n in days.items() if d >= ODDS_START})
+                    day = (in_hist or days).most_common(1)[0][0]
                     data = listing(c, day)
                     if data is not None:
                         lm = [m for m in (data.get("matches") or {}).values()
