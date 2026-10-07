@@ -98,15 +98,24 @@ def check_partition(season: str, league_id: str, root: Path = DATA) -> list[dict
     return out
 
 
-def popup_check(root: Path = DATA) -> dict:
-    """Popups that showed another match (uuid or kickoff differs) are rejected at ingestion and logged."""
+def popup_check(run_at: str | None, root: Path = DATA) -> dict:
+    """Popups that showed another match (iddaa code reused) and that the morebets fallback could not replace in
+    this run; such matches are retried by the next run."""
     log = read_log("failed_items", root)
-    n = int((log["kind"] == "popup_mismatch").sum()) if not log.empty and "kind" in log else 0
-    return _row("popup_match", "all", "warn" if n else "ok", n, "popups rejected because they showed another match")
+    if log.empty or "kind" not in log:
+        n = 0
+    else:
+        mine = log["kind"] == "popup_mismatch"
+        if run_at is not None:
+            mine &= log["logged_at_utc"] == run_at
+        n = int(mine.sum())
+    return _row("popup_match", "this run", "warn" if n else "ok", n,
+                "matches whose popup showed another match and no fallback found ours (retried next run)")
 
 
-def run_checks(partitions: list[tuple[str, str]], job: str, checked_at: str, root: Path = DATA) -> dict:
-    rows = [r for s, lid in partitions for r in check_partition(s, lid, root)] + [popup_check(root)]
+def run_checks(partitions: list[tuple[str, str]], job: str, checked_at: str, root: Path = DATA,
+               run_at: str | None = None) -> dict:
+    rows = [r for s, lid in partitions for r in check_partition(s, lid, root)] + [popup_check(run_at, root)]
     append_log("quality", [{"checked_at_utc": checked_at, "job": job, **r} for r in rows], root)
     return {"checks": len(rows), "fail": sum(r["status"] == "fail" for r in rows),
             "warn": sum(r["status"] == "warn" for r in rows)}

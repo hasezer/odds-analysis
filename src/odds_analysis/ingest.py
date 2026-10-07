@@ -208,14 +208,17 @@ def fetch_outcomes(c, match: dict, day_lists: dict, *, np: int) -> tuple[list[di
     meta = ((json.loads(res.text.lstrip("\ufeff")).get("data") or {}).get("matches") or [{}])[0]
     if meta.get("uuid") == match["match_id"]:
         return parse_odds_popup(res.text)["outcomes"], "popup", meta
-    day = match["kickoff_local_tr"][:10]
-    key = (day, np)
-    if key not in day_lists:
-        d = datetime.fromisoformat(day)
-        r = c.get(H.day_list_path(d.strftime("%d.%m.%Y"), np=np), backoff=H.LIST_BACKOFF_SECONDS)
-        day_lists[key] = parse_day_list(r.text) if r.ok else None
-    rows = day_lists[key] or []
-    arsiv = next((r for r in rows if str(r.get("event_code")) == str(code)), None)
+    # the arsiv list files night matches (00:00-06:00 Turkey time) under the previous day: look around the date
+    arsiv = None
+    for shift in (0, -1, 1):
+        d = datetime.fromisoformat(match["kickoff_local_tr"][:10]) + timedelta(days=shift)
+        key = (d.date().isoformat(), np)
+        if key not in day_lists:
+            r = c.get(H.day_list_path(d.strftime("%d.%m.%Y"), np=np), backoff=H.LIST_BACKOFF_SECONDS)
+            day_lists[key] = parse_day_list(r.text) if r.ok else None
+        arsiv = next((r for r in day_lists[key] or [] if str(r.get("event_code")) == str(code)), None)
+        if arsiv is not None:
+            break
     if arsiv is None:
         raise WrongMatch(f"popup {code} shows {meta.get('uuid')}, not {match['match_id']}; not in the arsiv day list")
     r = c.get(H.morebets_path(arsiv["mackolik_match_id"]))

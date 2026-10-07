@@ -184,7 +184,7 @@ def snapshot_run(c: H.MackolikClient, *, full: bool | None = None) -> dict:
     stats["failed_items"] = failures.finish()
     stats["due"] = len(todo) if matches else 1  # "saved nothing": no match listed, or popups due and none saved
     stats["saved"] = stats["fetched"] if matches else 0
-    stats["quality"] = quality.run_checks(sorted(_partitions(matches)), "snapshot", now.isoformat())
+    stats["quality"] = quality.run_checks(sorted(_partitions(matches)), "snapshot", now.isoformat(), run_at=failures.run_at)
     return stats
 
 
@@ -272,7 +272,7 @@ def results_run(c: H.MackolikClient, *, limit: int | None = None) -> dict:
     stats["saved"] = stats["final"] + stats["void"]
     stats["due"] = stats["saved"] + stats["deferred"] if stats["dates"] else 1
     stats["touched"] = [f"{lid} {s}" for s, lid in sorted(touched)]
-    stats["quality"] = quality.run_checks(sorted(_partitions(matches)), "results", now.isoformat())
+    stats["quality"] = quality.run_checks(sorted(_partitions(matches)), "results", now.isoformat(), run_at=failures.run_at)
     return stats
 
 
@@ -291,7 +291,9 @@ def process_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetim
         raise RuntimeError("key events failed")
     events = ingest.event_rows(m["match_id"], ke)
     page = www.stats_page(c, m["match_id"])
-    stats = ingest.stats_rows(m["match_id"], page, events) if page else []
+    if page is None:  # request failed: retry the whole match next run (corners would stay unsettled otherwise)
+        raise RuntimeError("statistics page failed")
+    stats = ingest.stats_rows(m["match_id"], page, events)
     if page:
         m["stadium"] = ingest.stadium(page) or m.get("stadium")
     ingest.apply_extra_time(m, events)

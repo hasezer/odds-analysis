@@ -118,3 +118,28 @@ def test_daily_scenario(tmp_path):
     assert out["match"] == ["finished", 2, 1, "X Arena", "4500001"]
     assert out["view"] == [["Fenerbahçe", "2-1", "2.1", "1.75"]]  # closing snapshot prices
     assert out["quality_fail"] == 0
+
+
+def test_wrong_popup_falls_back_to_morebets_of_previous_day(monkeypatch):
+    """A 01:15 match is filed under the previous day in the arsiv list."""
+    from odds_analysis import http as H
+    from odds_analysis import ingest, parsers
+
+    calls = []
+
+    class Client:
+        def get(self, path, **kw):
+            calls.append(path)
+            if "oddspopup" in path:
+                return H.FetchResult(path, 200, json.dumps({"data": {"matches": [{"uuid": "OLD"}]}}), 0, 1)
+            return H.FetchResult(path, 200, path, 0, 1)
+
+    monkeypatch.setattr(parsers, "parse_day_list",
+                        lambda text: [{"event_code": "3180648", "mackolik_match_id": 4475858}] if "d=02.10.2026" in text else [])
+    monkeypatch.setattr(parsers, "parse_morebets",
+                        lambda text: {"match": {"iddaa_code": "3180648"}, "outcomes": [{"market_name": "Maç Sonucu"}]})
+    match = {"match_id": "u1", "iddaa_event_code": "3180648", "kickoff_local_tr": "2026-10-03T01:15:00+03:00"}
+    outcomes, source, meta = ingest.fetch_outcomes(Client(), match, {}, np=0)
+    assert (source, meta["id"], len(outcomes)) == ("morebets", 4475858, 1)
+    assert any("d=03.10.2026" in p for p in calls) and any("d=02.10.2026" in p for p in calls)
+    assert calls[-1].endswith("mac=4475858&type=ByDate")

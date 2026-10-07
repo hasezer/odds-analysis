@@ -224,7 +224,7 @@ Rebuilt automatically from the tables above, never edited by hand (`src/odds_ana
 | in_default_analysis | false for `season_type = special` and anything not `settled` |
 
 **Exports** (`exports/<season>/`):
-- `oranlar_<season>.xlsx`: **one row per match** and one sheet per league. Columns: Tarih, Saat, Ev Sahibi, Deplasman, İY, MS, Korner, Sarı Kart, Kırmızı Kart, then the closing odds of the 45 markets in the order of `config/markets.yaml` (`MS 1`, `MS X`, `MS 2`, `ÇŞ 1-X`, …, `2,5 Alt`, `2,5 Üst`, …, `Skor 2-1`). **Winning odds are filled green.** About 380 rows × 130–170 columns per league.
+- `oranlar_<season>.xlsx`: **one row per match with closing odds** (upcoming matches appear once their closing snapshot is taken) and one sheet per league. Columns: Tarih, Saat, Ev Sahibi, Deplasman, İY, MS, Korner, Sarı Kart, Kırmızı Kart, then the closing odds of the 45 markets in the order of `config/markets.yaml` (`MS 1`, `MS X`, `MS 2`, `ÇŞ 1-X`, …, `2,5 Alt`, `2,5 Üst`, …, `Skor 2-1`). **Winning odds are filled green.** About 380 rows × 130–170 columns per league.
 - `<league_id>.csv.gz`: the full `analysis_flat` (one row per selection) for analysis tools.
 
 ## Data quality checks — `data/quality.csv`
