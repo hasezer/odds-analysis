@@ -1,0 +1,61 @@
+# The Nesine markets this project collects (user's selection, 2026-10-07). Everything else - player bets, card
+# markets, first-half corners and every unlisted market - is dropped when a popup is read and never stored.
+#
+# key/line : the market as normalised by catalog.py (market_key without the line; line for Alt/Üst-type markets)
+# label    : short Turkish column prefix in the one-row-per-match Excel view (column = label + selection)
+# Order = column order in the view.
+
+markets:
+  # Maç Sonucu
+  - {key: "1X2", label: "MS", name_tr: "Maç Sonucu"}
+  - {key: DC, label: "ÇŞ", name_tr: "Çifte Şans"}
+  - {key: HT_FT, label: "İY/MS", name_tr: "İlk Yarı/Maç Sonucu"}
+  - {key: 1X2_AND_OU, line: 1.5, label: "MS ve 1,5", name_tr: "MS ve 1,5 Alt/Üst"}
+  - {key: 1X2_AND_OU, line: 2.5, label: "MS ve 2,5", name_tr: "MS ve 2,5 Alt/Üst"}
+  - {key: 1X2_AND_OU, line: 3.5, label: "MS ve 3,5", name_tr: "MS ve 3,5 Alt/Üst"}
+  - {key: 1X2_AND_OU, line: 4.5, label: "MS ve 4,5", name_tr: "MS ve 4,5 Alt/Üst"}
+  - {key: 1X2_AND_BTTS, label: "MS ve KG", name_tr: "MS ve Karşılıklı Gol"}
+  # Yarı Sonucu
+  - {key: HT_1X2, label: "İY", name_tr: "1. Yarı Sonucu"}
+  - {key: HT_1X2_AND_HT_BTTS, label: "İY ve İY KG", name_tr: "1. Yarı ve 1. Yarı KG"}
+  - {key: 2H_1X2, label: "2Y", name_tr: "2. Yarı Sonucu"}
+  - {key: TEAM_WIN_EITHER_HALF_HOME, label: "Ev Yarı Kazanır", name_tr: "Ev Sahibi Yarı Kazanır"}
+  - {key: TEAM_WIN_EITHER_HALF_AWAY, label: "Dep Yarı Kazanır", name_tr: "Deplasman Yarı Kazanır"}
+  - {key: TEAM_WIN_BOTH_HALVES_HOME, label: "Ev İki Yarı", name_tr: "Ev Sahibi İki Yarıyı da Kazanır"}
+  - {key: TEAM_WIN_BOTH_HALVES_AWAY, label: "Dep İki Yarı", name_tr: "Deplasman İki Yarıyı da Kazanır"}
+  # Maç Sonucu Alt/Üst
+  - {key: OU, line: 0.5, label: "0,5", name_tr: "0,5 Alt/Üst"}
+  - {key: OU, line: 1.5, label: "1,5", name_tr: "1,5 Alt/Üst"}
+  - {key: OU, line: 2.5, label: "2,5", name_tr: "2,5 Alt/Üst"}
+  - {key: OU, line: 3.5, label: "3,5", name_tr: "3,5 Alt/Üst"}
+  - {key: OU, line: 4.5, label: "4,5", name_tr: "4,5 Alt/Üst"}
+  - {key: OU_AND_BTTS, line: 2.5, label: "2,5 ve KG", name_tr: "2,5 Alt/Üst ve Karşılıklı Gol"}
+  # Yarı Alt/Üst
+  - {key: HT_1X2_AND_HT_OU, line: 1.5, label: "İY ve İY 1,5", name_tr: "1.Yarı ve 1.Yarı 1,5 Alt/Üst"}
+  - {key: HT_OU, line: 0.5, label: "İY 0,5", name_tr: "1. Yarı 0,5 Alt/Üst"}
+  - {key: HT_OU, line: 1.5, label: "İY 1,5", name_tr: "1. Yarı 1,5 Alt/Üst"}
+  - {key: BOTH_HALVES_OVER, line: 1.5, label: "İki Yarı 1,5 Üst", name_tr: "İki Yarı da 1,5 Üst"}
+  # Takım Alt/Üst
+  - {key: TEAM_OU_HOME, line: 0.5, label: "Ev 0,5", name_tr: "Ev Sahibi 0,5 Alt/Üst"}
+  - {key: TEAM_OU_HOME, line: 1.5, label: "Ev 1,5", name_tr: "Ev Sahibi 1,5 Alt/Üst"}
+  - {key: TEAM_OU_HOME, line: 2.5, label: "Ev 2,5", name_tr: "Ev Sahibi 2,5 Alt/Üst"}
+  - {key: TEAM_OU_AWAY, line: 0.5, label: "Dep 0,5", name_tr: "Deplasman 0,5 Alt/Üst"}
+  - {key: TEAM_OU_AWAY, line: 1.5, label: "Dep 1,5", name_tr: "Deplasman 1,5 Alt/Üst"}
+  - {key: TEAM_OU_AWAY, line: 2.5, label: "Dep 2,5", name_tr: "Deplasman 2,5 Alt/Üst"}
+  - {key: HT_TEAM_OU_HOME, line: 0.5, label: "İY Ev 0,5", name_tr: "1. Yarı Ev Sahibi 0,5 Alt/Üst"}
+  - {key: HT_TEAM_OU_AWAY, line: 0.5, label: "İY Dep 0,5", name_tr: "1. Yarı Deplasman 0,5 Alt/Üst"}
+  # Gol
+  - {key: BTTS, label: "KG", name_tr: "Karşılıklı Gol"}
+  - {key: HT_BTTS, label: "İY KG", name_tr: "1. Yarı Karşılıklı Gol"}
+  - {key: 2H_BTTS, label: "2Y KG", name_tr: "2. Yarı Karşılıklı Gol"}
+  - {key: HT_2H_BTTS, label: "İY/2Y KG", name_tr: "1. Yarı / 2. Yarı Karşılıklı Gol"}
+  - {key: GOAL_RANGE, label: "Gol Aralığı", name_tr: "Toplam Gol Aralığı"}
+  # Kornerler
+  - {key: CORNERS_OU, line: 8.5, label: "Korner 8,5", name_tr: "8,5 Korner Alt/Üst"}
+  - {key: CORNERS_OU, line: 9.5, label: "Korner 9,5", name_tr: "9,5 Korner Alt/Üst"}
+  - {key: CORNERS_OU, line: 10.5, label: "Korner 10,5", name_tr: "10,5 Korner Alt/Üst"}
+  - {key: CORNERS_OU, line: 11.5, label: "Korner 11,5", name_tr: "11,5 Korner Alt/Üst"}
+  - {key: CORNERS_OU, line: 12.5, label: "Korner 12,5", name_tr: "12,5 Korner Alt/Üst"}
+  # Maç Skoru
+  - {key: HT_CORRECT_SCORE, label: "İY Skor", name_tr: "1. Yarı Skoru"}
+  - {key: CORRECT_SCORE, label: "Skor", name_tr: "Maç Skoru"}

@@ -42,7 +42,6 @@ def main() -> int:
     a = ap.parse_args()
     leagues = yaml.safe_load((ROOT / "config" / "leagues.yaml").read_text(encoding="utf-8"))["leagues"]
     pipe = yaml.safe_load((ROOT / "config" / "pipeline.yaml").read_text(encoding="utf-8"))
-    rules = yaml.safe_load((ROOT / "config" / "card_rules.yaml").read_text(encoding="utf-8"))
     lg = next(x for x in leagues if x["league_id"] == a.league)
     d = date.fromisoformat(a.date)
     season = season_for(lg, d)
@@ -73,9 +72,8 @@ def main() -> int:
                 print(f"skip {m['id']}: popup {pop.error}", file=sys.stderr)
                 continue
             odds, outs = ingest.odds_rows(match, pop.text)
-            ctx = ingest.engine_ctx(match, events, stats, rules)
-            sets = ingest.settlement_rows(match, outs, ctx, store.now_utc(), unsettleable_families=unsettleable,
-                                          unverified_keys=set(sett.get("unverified_markets", [])))
+            ctx = ingest.engine_ctx(match, events, stats)
+            sets = ingest.settlement_rows(match, outs, ctx, store.now_utc(), unsettleable_families=unsettleable)
             part = {"season": season, "league_id": a.league}
             store.upsert("teams", ingest.team_rows([match]), root=root)
             store.upsert("matches", [match], root=root)

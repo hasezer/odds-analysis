@@ -9,6 +9,11 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import cache
+
+import yaml
+
+from .config import ROOT
 
 from .markets import Market, normalize_market, normalize_selection
 
@@ -126,3 +131,18 @@ def selection_key(info: MarketInfo, sel_tr: str, home: str | None = None, away: 
     if re.fullmatch(r"\d+(-\d+|\+)", tok):  # goal/corner ranges 2-3, 6+
         return tok, tok
     return slug(tok) or "?", tok
+
+
+@cache
+def selected_markets() -> tuple[dict, ...]:
+    """config/markets.yaml: the markets this project collects, in view-column order."""
+    data = yaml.safe_load((ROOT / "config" / "markets.yaml").read_text(encoding="utf-8"))
+    return tuple(data["markets"])
+
+
+def selection_index() -> dict[tuple[str, float | None], dict]:
+    return {(m["key"], m.get("line")): m for m in selected_markets()}
+
+
+def is_selected(info: MarketInfo) -> bool:
+    return info.market_key is not None and (info.market_key, info.line) in selection_index()

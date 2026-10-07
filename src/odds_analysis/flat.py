@@ -11,14 +11,13 @@ from pathlib import Path
 import pandas as pd
 
 from . import store
-from .catalog import OVERLAP
+from .catalog import OVERLAP, selected_markets
 from .config import DATA, ROOT
 
 EXPORTS = ROOT / "exports"
 MARKET = ["match_id", "market_type_id", "line", "handicap_home", "handicap_away"]
 SELECTION = MARKET + ["selection_key"]
 NO_MARGIN_FAMILIES = {"player", "special"}  # selections are separate yes-bets, not one market summing to 100 %
-EXCLUDED_FAMILIES = {"cards"}  # Kart Puanı rule not confirmed yet (SCHEMA.md); flip when it is
 
 
 def _key_frame(df: pd.DataFrame) -> pd.DataFrame:
@@ -84,8 +83,7 @@ def build(season: str, league_id: str, root: Path = DATA) -> pd.DataFrame:
         tot = stats.groupby("match_id")[["corners", "yellow_cards", "red_cards"]].sum(min_count=2)
         tot.columns = ["corners_total", "yellow_cards_total", "red_cards_total"]
         df = df.merge(tot, left_on="match_id", right_index=True, how="left")
-    df["in_default_analysis"] = ((df["season_type"] != "special") & ~df["family"].isin(EXCLUDED_FAMILIES)
-                                 & df["status"].isin(["settled"]).fillna(False))
+    df["in_default_analysis"] = (df["season_type"] != "special") & df["status"].isin(["settled"]).fillna(False)
     df = df.sort_values(SELECTION, kind="stable").reset_index(drop=True)
     return df
 
@@ -101,22 +99,95 @@ def rebuild(season: str, league_id: str, root: Path = DATA) -> int:
 
 
 def export(season: str, league_ids: list[str], root: Path = DATA, out: Path = EXPORTS) -> list[Path]:
-    """exports/analysis_flat/<season>.csv.gz and exports/analysis_flat/<season>.xlsx (one sheet per league)."""
-    frames = [store.read("analysis_flat", season=season, league_id=lid, root=root) for lid in league_ids]
-    frames = [f for f in frames if not f.empty]
-    if not frames:
-        return []
-    df = pd.concat(frames, ignore_index=True).drop(columns=["schema_version", "ingested_at_utc"])
-    for c in df.columns:
-        if isinstance(df[c].dtype, pd.DatetimeTZDtype):
-            df[c] = df[c].dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-    d = out / "analysis_flat"
+    """exports/<season>/<league_id>.csv.gz (analysis_flat, every row) and exports/<season>/oranlar_<season>.xlsx
+    (one row per match, one sheet per league)."""
+    d = out / store.season_path(season)
     d.mkdir(parents=True, exist_ok=True)
-    name = store.season_path(season)
-    csv = d / f"{name}.csv.gz"
-    df.to_csv(csv, index=False, compression={"method": "gzip", "mtime": 0}, lineterminator="\n")
-    xlsx = d / f"{name}.xlsx"
-    with pd.ExcelWriter(xlsx, engine="openpyxl") as w:
-        for lid, part in df.groupby("league_id", sort=True):
-            part.to_excel(w, sheet_name=lid, index=False)
-    return [csv, xlsx]
+    paths, sheets = [], {}
+    for lid in league_ids:
+        df = store.read("analysis_flat", season=season, league_id=lid, root=root)
+        if df.empty:
+            continue
+        csv = df.drop(columns=["schema_version", "ingested_at_utc"])
+        for c in csv.columns:
+            if isinstance(csv[c].dtype, pd.DatetimeTZDtype):
+                csv[c] = csv[c].dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        path = d / f"{lid}.csv.gz"
+        csv.to_csv(path, index=False, compression={"method": "gzip", "mtime": 0}, lineterminator="\n")
+        paths.append(path)
+        sheets[lid] = match_view(df)
+    if sheets:
+        xlsx = d / f"oranlar_{store.season_path(season)}.xlsx"
+        write_view(sheets, xlsx)
+        paths.append(xlsx)
+    return paths
+
+
+# ---------------------------------------------------------------- one row per match (the iPad view)
+
+_RANK = {"1": 0, "X": 1, "2": 2, "1X": 0, "12": 1, "X2": 2, "UNDER": 0, "OVER": 1, "YES": 0, "NO": 1}
+
+
+def _sel_order(key: str) -> tuple:
+    """Column order inside a market: 1 X 2, Alt Üst, Var Yok, 1/1 ... 2/2, scores by goals, 'Diğer' last."""
+    if key == "OTHER":
+        return (99,)
+    if key in _RANK:
+        return (_RANK[key],)
+    for sep in ("&", "/"):
+        if sep in key:
+            return tuple(x for part in key.split(sep) for x in _sel_order(part))
+    nums = [int(x) for x in key.replace("+", "-").split("-") if x.isdigit()]
+    if nums:
+        return (0, *nums, 1 if key.endswith("+") else 0)
+    return (50, key)
+
+
+def match_view(flat: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """analysis_flat of one league-season -> (view, hits): one row per match, columns = closing odds of the markets
+    in config/markets.yaml (in that order); hits has the same shape (True = winning selection)."""
+    labels = {(m["key"], m.get("line")): m["label"] for m in selected_markets()}
+    order = {(m["key"], m.get("line")): i for i, m in enumerate(selected_markets())}
+    f = flat.copy()
+    f["_mk"] = list(zip(f["market_key"], f["line"].astype("object").where(f["line"].notna(), None), strict=True))
+    f = f[f["_mk"].isin(labels.keys())]
+    f["_col"] = [f"{labels[mk]} {name if isinstance(name, str) else key}"
+                 for mk, name, key in zip(f["_mk"], f["selection_name_tr"], f["selection_key"], strict=True)]
+    ranked = {c: (order[mk], *_sel_order(k)) for mk, k, c in zip(f["_mk"], f["selection_key"], f["_col"], strict=True)}
+    cols = sorted(ranked, key=lambda c: (ranked[c], c))
+    odds = f.pivot_table(index="match_id", columns="_col", values="closing_odds", aggfunc="first")
+    hits = f.assign(hit=f["hit"].astype("object")).pivot_table(index="match_id", columns="_col", values="hit",
+                                                               aggfunc="first")
+    m = f.drop_duplicates("match_id").set_index("match_id").sort_values("kickoff_utc")
+    tr = m["kickoff_utc"].dt.tz_convert("Europe/Istanbul")
+
+    def score(a, b):
+        return [f"{x}-{y}" if pd.notna(x) else None for x, y in zip(a, b, strict=True)]
+
+    view = pd.DataFrame({
+        "Tarih": tr.dt.strftime("%d.%m.%Y"), "Saat": tr.dt.strftime("%H:%M"),
+        "Ev Sahibi": m["home_team_tr"], "Deplasman": m["away_team_tr"],
+        "İY": score(m["ht_home"], m["ht_away"]), "MS": score(m["ft_home"], m["ft_away"]),
+        "Korner": m["corners_total"] if "corners_total" in m else None,
+        "Sarı Kart": m["yellow_cards_total"] if "yellow_cards_total" in m else None,
+        "Kırmızı Kart": m["red_cards_total"] if "red_cards_total" in m else None,
+    }, index=m.index).join(odds.reindex(columns=cols))
+    return view.reset_index(drop=True), hits.reindex(index=m.index, columns=cols).reset_index(drop=True)
+
+
+def write_view(sheets: dict[str, tuple[pd.DataFrame, pd.DataFrame]], path: Path) -> None:
+    """One sheet per league; header bold, first 4 columns frozen, winning odds filled green."""
+    from openpyxl.styles import Font, PatternFill
+
+    green = PatternFill("solid", fgColor="C6EFCE")
+    with pd.ExcelWriter(path, engine="openpyxl") as w:
+        for name, (view, hits) in sheets.items():
+            view.to_excel(w, sheet_name=name, index=False, freeze_panes=(1, 4))
+            ws = w.sheets[name]
+            for cell in ws[1]:
+                cell.font = Font(bold=True)
+            first = len(view.columns) - len(hits.columns) + 1
+            for r, row in enumerate(hits.itertuples(index=False), start=2):
+                for c, hit in enumerate(row, start=first):
+                    if pd.notna(hit) and bool(hit):
+                        ws.cell(row=r, column=c).fill = green

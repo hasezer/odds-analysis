@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from odds_analysis import flat, ingest, quality, store
-from odds_analysis.catalog import classify, selection_key
+from odds_analysis.catalog import classify, is_selected, selected_markets, selection_key
 from odds_analysis.schema import TABLES, season_label, season_path
 
 UTC = timezone.utc
@@ -86,6 +86,16 @@ def test_catalog():
     assert classify("Bilinmeyen Pazar").market_key is None
 
 
+def test_only_selected_markets_are_kept():
+    assert len(selected_markets()) == 45
+    keep = ["Maç Sonucu", "Çifte Şans", "2,5 Alt/Üst", "MS ve 3,5 Alt/Üst", "1. Yarı Deplasman 0,5 Alt/Üst",
+            "İki Yarı da 1,5 Üst", "12,5 Korner Alt/Üst", "Maç Skoru", "1. Yarı Skoru", "1. Yarı / 2. Yarı Karşılıklı Gol"]
+    drop = ["Oyuncu Gol Atar", "4,5 Kart Puanı Alt/Üst", "Kırmızı Kart", "1.Yarı 4,5 Korner Alt/Üst", "Hnd. MS (0:1)",
+            "İlk Gol", "Tek/Çift", "5,5 Alt/Üst", "1. Yarı 2,5 Alt/Üst", "İki Yarı da 1,5 Alt", "Toplam Korner Aralığı"]
+    assert all(is_selected(classify(n)) for n in keep)
+    assert not any(is_selected(classify(n)) for n in drop)
+
+
 def test_ingest_events_and_stats():
     ke = [{"type": "goal", "subType": "penalty-goal", "position": "home", "timeMin": "45 +2", "score": "1-0",
            "playerName": "A", "periodId": 1},
@@ -128,14 +138,14 @@ def _tables(root):
          "settle_source": "official"},
         {"market_type_id": "3", "market_key": "DC", "name_tr": "Çifte Şans", "family": "result", "has_line": False,
          "settle_source": "official"},
-        {"market_type_id": "301", "market_key": "CARD_POINTS_OU", "name_tr": "Kart Puanı Alt/Üst", "family": "cards",
+        {"market_type_id": "216", "market_key": "CORNERS_OU", "name_tr": "Korner Alt/Üst", "family": "corners",
          "has_line": True, "settle_source": "engine"}], root=root)
     rows = [odds(market_type_id="1", market_key="1X2", line=None, selection_key=k, selection_name_tr=k, odds=o)
             for k, o in (("1", 2.0), ("X", 3.4), ("2", 3.6))]
     rows += [odds(market_type_id="3", market_key="DC", line=None, selection_key=k, selection_name_tr=k, odds=o)
              for k, o in (("1X", 1.25), ("12", 1.3), ("X2", 1.7))]
-    rows += [odds(market_type_id="301", market_key="CARD_POINTS_OU", line=4.5, selection_key=k, selection_name_tr=k, odds=None)
-             for k in ("OVER", "UNDER")]
+    rows += [odds(market_type_id="216", market_key="CORNERS_OU", line=9.5, selection_key=k, selection_name_tr=n, odds=None)
+             for k, n in (("OVER", "Üst"), ("UNDER", "Alt"))]
     rows += [odds(market_type_id="1", market_key="1X2", line=None, selection_key="1", selection_name_tr="1",
                   price_type=p, captured_at_utc=t, odds=o)
              for p, t, o in (("opening_snapshot", "2025-10-17T06:07:00Z", 2.2), ("closing_snapshot", "2025-10-18T12:07:00Z", 1.95))]
@@ -148,14 +158,14 @@ def _tables(root):
 def test_analysis_flat(tmp_path):
     _tables(tmp_path)
     df = flat.build("2025/26", "ENG-1", tmp_path).set_index(["market_key", "selection_key"])
-    assert len(df) == 8  # every offered selection, the unpriced card ones too
+    assert len(df) == 8  # every offered selection, the unpriced corner ones too
     one = df.loc[("1X2", "1")]
     assert (one["closing_odds"], one["closing_source"], one["opening_odds"]) == (1.95, "closing_snapshot", 2.2)
     assert round(one["odds_movement_pct"], 1) == -11.4
     assert df.loc[("1X2", "X"), "closing_source"] == "closing_history"
     assert 0 < df.loc[("DC", "1X"), "market_margin"] < 0.1  # double chance: sum / 2
-    assert pd.isna(df.loc[("CARD_POINTS_OU", "OVER"), "market_margin"])
-    assert bool(one["in_default_analysis"]) and not df.loc[("CARD_POINTS_OU", "OVER"), "in_default_analysis"]
+    assert pd.isna(df.loc[("CORNERS_OU", "OVER"), "market_margin"])  # not priced -> no margin
+    assert bool(one["in_default_analysis"]) and not df.loc[("CORNERS_OU", "OVER"), "in_default_analysis"]
     assert flat.rebuild("2025/26", "ENG-1", tmp_path) == 8
 
 
@@ -169,3 +179,19 @@ def test_quality_checks(tmp_path):
     assert res["events_match_score ENG-1 2025/26"]["value"] == 1  # 1 goal event vs 2-1
     assert res["scores_present ENG-1 2025/26"]["status"] == "ok"
     assert res["duplicate_keys ENG-1 2025/26 odds"]["value"] == 0
+
+
+def test_match_view(tmp_path):
+    _tables(tmp_path)
+    store.upsert("teams", [{"team_id": "ENG-A", "name_tr": "Ev"}, {"team_id": "ENG-B", "name_tr": "Dep"}], root=tmp_path)
+    flat.rebuild("2025/26", "ENG-1", tmp_path)
+    view, hits = flat.match_view(store.read("analysis_flat", season="2025/26", league_id="ENG-1", root=tmp_path))
+    assert len(view) == 1  # one row per match
+    assert list(view.columns[:6]) == ["Tarih", "Saat", "Ev Sahibi", "Deplasman", "İY", "MS"]
+    assert list(view.columns[9:]) == ["MS 1", "MS X", "MS 2", "ÇŞ 1X", "ÇŞ 12", "ÇŞ X2", "Korner 9,5 Alt", "Korner 9,5 Üst"]
+    row = view.iloc[0]
+    assert (row["Tarih"], row["Saat"], row["Ev Sahibi"], row["İY"], row["MS"]) == ("18.10.2025", "17:00", "Ev", "1-0", "2-1")
+    assert row["MS 1"] == 1.95  # closing snapshot wins over closing history
+    assert bool(hits.iloc[0]["MS 1"]) and not bool(hits.iloc[0]["MS X"])
+    paths = flat.export("2025/26", ["ENG-1"], root=tmp_path, out=tmp_path / "exp")
+    assert [p.name for p in paths] == ["ENG-1.csv.gz", "oranlar_2025-26.xlsx"]

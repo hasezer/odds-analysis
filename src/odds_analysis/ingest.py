@@ -10,9 +10,9 @@ import html as htmlmod
 import re
 from datetime import datetime, timedelta, timezone
 
-from .catalog import classify, selection_key, slug
+from .catalog import classify, is_selected, selection_key, slug
 from .parsers import parse_odds_popup
-from .settle import Ctx, card_points, engine
+from .settle import Ctx, engine
 
 TR = timezone(timedelta(hours=3))
 PLAYOFF_STAGE = re.compile(r"play|playoff|final|yarı|çeyrek|son 16|eleme|üçüncülük|\d+\.(lik|lük|luk|lık) maçı|"
@@ -201,6 +201,8 @@ def odds_rows(match: dict, popup_text: str, *, price_type: str = "closing_histor
     rows, outs = [], []
     for o in p["outcomes"]:
         info = classify(o["market_name"])
+        if not is_selected(info):  # only the markets in config/markets.yaml are stored
+            continue
         sk, tok = selection_key(info, o["selection"], match.get("_home_tr"), match.get("_away_tr"))
         mins = None
         if captured_at is not None:
@@ -215,7 +217,7 @@ def odds_rows(match: dict, popup_text: str, *, price_type: str = "closing_histor
     return rows, outs
 
 
-def engine_ctx(match: dict, events: list[dict], stats: list[dict], card_rules: dict) -> Ctx | None:
+def engine_ctx(match: dict, events: list[dict], stats: list[dict]) -> Ctx | None:
     if match.get("status") != "finished" or match.get("ft_home") is None:
         return None
     c = Ctx(H=match["ft_home"], A=match["ft_away"], h1=match.get("ht_home"), a1=match.get("ht_away"))
@@ -227,23 +229,13 @@ def engine_ctx(match: dict, events: list[dict], stats: list[dict], card_rules: d
     if st.get("home", {}).get("corners") is not None and st.get("away", {}).get("corners") is not None:
         c.corners = (st["home"]["corners"], st["away"]["corners"])
     if events:
-        legacy = []
-        for e in reg:
-            if e["event_type"] in ("yellow", "red", "second_yellow"):
-                legacy.append({"type": "yellow" if e["event_type"] == "yellow" else "red", "team": e["team_side"],
-                               "minute": e["minute"], "player": e.get("player_name"),
-                               "detail": "second_yellow" if e["event_type"] == "second_yellow" else None})
-            elif e["event_type"] == "sub_out":
-                legacy.append({"type": "sub", "team": e["team_side"], "minute": e["minute"], "player_out_id": e.get("player_name")})
-        c.card_points, c.reds = card_points(legacy, card_rules)
-        c.ht_card_points, _ = card_points(legacy, card_rules, until_minute=45)
         pens = any(e["event_type"] in ("penalty_goal", "missed_penalty") for e in reg)
         c.penalty = True if pens else (False if c.goals is not None else None)
     return c
 
 
 def settlement_rows(match: dict, outcomes: list[dict], ctx: Ctx | None, settled_at: datetime, *,
-                    unsettleable_families: set[str] = frozenset(), unverified_keys: set[str] = frozenset()) -> list[dict]:
+                    unsettleable_families: set[str] = frozenset()) -> list[dict]:
     """hit_official = Nesine's winner mark (only for markets where Nesine marks winners and at least one
     selection is marked); hit_engine = our engine; hit = official if present else engine."""
     marked = {(o["market_type_id"], o["line"], o["handicap_home"]) for o in outcomes if o["_highlight"]}
@@ -269,8 +261,6 @@ def settlement_rows(match: dict, outcomes: list[dict], ctx: Ctx | None, settled_
             status, hit = "unsettleable", None
         elif hit is None:
             status = "pending" if match.get("status") != "finished" else "unsettleable"
-        elif info.market_key in unverified_keys:
-            status = "unverified"
         else:
             status = "settled"
         rows.append({"match_id": o["match_id"], "market_type_id": o["market_type_id"], "line": o["line"],

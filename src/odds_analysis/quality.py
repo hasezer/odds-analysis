@@ -17,7 +17,8 @@ from .schema import TABLES
 from .storage import append_log, read_log
 
 ODDS_MIN, ODDS_MAX = 1.01, 1000
-SUM_MIN, SUM_MAX = 1.00, 1.30
+SUM_MIN = 1.00
+SUM_MAX, SUM_MAX_MANY = 1.30, 1.70  # 2-3 selections / more selections (combos, İY/MS, scores have higher margins)
 NO_SUM_FAMILIES = {"player", "special"}
 MARKET = ["match_id", "market_type_id", "line", "handicap_home", "handicap_away"]
 
@@ -65,10 +66,12 @@ def check_partition(season: str, league_id: str, root: Path = DATA) -> list[dict
         overlap = close.groupby(MARKET + ["price_type", "captured_at_utc"], dropna=False)["market_key"].first() \
             .map(OVERLAP).fillna(1)
         sums = (g.apply(lambda s: (1 / s).sum()) / overlap)[complete]
-        off = sums[(sums < SUM_MIN) | (sums > SUM_MAX)]
+        many = (g.size() > 3) | (overlap > 1)  # more selections, or double chance
+        limit = many[complete].map({True: SUM_MAX_MANY, False: SUM_MAX})
+        off = sums[(sums < SUM_MIN) | (sums > limit)]
         share = len(off) / len(sums) if len(sums) else 0
         out.append(_row("market_sum", scope, "warn" if len(off) else "ok", len(off),
-                        f"{len(off)} of {len(sums)} complete markets outside 100-130 % ({share:.1%})"))
+                        f"{len(off)} of {len(sums)} complete markets outside 100-130 % (2-3 selections) / 100-170 % ({share:.1%})"))
 
     m = t["matches"]
     if not m.empty:

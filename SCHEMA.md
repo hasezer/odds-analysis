@@ -27,6 +27,35 @@ nothing there was changed without asking.
 Types used below: `string`, `int`, `float`, `bool`, `ts` (UTC timestamp), `list` (list of strings).
 **Bold** = NOT NULL. Key columns are listed under each table.
 
+## Collected markets
+
+Only the **45 markets in `config/markets.yaml`** (your selection of 2026-10-07) are stored. Player bets, card markets
+(Kart Puanı, Kırmızı Kart), 1st-half corners and every other market are dropped when a popup is read and never stored.
+
+| Group | Markets |
+|---|---|
+| Maç Sonucu | Maç Sonucu · Çifte Şans · İlk Yarı/Maç Sonucu · MS ve 1,5 / 2,5 / 3,5 / 4,5 Alt/Üst · MS ve Karşılıklı Gol |
+| Yarı Sonucu | 1. Yarı Sonucu · 1. Yarı ve 1. Yarı KG · 2. Yarı Sonucu · Ev Sahibi / Deplasman Yarı Kazanır · Ev Sahibi / Deplasman İki Yarıyı da Kazanır |
+| Alt/Üst | 0,5 / 1,5 / 2,5 / 3,5 / 4,5 Alt/Üst · 2,5 Alt/Üst ve Karşılıklı Gol |
+| Yarı Alt/Üst | 1.Yarı ve 1.Yarı 1,5 Alt/Üst · 1. Yarı 0,5 / 1,5 Alt/Üst · İki Yarı da 1,5 Üst |
+| Takım Alt/Üst | Ev Sahibi 0,5 / 1,5 / 2,5 · Deplasman 0,5 / 1,5 / 2,5 · 1. Yarı Ev Sahibi 0,5 · 1. Yarı Deplasman 0,5 |
+| Gol | Karşılıklı Gol · 1. Yarı KG · 2. Yarı KG · 1. Yarı / 2. Yarı KG · Toplam Gol Aralığı |
+| Kornerler | 8,5 / 9,5 / 10,5 / 11,5 / 12,5 Korner Alt/Üst |
+| Maç Skoru | 1. Yarı Skoru · Maç Skoru |
+
+Not every market exists for every match. Share of sampled matches that had the market:
+
+| Market | When it is offered |
+|---|---|
+| Maç Skoru | ~95 % of sampled matches in most seasons, but only 17 of 74 samples in 2025/2025-26 (Nesine mostly left it out that season) |
+| 1. Yarı Skoru | from 2022 |
+| 2. Yarı KG | from 2024 |
+| İki Yarı da 1,5 Üst | from 2024 |
+| 1. Yarı / 2. Yarı KG | from 2025 |
+| 12,5 Korner | rare |
+
+A 2025/26 match has about 120–160 stored selections; a full season of all 26 leagues about 1.2 million rows.
+
 ## Tables
 
 ### 1. leagues — `data/leagues/`
@@ -82,10 +111,10 @@ One row per Nesine market type. Key: `market_type_id`.
 
 | Column | Type | Notes |
 |---|---|---|
-| **market_type_id** | string | Nesine's id. Some types are one line each (goals O/U 1.5 = 11, 2.5 = 12, 3.5 = 13), some cover several lines (corners O/U 8.5/9.5/10.5 = 216, card points = 301, handicap = 268) – the line is always in the odds row |
-| market_key | string | English, without the line: `1X2`, `DC`, `OU`, `HT_OU`, `TEAM_OU_HOME`, `HANDICAP`, `HT_FT`, `CORRECT_SCORE`, `1X2_AND_OU`, `CORNERS_OU`, `CARD_POINTS_OU`, `PLAYER_TO_SCORE`, … NULL = not mapped yet (logged, never guessed) |
+| **market_type_id** | string | Nesine's id. Some types are one line each (goals O/U 1.5 = 11, 2.5 = 12, 3.5 = 13), some cover several lines (corners O/U 8.5/9.5/10.5 = 216) – the line is always in the odds row |
+| market_key | string | English, without the line: `1X2`, `DC`, `OU`, `HT_OU`, `TEAM_OU_HOME`, `HT_FT`, `CORRECT_SCORE`, `1X2_AND_OU`, `CORNERS_OU`, … (one per entry of `config/markets.yaml`) |
 | **name_tr** | string | Nesine's name; for a type covering several lines the line is removed (`Korner Alt/Üst`) |
-| family | string | `result` \| `goals` \| `halves` \| `handicap` \| `combo` \| `corners` \| `cards` \| `player` \| `special` |
+| family | string | `result` \| `goals` \| `halves` \| `combo` \| `corners` (the spec's `handicap`, `cards`, `player`, `special` stay allowed but are not collected) |
 | **has_line** | bool | |
 | **settle_source** | string | `official` (Nesine marks winners) \| `engine` (we compute it) \| `none` (can't be settled from Mackolik data) |
 | first_seen_season | string | |
@@ -99,8 +128,8 @@ One row per selection and price. Key: `match_id, market_type_id, line, handicap_
 | market_key | string | |
 | line | float | NULL if none |
 | handicap_home, handicap_away | int | iddaa `Hnd. MS (0:1)` → 0 and 1 |
-| **selection_key** | string | `1` `X` `2` `OVER` `UNDER` `YES` `NO` `1X` `12` `X2` `ODD` `EVEN` `1H` `2H` `EQUAL` `NONE` (no goal/corner), HT/FT `1/X`, scores `2-1` / `OTHER`, ranges `2-3` `6+`, combos `1&OVER` `X&YES` `UNDER&NO`, winning margin `1_2` `2_3+`, player/special: ASCII name in upper case (`ALEJANDRO_GARNACHO`, `HOME_GERIDEN_GELIP_KAZANIR`), `UNNAMED` for Nesine's empty `-` placeholder |
-| selection_name_tr | string | Nesine's text; NULL only for the `-` placeholder |
+| **selection_key** | string | `1` `X` `2` `OVER` `UNDER` `YES` `NO` `1X` `12` `X2`, HT/FT `1/X`, 1st half / 2nd half BTTS `YES/NO`, scores `2-1` / `OTHER` (Diğer), goal ranges `2-3` `6+`, combos `1&OVER` `X&YES` `UNDER&NO` |
+| selection_name_tr | string | Nesine's text (e.g. `Üst`, `1 ve Alt`, `MS1 & Var`) |
 | odds | float | NULL = offered without a price |
 | mbs | int | minimum number of events in a coupon |
 | **price_type** | string | `closing_history` \| `opening_snapshot` \| `intraday_snapshot` \| `closing_snapshot` |
@@ -123,21 +152,14 @@ Key: `match_id, market_type_id, line, handicap_home, handicap_away, selection_ke
 | hit_official | bool | Nesine's winner mark (popup highlight); only for `official` markets where Nesine marked a winner |
 | hit_engine | bool | our engine (scores, events, statistics) |
 | hit | bool | `hit_official` if present, else `hit_engine` |
-| **status** | string | `settled` \| `void` (match postponed/cancelled/abandoned) \| `pending` \| `unsettleable` \| `unverified` |
+| **status** | string | `settled` \| `void` (match postponed/cancelled/abandoned) \| `pending` \| `unsettleable` (`unverified` stays allowed but is not used: no card markets) |
 | settle_basis | string | `official` \| `engine` (NULL when not settled) |
 | **settled_at_utc** | ts | |
 
 Settlement rules (`config/pipeline.yaml` → `settlement`):
-- **Official:** goal and result markets use Nesine's winner marks. The engine still computes `hit_engine` as a cross-check: in the example below it agreed on 380 of 380 selections.
-- **Engine:** markets with no winner marks from Nesine:
-  - corners (from the statistics page);
-  - card points;
-  - red card, penalty, first goal, 2nd-half BTTS (from the key events).
-- **Unsettleable:**
-  - player and special markets (Mackolik has no data for them);
-  - half-time corner markets (the new site's statistics have no first-half corner count);
-  - Belgium 2019/20 corner markets (no corner statistics for that season).
-- **Unverified:** card-point markets (`CARD_POINTS_OU`, `HT_CARD_POINTS_OU`, `MOST_CARD_POINTS`). They are computed with the Nesine help-text rule, but they stay out of analyses until you confirm the rule.
+- **Official:** every collected market except the ones below uses Nesine's winner marks. The engine still computes `hit_engine` as a cross-check: in the example it agreed on every selection where both exist.
+- **Engine:** corners O/U (from the statistics page) and 2. Yarı KG (Nesine marks no winner there).
+- **Unsettleable:** Belgium 2019/20 corner markets (no corner statistics for that season), and any selection whose data is missing (e.g. the statistics page failed every retry).
 
 ### 7. events — `data/events/season=…/league=…/`
 Key: `match_id, event_order`.
@@ -197,15 +219,13 @@ Rebuilt automatically from the tables above, never edited by hand (`src/odds_ana
 | opening_odds | first `opening_snapshot`; NULL in history |
 | odds_movement_pct | `(closing / opening − 1) × 100`; only from our own snapshots |
 | implied_prob | `1 / closing_odds` |
-| fair_prob, market_margin | margin removed within the market. Only for complete markets (every selection priced) that are a real split of outcomes; double chance is divided by 2; not for player/special markets |
+| fair_prob, market_margin | margin removed within the market. Only for complete markets (every selection priced); double chance is divided by 2 |
 | hit, status | from settlements |
-| in_default_analysis | false for `season_type = special`, card markets (until Kart Puanı is confirmed) and anything not `settled` |
+| in_default_analysis | false for `season_type = special` and anything not `settled` |
 
-**Exports:**
-- `exports/analysis_flat/<season>.csv.gz`
-- `exports/analysis_flat/<season>.xlsx`, one sheet per league
-
-See decision 1 below: these won't fit size limits for full seasons.
+**Exports** (`exports/<season>/`):
+- `oranlar_<season>.xlsx`: **one row per match** and one sheet per league. Columns: Tarih, Saat, Ev Sahibi, Deplasman, İY, MS, Korner, Sarı Kart, Kırmızı Kart, then the closing odds of the 45 markets in the order of `config/markets.yaml` (`MS 1`, `MS X`, `MS 2`, `ÇŞ 1-X`, …, `2,5 Alt`, `2,5 Üst`, …, `Skor 2-1`). **Winning odds are filled green.** About 380 rows × 130–170 columns per league.
+- `<league_id>.csv.gz`: the full `analysis_flat` (one row per selection) for analysis tools.
 
 ## Data quality checks — `data/quality.csv`
 Run after every job, appended. One row per check and league-season, with status `ok`/`warn`/`fail`, a value and details.
@@ -223,7 +243,7 @@ Run after every job, appended. One row per check and league-season, with status 
 
 ## Example (real data)
 
-`scripts/schema_example.py --date 2025-10-18 --league ENG-1 --limit 2` produced these rows from Mackolik. The quality checks on them gave 0 fail and 1 warn: `market_sum`, the high-margin markets in decision 2.
+`scripts/schema_example.py --date 2025-10-18 --league ENG-1 --limit 4` produced these rows from Mackolik. All quality checks were ok (0 fail, 0 warn).
 
 **matches**
 
@@ -231,31 +251,18 @@ Run after every job, appended. One row per check and league-season, with status 
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 1ul4lz9b1npclnmnufhedm7tg | 2367090 | ENG-1 | 2025/26 | regular | 2025-10-18 11:30:00+00 | 2025-10-18T14:30:00+03:00 | ENG-NOT_FOREST | ENG-CHELSEA | finished | 0-0 | 0-3 | The City Ground |
 
-**odds** (Nottingham Forest – Chelsea; `price_type` `closing_history`, `captured_at_utc`/`minutes_before_kickoff` NULL, `source` arsiv, `mbs` 1)
+**odds + settlements** (Nottingham Forest – Chelsea, 0-0 / 0-3; `price_type` `closing_history`, `source` arsiv, `mbs` 1)
 
-| market_type_id | market_key | line | handicap_home | handicap_away | selection_key | selection_name_tr | odds |
-|---|---|---|---|---|---|---|---|
-| 1 | 1X2 | NULL | NULL | NULL | 1 | 1 | 2.80 |
-| 1 | 1X2 | NULL | NULL | NULL | 2 | 2 | 1.95 |
-| 11 | OU | 1.5 | NULL | NULL | OVER | Üst | 1.11 |
-| 268 | HANDICAP | NULL | 0 | 1 | 2 | 2 | 1.09 |
-| 5 | HT_FT | NULL | NULL | NULL | 1/2 | 1/2 | 24.85 |
-| 216 | CORNERS_OU | 9.5 | NULL | NULL | UNDER | Alt | 1.88 |
-| 301 | CARD_POINTS_OU | 3.5 | NULL | NULL | OVER | Üst | 1.13 |
-| 701 | PLAYER_TO_SCORE | NULL | NULL | NULL | ALEJANDRO_GARNACHO | Alejandro Garnacho | 3.05 |
-
-**settlements** (same selections)
-
-| market_type_id | line | selection_key | hit_official | hit_engine | hit | status | settle_basis |
-|---|---|---|---|---|---|---|---|
-| 1 | NULL | 1 | false | false | false | settled | official |
-| 1 | NULL | 2 | true | true | true | settled | official |
-| 11 | 1.5 | OVER | true | true | true | settled | official |
-| 268 | NULL | 2 | true | true | true | settled | official |
-| 5 | NULL | 1/2 | false | false | false | settled | official |
-| 216 | 9.5 | UNDER | NULL | true | true | settled | engine |
-| 301 | 3.5 | OVER | NULL | true | true | unverified | engine |
-| 701 | NULL | ALEJANDRO_GARNACHO | NULL | NULL | NULL | unsettleable | NULL |
+| market_type_id | market_key | line | selection_key | selection_name_tr | odds | hit_official | hit_engine | hit | status | settle_basis |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1X2 | NULL | 1 | 1 | 2.80 | false | false | false | settled | official |
+| 1 | 1X2 | NULL | 2 | 2 | 1.95 | true | true | true | settled | official |
+| 12 | OU | 2.5 | OVER | Üst | 1.61 | true | true | true | settled | official |
+| 343 | 1X2_AND_OU | 2.5 | 2&OVER | 2 ve Üst | 2.88 | true | true | true | settled | official |
+| 5 | HT_FT | NULL | X/2 | X/2 | 5.11 | true | true | true | settled | official |
+| 29 | TEAM_OU_AWAY | 1.5 | OVER | Üst | 1.84 | true | true | true | settled | official |
+| 599 | 2H_BTTS | NULL | NO | Yok | 1.18 | NULL | true | true | settled | engine |
+| 216 | CORNERS_OU | 9.5 | UNDER | Alt | 1.88 | NULL | true | true | settled | engine |
 
 **events** (first rows)
 
@@ -281,37 +288,37 @@ Run after every job, appended. One row per check and league-season, with status 
 | 1X2 | NULL | 2 | 1.95 | closing_history | 0.513 | 0.430 | 0.194 | true | settled | true |
 | CORNERS_OU | 9.5 | UNDER | 1.88 | closing_history | 0.532 | 0.434 | 0.226 | true | settled | true |
 
-## Decisions needed
+**oranlar_2025-26.xlsx**, sheet ENG-1 (first columns; winning odds are green in the file)
 
-These are the points where your spec doesn't fit. In each case I implemented your spec, or the closest version of it, and changed nothing else.
+| Tarih | Saat | Ev Sahibi | Deplasman | İY | MS | Korner | Sarı Kart | Kırmızı Kart | MS 1 | MS X | MS 2 | … |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 18.10.2025 | 14:30 | Not. Forest | Chelsea | 0-0 | 0-3 | 7 | 5 | 1 | 2.80 | 3.09 | **1.95** | … |
+| 18.10.2025 | 17:00 | Brighton | Newcastle | 1-0 | 2-1 | 12 | 1 | 0 | **2.53** | 3.05 | 2.13 | … |
 
-1. **Export size.** A 2025/26 match has about 630 selections: about 330 player-market selections, 60 special, 240 others. Measured on the example: CSV.gz about 25 bytes per row, XLSX about 150 bytes per row.
-   - Per season, all 26 leagues: about 5 million rows. That is far above Excel's limit of 1,048,576 rows per sheet, and the CSV.gz would be about 130 MB, above the 50 MB file limit.
-   - Per season and league: about 240,000 rows, an XLSX of about 37 MB.
 
-   **Proposal:**
-   - CSV.gz per season *and* league, with every row: about 6 MB;
-   - XLSX per season and league without player/special markets: about 90,000 rows, about 14 MB, opens on the iPad.
+## Decisions
 
-2. **The 100–130 % market-sum check flags normal Nesine markets.** Nesine's margin is about 19 % on 1X2 and 19–23 % on O/U, but higher elsewhere:
+Settled (2026-10-07):
+- **Markets:** only the 45 in `config/markets.yaml`. No player bets, no card markets (Kart Puanı, Kırmızı Kart), no 1st-half corners.
+- **Exports:** one row per match in `oranlar_<season>.xlsx` (one sheet per league, winners green); the full one-row-per-selection data as `<league_id>.csv.gz` per season.
+
+Still open (my proposal is implemented; say if you want it different):
+1. **Market-sum check (100–130 %).** Nesine's margin on some collected markets is higher:
 
    | Market | Margin |
    |---|---|
+   | Combos (MS ve Alt/Üst, MS ve KG …) | ~32 % |
    | Double chance | ~32 % (after dividing by 2) |
-   | Combos (1X2 & O/U …) | ~32 % |
-   | 3-way handicap | ~43 % |
-   | Winning margin | ~55 % |
-   | HT/FT correct score | ~58 % |
+   | İY/MS | ~32 % |
+   | Correct scores | higher still |
 
-   **Proposal:** keep 100–130 % for 2- and 3-way markets, and allow up to 170 % for markets with more selections. For now it is a warning only.
-3. **Team English names.** Mackolik only has Turkish display names, often already English-like (`Brighton`, `Not. Forest`, `Bayern Münih`), and "no external sources" rules out an English source. **Proposal:** `name_en` stays NULL unless you fill a small `config/teams_en.yaml` yourself; `team_id` uses the ASCII form of the Mackolik name.
-4. **Red-card market.** "Card markets excluded" currently excludes the whole cards family, including `RED_CARD`, whose rule is simple (any red card). Should `RED_CARD` count as settled and analysable?
-5. **runs.job values.** Settlement and export run inside the results workflow and are logged as `results` with a note; the health check is not logged. Is that OK, or should `settle`/`export` be their own job values?
+   **Proposal:** 100–130 % for 2- and 3-way markets, up to 170 % for markets with more selections and for double chance. The check is a warning only and never blocks anything.
+2. **Team English names:** Mackolik only has Turkish display names. **Proposal:** `name_en` stays NULL unless you fill `config/teams_en.yaml` yourself.
+3. **runs.job values:** settlement and export run inside the results workflow and are logged as `results` with a note.
 
-Not decisions, just stating how the spec is applied:
+How the spec is applied:
 - the season is written `2024-25` in folder names;
 - `captured_at_utc` is NULL for `closing_history`;
-- `selection_key = UNNAMED` for Nesine's `-` placeholder;
 - `round` holds Mackolik's stage name;
 - `referee` is NULL in history.
 
