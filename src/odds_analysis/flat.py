@@ -6,6 +6,7 @@ corner/card totals, closing and opening odds, implied/fair probability, market m
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -14,7 +15,7 @@ from . import store
 from .catalog import OVERLAP, selected_markets
 from .config import DATA, ROOT
 
-EXPORTS = ROOT / "exports"
+EXPORTS = Path(os.environ.get("ODDS_EXPORTS_DIR", ROOT / "exports"))
 MARKET = ["match_id", "market_type_id", "line", "handicap_home", "handicap_away"]
 SELECTION = MARKET + ["selection_key"]
 NO_MARGIN_FAMILIES = {"player", "special"}  # selections are separate yes-bets, not one market summing to 100 %

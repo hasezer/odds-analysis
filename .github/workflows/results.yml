@@ -2,7 +2,7 @@ name: Results
 
 on:
   schedule:
-    # 05:00 UTC: collect results for every date still in Mackolik's ~4.5-day window
+    # 05:04 UTC: finished matches of the last days -> scores, events, statistics, final odds, settlements
     - cron: "4 5 * * *"   # 05:04 UTC (off the top of the hour, which GitHub often drops)
   workflow_dispatch:
 
@@ -31,11 +31,6 @@ jobs:
         id: job
         continue-on-error: true
         run: PYTHONPATH=src python -m odds_analysis results --raw-dir raw
-      - name: Settle (last 7 match dates)
-        id: settle
-        if: always()
-        continue-on-error: true
-        run: PYTHONPATH=src python -m odds_analysis settle --days 7
       - name: Commit data
         if: always()
         run: |
@@ -46,7 +41,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-        run: scripts/publish_exports.sh "export --days 7"
+        run: scripts/publish_exports.sh "export"
       - name: Start a follow-up run if the time budget was reached
         if: always() && hashFiles('.continue_results') != ''
         env:
@@ -61,7 +56,7 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
       - name: Fail if the job had errors
-        if: steps.job.outcome != 'success' || steps.settle.outcome != 'success' || steps.export.outcome != 'success'
+        if: steps.job.outcome != 'success' || steps.export.outcome != 'success'
         run: |
-          echo "Results, settlement or export reported errors - see the step logs and data/runs.csv"
+          echo "Results or export reported errors - see the step logs and data/runs.csv"
           exit 1

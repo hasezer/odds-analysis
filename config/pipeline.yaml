@@ -1,23 +1,19 @@
 # Pipeline settings. Times are UTC unless noted; match dates/kickoffs from Mackolik lists are Turkey time (UTC+3).
 
-# Snapshots (endpoint A np=1 per date + endpoint B per match)
+# Snapshots (www.mackolik.com date listing + arsiv odds popup per match; 26 leagues, 45 markets)
 snapshot:
-  days_ahead: 10            # request A for today .. today+10 (Turkey date)
-  # A match's odds are fetched (B popup) when it is seen for the first time (opening),
-  # and again in the run just before its kickoff: every run fetches the matches that kick off
-  # before the next scheduled run (+ buffer), so the last fetch before kickoff = closing.
-  # The 22:00 UTC run therefore covers night kickoffs until 06:00 UTC. Keeps Actions minutes low.
-  buffer_minutes: 40        # runs start at :07 and can be delayed: fetch everything kicking off before next run + 40 min
-  # Extra re-snapshots of matches further ahead (0 = off). Each hour costs Actions minutes.
-  resnapshot_horizon_hours: 0
+  days_ahead: 10            # the morning run (06:07 UTC) lists today .. today+10 (Turkey dates)
+  days_ahead_intraday: 2    # the other runs list today .. today+2
+  # A match's odds are fetched (popup) the first time it is seen (opening_snapshot) and in the last run before its
+  # kickoff (closing_snapshot = every selection): every run fetches the matches that kick off before the next
+  # scheduled run + buffer. The 22:07 UTC run therefore covers night kickoffs until 06:07 UTC.
+  buffer_minutes: 40        # runs start at :07 and can be delayed
 
-# Results (05:00 UTC): every date still in Mackolik's rolling window
+# Results (05:04 UTC): finished matches of the last days
 results:
   days_back: 5              # Turkey dates today-5 .. today
   min_minutes_after_kickoff: 150
-  fetch_rb_stats_if_no_corners: true
-  # Stop cleanly after this many minutes (job limit is 150): progress is saved and a follow-up run
-  # is started automatically for the remaining matches.
+  # Stop cleanly after this many minutes (job limit is 150): progress is saved and a follow-up run starts.
   max_minutes: 110
 
 # Run status: a run is "failed" if more than this share of its requests still fail after the retries
@@ -31,9 +27,6 @@ health:
   max_hours_without_results: 48
   max_hours_without_snapshot: 12
 
-# Exports (exports/)
-exports:
-  keep_daily_xlsx_days: 60   # older daily .xlsx files are deleted from git (rebuildable from data/)
 
 # Settlement rules for the SCHEMA.md tables (settlements.status)
 # Collected markets: config/markets.yaml (no player bets, no card markets).

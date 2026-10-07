@@ -1,8 +1,7 @@
 name: Weekly analysis
 
 on:
-  schedule:
-    - cron: "37 7 * * 1"   # Mondays 07:37 UTC, after the 05:00 results run
+  # Paused: the weekly analysis moves to the SCHEMA.md tables (analysis_flat) in its own PR.
   workflow_dispatch:
 
 permissions:

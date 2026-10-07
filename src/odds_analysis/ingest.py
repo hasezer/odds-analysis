@@ -188,18 +188,49 @@ def stadium(page_html: str) -> str | None:
 
 # ---------------------------------------------------------------- odds / settlement
 
-def odds_rows(match: dict, popup_text: str, *, price_type: str = "closing_history", captured_at=None) -> tuple[list[dict], list[dict]]:
-    """Popup -> odds rows + the raw outcomes (with the official winner marks) for settlement.
-    Raises ValueError if the popup belongs to another match (uuid check)."""
+class WrongMatch(RuntimeError):
+    """The odds popup showed another match and no fallback found ours."""
+
+
+def fetch_outcomes(c, match: dict, day_lists: dict, *, np: int) -> tuple[list[dict], str, dict]:
+    """Nesine outcomes of one match: the arsiv odds popup, accepted only if it shows this match (uuid). If it
+    shows an old match (iddaa codes are reused), the arsiv day list of the match date gives the arsiv match id and
+    `morebets` returns that match's odds (no winner marks). Returns (outcomes, source, popup match meta)."""
     import json
 
-    data = json.loads(popup_text.lstrip("﻿"))
-    pm = ((data.get("data") or {}).get("matches") or [{}])[0]
-    if pm.get("uuid") != match["match_id"]:
-        raise ValueError(f"popup shows match {pm.get('uuid')}, not {match['match_id']}")
-    p = parse_odds_popup(popup_text)
+    from . import http as H
+    from .parsers import parse_day_list, parse_morebets
+
+    code = match["iddaa_event_code"]
+    res = c.get(H.odds_popup_path(code))
+    if not res.ok:
+        raise RuntimeError(f"popup {res.error}")
+    meta = ((json.loads(res.text.lstrip("\ufeff")).get("data") or {}).get("matches") or [{}])[0]
+    if meta.get("uuid") == match["match_id"]:
+        return parse_odds_popup(res.text)["outcomes"], "popup", meta
+    day = match["kickoff_local_tr"][:10]
+    key = (day, np)
+    if key not in day_lists:
+        d = datetime.fromisoformat(day)
+        r = c.get(H.day_list_path(d.strftime("%d.%m.%Y"), np=np), backoff=H.LIST_BACKOFF_SECONDS)
+        day_lists[key] = parse_day_list(r.text) if r.ok else None
+    rows = day_lists[key] or []
+    arsiv = next((r for r in rows if str(r.get("event_code")) == str(code)), None)
+    if arsiv is None:
+        raise WrongMatch(f"popup {code} shows {meta.get('uuid')}, not {match['match_id']}; not in the arsiv day list")
+    r = c.get(H.morebets_path(arsiv["mackolik_match_id"]))
+    if not r.ok:
+        raise RuntimeError(f"morebets {r.error}")
+    mb = parse_morebets(r.text)
+    if str(mb["match"]["iddaa_code"]) not in ("None", str(code)):
+        raise WrongMatch(f"morebets {arsiv['mackolik_match_id']} is event {mb['match']['iddaa_code']}, not {code}")
+    return mb["outcomes"], "morebets", {"id": arsiv["mackolik_match_id"]}
+
+
+def odds_rows_from(match: dict, outcomes: list[dict], *, price_type: str, captured_at=None) -> tuple[list[dict], list[dict]]:
+    """Outcomes of the selected markets (config/markets.yaml) -> odds rows + outcomes for settlement."""
     rows, outs = [], []
-    for o in p["outcomes"]:
+    for o in outcomes:
         info = classify(o["market_name"])
         if not is_selected(info):  # only the markets in config/markets.yaml are stored
             continue
@@ -209,12 +240,21 @@ def odds_rows(match: dict, popup_text: str, *, price_type: str = "closing_histor
             mins = int((match["kickoff_utc"] - captured_at).total_seconds() // 60)
         row = {"match_id": match["match_id"], "market_type_id": str(o["market_type_id"]), "market_key": info.market_key,
                "line": info.line, "handicap_home": info.handicap_home, "handicap_away": info.handicap_away,
-               "selection_key": sk,
-               "selection_name_tr": None if sk == "UNNAMED" else o["selection"], "odds": o["odds"], "mbs": o["mbs"],
+               "selection_key": sk, "selection_name_tr": None if sk == "UNNAMED" else o["selection"], "odds": o["odds"], "mbs": o["mbs"],
                "price_type": price_type, "captured_at_utc": captured_at, "minutes_before_kickoff": mins, "source": "arsiv"}
         rows.append(row)
         outs.append({**row, "_name_tr": o["market_name"], "_info": info, "_tok": tok, "_highlight": o["highlight"]})
     return rows, outs
+
+
+def odds_rows(match: dict, popup_text: str, *, price_type: str = "closing_history", captured_at=None) -> tuple[list[dict], list[dict]]:
+    """Popup text -> odds rows (raises WrongMatch if the popup belongs to another match)."""
+    import json
+
+    meta = ((json.loads(popup_text.lstrip("\ufeff")).get("data") or {}).get("matches") or [{}])[0]
+    if meta.get("uuid") != match["match_id"]:
+        raise WrongMatch(f"popup shows match {meta.get('uuid')}, not {match['match_id']}")
+    return odds_rows_from(match, parse_odds_popup(popup_text)["outcomes"], price_type=price_type, captured_at=captured_at)
 
 
 def engine_ctx(match: dict, events: list[dict], stats: list[dict]) -> Ctx | None:

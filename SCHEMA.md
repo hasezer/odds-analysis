@@ -322,6 +322,8 @@ How the spec is applied:
 - `round` holds Mackolik's stage name;
 - `referee` is NULL in history.
 
-## Not yet switched over
+## Status
 
-This PR adds the structure and the code that writes it. The daily jobs still write the old CSV tables. In the next phase they move to these tables, and the data collected so far (since 2026-10-06) is converted. The backfill writes these tables from its first run.
+The daily jobs write these tables since PR "Daily collection on SCHEMA.md". The odds snapshots collected before
+(2026-10-06 →) were converted once (26 leagues, 45 markets; `src/odds_analysis/migrate.py`); the old CSV tables were
+removed (git history keeps them). The backfill writes these tables from its first run.

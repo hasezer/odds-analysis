@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pandas as pd
 
 from . import store
 from .catalog import OVERLAP

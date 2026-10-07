@@ -274,3 +274,22 @@ def _season_from_path(s: str) -> str:
 
 def as_date(v) -> date:
     return _ts(v).date()
+
+
+def relabel_odds(season: str, league_id: str, match_ids: set[str], *, old: str, new: str, root: Path = DATA) -> int:
+    """Change price_type old -> new for these matches' odds rows (e.g. an earlier closing_snapshot becomes
+    intraday_snapshot when a later pre-kickoff snapshot replaces it). Returns the number of rows changed."""
+    table = TABLES["odds"]
+    base = partition_dir(table, season, league_id, root=root)
+    changed = 0
+    for d in sorted({f.parent for f in base.glob("**/part-*.parquet")}):
+        t = _read_dir(d)
+        df = to_pandas(t.cast(arrow_schema(table)))
+        hit = df["match_id"].isin(match_ids) & (df["price_type"] == old)
+        if not hit.any():
+            continue
+        df.loc[hit, "price_type"] = new
+        changed += int(hit.sum())
+        df = df.sort_values(list(table.key), kind="stable", na_position="first").reset_index(drop=True)
+        _write_dir(table, d, to_arrow(table, df))
+    return changed
