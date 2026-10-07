@@ -4,6 +4,18 @@ Scope: the 26 leagues in `config/leagues.yaml` (regular season + their own playo
 no cups). Everything below was measured from Mackolik only (new www.mackolik.com backend + arsiv.mackolik.com),
 at ≤ 1 request/second, read-only. **No backfill was run.**
 
+## Decisions (2026-10-07)
+
+| Topic | Decision |
+|---|---|
+| New site vs arsiv | **Use both.** www.mackolik.com: match lists, scores, events, statistics, history, and checking that the odds popup belongs to the right match. arsiv: pre-match snapshots (opening odds and movement). |
+| Odds movement | Analyses of odds movement use **only our own snapshots**. Every analysis states the date range of its data. |
+| Japan "J1 100 Year Vision League" (spring 2026) | Data kept, `season_type = special`, excluded from default analyses. |
+| Card points (Kart Puanı) | Still unverified: card markets stay **excluded from analysis** until Nesine's rule is confirmed. |
+| Belgium 2019/20 (no corner statistics) | Corner markets of that season are `unsettleable`. |
+| Backfill | Full history (Aug 2019 → now) for the 26 leagues, newest season first, 1 request/second. Starts only after the SCHEMA.md PR is approved. |
+| Actions budget | `monthly_minutes` (2,000 now; 3,000 with GitHub Student Pro) and `daily_reserve` (900) as config values. The backfill pauses when the minutes left drop below the reserve; the reserve is updated after a week of measured daily usage. |
+
 ## TL;DR
 
 1. **There is history, back to August 2019.** The new mackolik.com backend keeps every past match with its iddaa
@@ -104,7 +116,8 @@ Read the numbers as indications: each season has only 2–5 sampled matches.
 Season labels: calendar-year leagues (Norway, MLS, Brazil, Japan, Argentina) use "2024"; the others "2024/25".
 Japan's J1 moves to an autumn–spring calendar from 2026 ("2026/27"). In spring 2026 the J1 clubs played a
 one-off transition league, "J1 100 Year Vision League" (own competition id, in `config/leagues.yaml` as
-`extra`); it is the Japan "2026" season below. Remove it from the config if you don't want it.
+`extra`); it is the Japan "2026" season below. Decision: keep the data as `season_type = special`, excluded from
+default analyses.
 
 ### Summary per league
 
@@ -395,7 +408,7 @@ Data quality notes for the backfill:
 
 ## 6. Replace or complement?
 
-**Complement.**
+**Complement** (approved 2026-10-07).
 
 | Job | Keep (arsiv) | Add (new backend) |
 |---|---|---|
