@@ -36,6 +36,9 @@ def check() -> int:
     first_run = min(datetime.fromisoformat(t.replace("Z", "+00:00")) for t in runs["run_at"])
     problems = []
     for job, limit in (("results", cfg["max_hours_without_results"]), ("snapshot", cfg["max_hours_without_snapshot"])):
+        if not limit:  # check switched off (e.g. snapshots paused)
+            print(f"{job}: check off")
+            continue
         last = last_success(runs, job) or first_run
         age = (now - last).total_seconds() / 3600 if last else None
         print(f"{job}: last successful run {last} ({'never' if age is None else f'{age:.1f} h ago'}), limit {limit} h")

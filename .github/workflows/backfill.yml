@@ -2,15 +2,15 @@ name: Backfill
 
 on:
   schedule:
-    # Nightly, between the 22:07 snapshot and the 05:04 results run; each job runs at most ~100 minutes.
-    # A job pauses itself when this month's Actions minutes left drop below daily_reserve (config/backfill.yaml).
+    # Each job runs at most ~100 minutes and starts the next one until the backfill is finished or this month's
+    # Actions minutes left drop below daily_reserve (config/backfill.yaml). The schedule restarts a stopped chain.
     - cron: "17 23 * * *"
     - cron: "17 1 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
-  actions: read   # to count this month's Actions minutes
+  actions: write   # count this month's Actions minutes; start the next job
 
 concurrency:
   group: data-writer
@@ -46,6 +46,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/publish_exports.sh "export"
+      - name: Start the next job (time limit reached, budget left)
+        if: always() && hashFiles('.continue_backfill') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run backfill.yml --ref main
       - name: Fail if the job had errors
         if: steps.job.outcome != 'success' || steps.export.outcome != 'success'
         run: |
