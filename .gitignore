@@ -10,3 +10,4 @@ raw/
 _exports/
 .continue_results
 .touched_partitions
+.continue_backfill
