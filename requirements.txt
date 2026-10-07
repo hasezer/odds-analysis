@@ -1,6 +1,7 @@
 httpx==0.28.1
 selectolax==1.0.0
 pandas==2.2.3
+pyarrow==18.1.0
 openpyxl==3.1.5
 PyYAML==6.0.2
 pytest==8.3.4

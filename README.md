@@ -30,4 +30,4 @@ In GitHub, open a file → *View raw* to download it.
 
 **Weekly reports:** [`reports/`](reports/). The running log of patterns that held up on newer data is [`reports/findings.md`](reports/findings.md). For a compact table to upload to a Claude chat, use `analysis_summary.csv` on the exports branch.
 
-See [docs/DATA.md](docs/DATA.md) for the tables and [PHASE0_REPORT.md](PHASE0_REPORT.md) for the endpoint research.
+See [SCHEMA.md](SCHEMA.md) for the agreed data structure (the daily jobs move to it in the next phase), [docs/DATA.md](docs/DATA.md) for the current tables and [PHASE0_REPORT.md](PHASE0_REPORT.md) for the endpoint research.
