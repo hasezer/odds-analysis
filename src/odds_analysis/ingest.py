@@ -219,8 +219,13 @@ def fetch_outcomes(c, match: dict, day_lists: dict, *, np: int) -> tuple[list[di
         arsiv = next((r for r in day_lists[key] or [] if str(r.get("event_code")) == str(code)), None)
         if arsiv is not None:
             break
-    if arsiv is None:
-        raise WrongMatch(f"popup {code} shows {meta.get('uuid')}, not {match['match_id']}; not in the arsiv day list")
+    if arsiv is None:  # past dates are no longer in the arsiv lists: the new site's markets of this match uuid
+        from . import www
+
+        new = www.market_outcomes(c, match["match_id"])
+        if new:
+            return new, "new", {}
+        raise WrongMatch(f"popup {code} shows {meta.get('uuid')}, not {match['match_id']}; no fallback had the match")
     r = c.get(H.morebets_path(arsiv["mackolik_match_id"]))
     if not r.ok:
         raise RuntimeError(f"morebets {r.error}")
@@ -230,7 +235,8 @@ def fetch_outcomes(c, match: dict, day_lists: dict, *, np: int) -> tuple[list[di
     return mb["outcomes"], "morebets", {"id": arsiv["mackolik_match_id"]}
 
 
-def odds_rows_from(match: dict, outcomes: list[dict], *, price_type: str, captured_at=None) -> tuple[list[dict], list[dict]]:
+def odds_rows_from(match: dict, outcomes: list[dict], *, price_type: str, captured_at=None,
+                   source: str = "arsiv") -> tuple[list[dict], list[dict]]:
     """Outcomes of the selected markets (config/markets.yaml) -> odds rows + outcomes for settlement."""
     rows, outs = [], []
     for o in outcomes:
@@ -244,7 +250,8 @@ def odds_rows_from(match: dict, outcomes: list[dict], *, price_type: str, captur
         row = {"match_id": match["match_id"], "market_type_id": str(o["market_type_id"]), "market_key": info.market_key,
                "line": info.line, "handicap_home": info.handicap_home, "handicap_away": info.handicap_away,
                "selection_key": sk, "selection_name_tr": None if sk == "UNNAMED" else o["selection"], "odds": o["odds"], "mbs": o["mbs"],
-               "price_type": price_type, "captured_at_utc": captured_at, "minutes_before_kickoff": mins, "source": "arsiv"}
+               "price_type": price_type, "captured_at_utc": captured_at, "minutes_before_kickoff": mins,
+               "source": "new" if source == "new" else "arsiv"}
         rows.append(row)
         outs.append({**row, "_name_tr": o["market_name"], "_info": info, "_tok": tok, "_highlight": o["highlight"]})
     return rows, outs

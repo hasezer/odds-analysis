@@ -1,0 +1,53 @@
+name: Backfill
+
+on:
+  schedule:
+    # Nightly, between the 22:07 snapshot and the 05:04 results run; each job runs at most ~100 minutes.
+    # A job pauses itself when this month's Actions minutes left drop below daily_reserve (config/backfill.yaml).
+    - cron: "17 23 * * *"
+    - cron: "17 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read   # to count this month's Actions minutes
+
+concurrency:
+  group: data-writer
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Backfill
+        id: job
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: PYTHONPATH=src python -m odds_analysis backfill
+      - name: Commit data and progress
+        if: always()
+        run: |
+          scripts/commit_data.sh "data: backfill $(date -u +%Y-%m-%dT%H:%MZ)"
+      - name: Publish exports of the seasons this job touched
+        id: export
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/publish_exports.sh "export"
+      - name: Fail if the job had errors
+        if: steps.job.outcome != 'success' || steps.export.outcome != 'success'
+        run: |
+          echo "Backfill or export reported errors - see the step logs and data/runs.csv"
+          exit 1

@@ -1,4 +1,4 @@
-"""CLI: python -m odds_analysis {snapshot,results,export,health,analyze} [--raw-dir DIR]
+"""CLI: python -m odds_analysis {snapshot,results,backfill,export,health,analyze} [--raw-dir DIR]
 
 snapshot / results / export work on the SCHEMA.md tables (src/odds_analysis/daily.py, flat.py).
 """
@@ -27,7 +27,12 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None, full: boo
         try:
             from . import daily, migrate
 
-            if job == "snapshot":
+            if job == "backfill":
+                from . import backfill
+
+                stats = backfill.run(client)
+                Path(".touched_partitions").write_text(json.dumps(stats.get("touched", [])))
+            elif job == "snapshot":
                 if migrate.legacy_present():  # one time: convert the pre-SCHEMA.md CSV tables
                     logging.info("migration: %s", migrate.migrate(client))
                 stats = daily.snapshot_run(client, full=full)
@@ -79,7 +84,8 @@ def _log_run(job: str, run_at: str, status: str, requests: int, errors: int, sav
     from . import store
 
     notes = json.dumps({k: v for k, v in stats.items() if k in ("matches_listed", "fetched", "listed", "final", "void",
-                                                                   "deferred", "failed_items", "morebets_fallback")})
+                                                                   "deferred", "failed_items", "morebets_fallback",
+                                                                   "no_odds", "cursor", "paused", "stopped")})
     store.upsert("runs", [{"run_id": f"{job}-{run_at}", "job": job, "started_at_utc": run_at,
                            "finished_at_utc": iso(now_utc()), "status": status, "requests": requests,
                            "errors": errors, "matches_saved": saved,
@@ -116,7 +122,7 @@ def _export(seasons: list[str]) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="odds_analysis")
-    ap.add_argument("command", choices=["snapshot", "results", "export", "analyze", "health"])
+    ap.add_argument("command", choices=["snapshot", "results", "backfill", "export", "analyze", "health"])
     ap.add_argument("--raw-dir", type=Path, default=None, help="save raw responses here (Actions artifact)")
     ap.add_argument("--limit", type=int, default=None, help="results: process at most N matches (testing)")
     ap.add_argument("--full", action="store_true", default=None, help="snapshot: list every day ahead (default: morning run)")
@@ -124,7 +130,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     logging.getLogger("httpx").setLevel(logging.WARNING)
-    if args.command in ("snapshot", "results"):
+    if args.command in ("snapshot", "results", "backfill"):
         return _run_job(args.command, args.raw_dir, args.limit, args.full)
     if args.command == "export":
         return _export(args.season)
