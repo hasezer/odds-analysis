@@ -92,6 +92,11 @@ def match_row(m: dict, *, league_id: str, season: str, stage: str | None = None,
     }
 
 
+def went_to_extra_time(match: dict) -> bool:
+    sub = (match.get("_substate") or "").lower()
+    return "extra" in sub or "penalt" in sub
+
+
 def apply_extra_time(match: dict, events: list[dict]) -> None:
     """Listing scores include extra time. With events from periods 3/4, ft = after 90 min, et = after 120 min."""
     et_goals = [e for e in events if e["event_type"] in ("goal", "penalty_goal", "own_goal") and (e.get("_period") or 0) in (3, 4)]
@@ -156,7 +161,8 @@ STAT_LABELS = {"corners": "Korner", "yellow_cards": "Sarı Kart", "shots": "Topl
 
 
 def stats_rows(match_id: str, page_html: str, events: list[dict]) -> list[dict]:
-    """Statistics page ('Genel İstatistikler') + red cards / second yellows counted from the key events."""
+    """Statistics page ('Genel İstatistikler') + red cards / second yellows counted from the key events (None when
+    the key events were not collected)."""
     t = htmlmod.unescape(re.sub(r"<[^>]+>", " ", page_html))
     t = re.sub(r"\s+", " ", t)
     a, b = t.find("Genel İstatistikler"), t.find("Oyuncu İstatistikleri")
@@ -168,7 +174,7 @@ def stats_rows(match_id: str, page_html: str, events: list[dict]) -> list[dict]:
         m = re.search(rf"(?<![\wçğıöşü]){label} (\d+) (\d+)", block)
         vals[key] = (int(m[1]), int(m[2])) if m else None
     pos = re.search(r"Topla Oynama %(\d+(?:,\d+)?) %(\d+(?:,\d+)?)", block)
-    if vals["yellow_cards"] is None and vals["corners"] is not None and events:
+    if vals["yellow_cards"] is None and vals["corners"] is not None:
         vals["yellow_cards"] = (0, 0)  # the page leaves out the row when nobody was booked (key events agree)
     out = []
     for i, side in enumerate(("home", "away")):

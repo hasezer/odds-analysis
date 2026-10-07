@@ -63,7 +63,11 @@ SCENARIO = textwrap.dedent('''
                               "homeTeam": {"id": "h", "name": "Göztepe"}, "awayTeam": {"id": "a", "name": "Rizespor"},
                               "score": {"home": "1", "away": "0", "ht": {"home": 0, "away": 0}}}
         return {"competitions": {}, "matches": {"a": mk("a", 11)} if d == D1 else {"b": mk("b", None)} if d == D2 else {}}
+    seen_delays = []
     def fetch(c, m, day_lists, np):
+        seen_delays.append(list(c.retry_delays))
+        if len(seen_delays) == 1:
+            raise RuntimeError("popup HTTP 502")  # first pass: one attempt, no waiting; the second pass succeeds
         return [{"market_name": "Maç Sonucu", "market_type_id": 1, "selection": s, "odds": v, "mbs": 1, "highlight": s == "1"}
                 for s, v in (("1", 2.0), ("X", 3.2), ("2", 3.6))], "popup", {"id": 1}
     www.season_fixtures, www.listing, ingest.fetch_outcomes = fixtures, listing, fetch
@@ -80,8 +84,15 @@ SCENARIO = textwrap.dedent('''
     backfill.README = backfill.DIR.parent / "README.md"
     backfill.README.parent.mkdir(parents=True, exist_ok=True)
     backfill.README.write_text("# x\\n")
+    soon = (datetime.now(UTC) + timedelta(hours=12)).replace(second=0, microsecond=0)
+    backfill.RESULTS_WINDOW = (soon.time(), (soon + timedelta(minutes=1)).time())  # never hit by the test, whatever its clock
     class C: pass
     out = {"run": backfill.run(C())}
+    from collections import defaultdict
+    from odds_analysis.runs import FailedItems
+    out["past_deadline"] = backfill.process_date(C(), D1, {}, FailedItems("t", "x"), defaultdict(int), datetime.now(UTC),
+                                                 {}, deadline=0)
+    out["seen_delays"] = seen_delays
     out["state"] = json.loads(backfill.STATE.read_text())["next_date"]
     out["matches"] = sorted(store.read("matches")["match_id"])
     out["settled"] = int((store.read("settlements")["status"] == "settled").sum())
@@ -97,8 +108,11 @@ def test_backfill_scenario(tmp_path):
     assert r.returncode == 0, r.stderr[-3000:]
     out = json.loads(r.stdout.strip().splitlines()[-1])
     assert out["run"]["finished"] and out["run"]["final"] == 1 and out["run"]["no_odds"] == 1
+    assert out["run"]["second_pass"] == 1 and out["run"]["deferred"] == 0
+    assert out["seen_delays"] == [[], [5, 15, 45]]
     assert out["state"] == "2026-09-25"  # both dates done, newest first
     assert out["matches"] == ["a", "b"]  # the match without Nesine odds is stored too
     assert out["settled"] == 3
+    assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
     assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]

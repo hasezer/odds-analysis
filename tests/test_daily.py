@@ -83,7 +83,8 @@ SCENARIO = textwrap.dedent('''
     # results: finished 2-1, Nesine marks 1 and Üst
     MATCH.update({"state": "post", "substate": "fullTime", "score": {"home": "2", "away": "1", "ht": {"home": 1, "away": 0}}})
     state["hl"] = {("Maç Sonucu", "1"), ("2,5 Alt/Üst", "Üst")}
-    www.key_events = lambda c, u: [
+    key_event_calls = []
+    www.key_events = lambda c, u: key_event_calls.append(u) or [
         {"type": "goal", "subType": "goal", "position": "home", "timeMin": "10", "score": "1-0", "playerName": "A", "periodId": 1},
         {"type": "goal", "subType": "goal", "position": "away", "timeMin": "50", "score": "1-1", "playerName": "B", "periodId": 2},
         {"type": "goal", "subType": "goal", "position": "home", "timeMin": "80", "score": "2-1", "playerName": "C", "periodId": 2}]
@@ -99,6 +100,8 @@ SCENARIO = textwrap.dedent('''
     view, hits = flat.match_view(store.read("analysis_flat"))
     out["view"] = view[["Ev Sahibi", "MS", "MS 1", "2,5 Üst"]].astype(str).values.tolist()
     out["quality_fail"] = out["results"]["quality"]["fail"]
+    out["key_event_calls"] = key_event_calls
+    out["cards"] = sorted(store.read("stats")["yellow_cards"].tolist())
     print(json.dumps(out, default=str))
 ''')
 
@@ -118,6 +121,15 @@ def test_daily_scenario(tmp_path):
     assert out["match"] == ["finished", 2, 1, "X Arena", "4500001"]
     assert out["view"] == [["Fenerbahçe", "2-1", "2.1", "1.75"]]  # closing snapshot prices
     assert out["quality_fail"] == 0
+    assert out["key_event_calls"] == []  # no extra time: the key events are not fetched
+    assert out["cards"] == [1, 2]
+
+
+def test_key_events_only_for_extra_time():
+    from odds_analysis.ingest import went_to_extra_time
+
+    assert not went_to_extra_time({"_substate": "fullTime"})
+    assert went_to_extra_time({"_substate": "afterExtraTime"}) and went_to_extra_time({"_substate": "afterPenalties"})
 
 
 def test_wrong_popup_falls_back_to_morebets_of_previous_day(monkeypatch):

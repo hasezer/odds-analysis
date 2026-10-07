@@ -49,6 +49,7 @@ class MackolikClient:
     min_interval_s: float = 1.0
     timeout_s: float = 20.0
     raw_dir: Path | None = None
+    retry_delays: tuple[int, ...] = BACKOFF_SECONDS  # used when get() is called without backoff=
     requests: int = field(default=0, init=False)  # HTTP attempts, retries included
     calls: int = field(default=0, init=False)  # logical requests (get() calls)
     failed: int = field(default=0, init=False)  # logical requests that still failed after all retries
@@ -86,7 +87,7 @@ class MackolikClient:
         status: int | None = None
         text = ""
         attempts = 0
-        delays = BACKOFF_SECONDS if backoff is None else backoff
+        delays = self.retry_delays if backoff is None else backoff
         self.calls += 1
         for attempt in range(len(delays) + 1):
             attempts = attempt + 1
