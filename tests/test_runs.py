@@ -81,10 +81,12 @@ def test_client_starts_at_most_one_request_per_interval_across_threads():
 
     c = H.MackolikClient(min_interval_s=0.05)
     c._client = Slow()
+    t0 = time.monotonic()
     with ThreadPoolExecutor(4) as pool:
         list(pool.map(lambda i: c.get(f"https://x/{i}"), range(12)))
-    gaps = [b - a for a, b in zip(starts, starts[1:])]
-    assert len(starts) == 12 and min(gaps) >= 0.045
+    # a thread can record its start late (scheduling), never early: the k-th start is at least k intervals after t0
+    assert len(starts) == 12
+    assert all(s - t0 >= k * 0.05 - 0.005 for k, s in enumerate(sorted(starts)))
     assert max(starts) - min(starts) < 12 * 0.15  # overlapping: faster than one at a time
     with c.quick():
         assert not c.get("https://x/bad").ok  # one attempt, no backoff sleep
