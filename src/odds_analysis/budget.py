@@ -113,7 +113,9 @@ def repo_is_public() -> bool:
         return False
     try:
         with c:
-            r = c.get("")
+            r = c.get(str(c.base_url).rstrip("/"))  # c.get("") would add a trailing slash: HTTP 400
+            if r.status_code != 200:
+                log.warning("repository visibility not readable (HTTP %s): minutes limit applies", r.status_code)
             return r.status_code == 200 and r.json().get("private") is False
     except httpx.HTTPError:
         return False

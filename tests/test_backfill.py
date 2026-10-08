@@ -143,3 +143,23 @@ def test_visibility_unknown_counts_as_private(monkeypatch):
     monkeypatch.delenv("GH_TOKEN", raising=False)
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
     assert budget.repo_is_public() is False
+
+
+def test_visibility_request_url(monkeypatch):
+    import httpx
+
+    from odds_analysis import budget
+
+    seen = []
+
+    def handler(request):
+        seen.append(str(request.url))
+        ok = str(request.url) == "https://api.github.com/repos/o/r"
+        return httpx.Response(200 if ok else 400, json={"private": False} if ok else {})
+
+    monkeypatch.setenv("GH_TOKEN", "t")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "o/r")
+    real = budget._client
+    monkeypatch.setattr(budget, "_client", lambda: httpx.Client(base_url=real().base_url, transport=httpx.MockTransport(handler)))
+    assert budget.repo_is_public() is True
+    assert seen == ["https://api.github.com/repos/o/r"]
