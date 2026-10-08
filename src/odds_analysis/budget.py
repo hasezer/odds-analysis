@@ -105,12 +105,28 @@ def daily_usage(ledger: pd.DataFrame, now: datetime, days: int = 7) -> float | N
     return round(pd.to_numeric(recent["minutes"]).sum() / days, 1)
 
 
+def repo_is_public() -> bool:
+    """True only when the GitHub API says so (public repositories use Actions minutes for free); False when the
+    repository is private or its visibility cannot be read."""
+    c = _client()
+    if c is None:
+        return False
+    try:
+        with c:
+            r = c.get("")
+            return r.status_code == 200 and r.json().get("private") is False
+    except httpx.HTTPError:
+        return False
+
+
 def allowance(now: datetime | None = None, running_minutes: float = 0, root=DATA) -> dict:
-    """{'used', 'left', 'reserve', 'ok'}: ok = the backfill may (continue to) run."""
+    """{'used', 'left', 'reserve', 'ok'}: ok = the backfill may (continue to) run. Always ok while the repository
+    is public (no minutes limit); the limit applies again as soon as it is private."""
     now = now or datetime.now(timezone.utc)
     cfg = load("backfill")
     ledger = refresh_ledger(now, root)
     used = used_this_month(ledger, now) + math.ceil(running_minutes)
     left = cfg["monthly_minutes"] - used
+    public = repo_is_public()
     return {"used": used, "left": left, "reserve": cfg["daily_reserve"], "monthly": cfg["monthly_minutes"],
-            "ok": left >= cfg["daily_reserve"], "daily_usage_7d": daily_usage(ledger, now)}
+            "public": public, "ok": public or left >= cfg["daily_reserve"], "daily_usage_7d": daily_usage(ledger, now)}

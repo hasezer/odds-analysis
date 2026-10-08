@@ -122,3 +122,24 @@ def test_backfill_scenario(tmp_path):
     assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
     assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]
+
+
+def test_no_minutes_limit_while_public(monkeypatch):
+    from odds_analysis import budget
+
+    led = pd.DataFrame([{"run_id": "1", "workflow": "Backfill", "created_at": "2026-10-07T10:00:00Z", "minutes": "1500"}])
+    monkeypatch.setattr(budget, "refresh_ledger", lambda now, root: led)
+    now = datetime(2026, 10, 8, 12, tzinfo=UTC)
+    monkeypatch.setattr(budget, "repo_is_public", lambda: False)
+    assert not budget.allowance(now)["ok"]  # 500 left < 900 reserve
+    monkeypatch.setattr(budget, "repo_is_public", lambda: True)
+    a = budget.allowance(now)
+    assert a["ok"] and a["public"]
+
+
+def test_visibility_unknown_counts_as_private(monkeypatch):
+    from odds_analysis import budget
+
+    monkeypatch.delenv("GH_TOKEN", raising=False)
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    assert budget.repo_is_public() is False
