@@ -81,3 +81,4 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-07T23:09:19Z,backfill,match,75x10qjvovwfd72z7mr2epzis,75x10qjvovwfd72z7mr2epzis,1,RuntimeError('statistics page failed')
 2026-10-07T23:09:19Z,backfill,match,3ewh1drf3mm32mosbi0dcy9sk,3ewh1drf3mm32mosbi0dcy9sk,1,RuntimeError('statistics page failed')
 2026-10-07T23:09:19Z,backfill,match,d9v3yc64dcokoxc5vrlk7dc7o,d9v3yc64dcokoxc5vrlk7dc7o,1,RuntimeError('statistics page failed')
+2026-10-08T11:48:39Z,results,match,8loizj0rybtsuh2xemzlu9i50,8loizj0rybtsuh2xemzlu9i50,1,RuntimeError('statistics page failed')
