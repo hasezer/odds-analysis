@@ -320,8 +320,10 @@ def readme_block(table: pd.DataFrame, state: dict, allow: dict | None) -> str:
         lines.append("Per league and season: [`data/backfill_progress.csv`](data/backfill_progress.csv).")
     if allow:
         usage = allow.get("daily_usage_7d")
-        lines += ["", f"Actions minutes this month: **{allow['used']:,} used of {allow['monthly']:,}**, "
-                      f"{allow['left']:,} left; the backfill pauses below the daily reserve of {allow['reserve']:,}."
+        lines += ["", f"Actions minutes this month: **{allow['used']:,} used of {allow['monthly']:,}**; "
+                      + ("the repository is public, so there is no minutes limit (the reserve applies again when it is "
+                         "private)." if allow.get("public") else
+                         f"{allow['left']:,} left; the backfill pauses below the daily reserve of {allow['reserve']:,}.")
                   + (f" Daily jobs used {usage} min/day over the last 7 days (≈ {round(usage * 30):,}/month)." if usage else "")]
     lines.append("<!-- backfill-progress:end -->")
     return "\n".join(lines)
