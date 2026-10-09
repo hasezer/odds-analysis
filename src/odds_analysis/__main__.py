@@ -70,7 +70,7 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None, full: boo
     if stats.get("stopped_early"):
         Path(".continue_results").write_text("time budget reached\n")  # the workflow starts a follow-up run
     if job == "backfill" and status != "failed" and (stats.get("stopped") or stats.get("note")) \
-            and not stats.get("paused") and not stats.get("finished") and not stats.get("quiet"):
+            and not stats.get("paused") and not stats.get("finished"):
         Path(".continue_backfill").write_text("job time limit reached\n")  # the workflow starts the next job
     print(json.dumps({k: v for k, v in stats.items() if k != "dates"}, ensure_ascii=False, indent=1))
     share = f"{failed}/{calls} requests failed after retries"

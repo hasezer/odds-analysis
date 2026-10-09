@@ -6,7 +6,7 @@ on:
     # Actions minutes left drop below daily_reserve (config/backfill.yaml). The schedule restarts a stopped chain.
     - cron: "17 23 * * *"
     - cron: "17 1 * * *"
-    - cron: "17 6 * * *"   # after the 05:04 results run (backfill jobs leave 04:50-06:00 UTC free for it)
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -51,7 +51,10 @@ jobs:
         if: always() && hashFiles('.continue_backfill') != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run backfill.yml --ref main
+        # Runs of the data-writer group wait in a queue of one: a newer waiting run cancels the older one, and
+        # GitHub starts scheduled runs hours late. So after 05:00 UTC, if today's results run has not succeeded
+        # (nor is running), the results run goes next; it starts the backfill again when it is done.
+        run: scripts/next_data_job.sh
       - name: Fail if the job had errors
         if: steps.job.outcome != 'success' || steps.export.outcome != 'success'
         run: |

@@ -84,8 +84,6 @@ SCENARIO = textwrap.dedent('''
     backfill.README = backfill.DIR.parent / "README.md"
     backfill.README.parent.mkdir(parents=True, exist_ok=True)
     backfill.README.write_text("# x\\n")
-    soon = (datetime.now(UTC) + timedelta(hours=12)).replace(second=0, microsecond=0)
-    backfill.RESULTS_WINDOW = (soon.time(), (soon + timedelta(minutes=1)).time())  # never hit by the test, whatever its clock
     from odds_analysis import http as H
     C = H.MackolikClient  # fetches are all replaced above: no request leaves the test
     out = {"run": backfill.run(C())}
