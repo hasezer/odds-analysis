@@ -86,6 +86,9 @@ SCENARIO = textwrap.dedent('''
     backfill.README.write_text("# x\\n")
     from odds_analysis import http as H
     C = H.MackolikClient  # fetches are all replaced above: no request leaves the test
+    from odds_analysis.runs import save_queue
+    save_queue("backfill", [{"job": "backfill", "kind": "match", "key": "zz", "match_id": "zz", "match_date": "2026-09-26",
+                             "attempts": "5", "last_error": "WrongMatch('no fallback had the match')"}])
     out = {"run": backfill.run(C())}
     from collections import defaultdict
     from odds_analysis.runs import FailedItems
@@ -112,6 +115,7 @@ def test_backfill_scenario(tmp_path):
     out = json.loads(r.stdout.strip().splitlines()[-1])
     assert out["run"]["finished"] and out["run"]["final"] == 1 and out["run"]["no_odds"] == 1
     assert out["run"]["second_pass"] == 1 and out["run"]["deferred"] == 0
+    assert out["run"]["abandoned"] == 1  # tried in 5 jobs already: given up, not retried
     assert out["seen_delays"] == [True, False]  # first pass quick (no backoff), second pass with the normal retries
     assert out["state"] == "2026-09-25"  # both dates done, newest first
     assert out["matches"] == ["a", "b"]  # the match without Nesine odds is stored too
