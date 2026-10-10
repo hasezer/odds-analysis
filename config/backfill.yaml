@@ -13,4 +13,4 @@ newest_offset_days: 6       # stop 6 days before today: the daily results job co
 max_job_minutes: 100        # one job; the workflow limit is 120
 # Matches worked on at the same time (Mackolik's pages take 3-9 s to answer). Requests still START at most once
 # per second in total; lower this to 1 if Mackolik answers with more errors.
-parallel_requests: 4
+parallel_requests: 2
