@@ -281,9 +281,12 @@ def process_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetim
     write_rows(collect_finished(c, m, day_lists, now, unsettleable))
 
 
-def collect_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetime, unsettleable: set[str]) -> dict:
+def collect_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetime, unsettleable: set[str], *,
+                     allow_missing_stats: bool = False) -> dict:
     """Rows of one finished (or void) match: events, statistics, Nesine's final odds + winner marks, settlements.
-    Returns {"matches": [...], "markets": [(outs, season)], "odds": [...], ...} with partition columns set."""
+    Returns {"matches": [...], "markets": [(outs, season)], "odds": [...], ...} with partition columns set.
+    allow_missing_stats: when the statistics page fails, keep the match without statistics (corner markets stay
+    unsettled; "stats" is empty) instead of raising."""
     part = {"season": m["season"], "league_id": m["league_id"]}
     if m["status"] != "finished":  # postponed / cancelled / abandoned: every stored selection is void
         o = store.read("odds", **part)
@@ -300,10 +303,10 @@ def collect_finished(c: H.MackolikClient, m: dict, day_lists: dict, now: datetim
             raise RuntimeError("key events failed")
         events = ingest.event_rows(m["match_id"], ke)
     page = www.stats_page(c, m["match_id"])
-    if page is None:  # request failed: retry the whole match next run (corners would stay unsettled otherwise)
+    if page is None and not allow_missing_stats:  # retry the whole match next run (corners stay unsettled otherwise)
         raise RuntimeError("statistics page failed")
-    stats = ingest.stats_rows(m["match_id"], page, events)
-    m["stadium"] = ingest.stadium(page) or m.get("stadium")
+    stats = ingest.stats_rows(m["match_id"], page, events) if page is not None else []
+    m["stadium"] = (ingest.stadium(page) if page is not None else None) or m.get("stadium")
     ingest.apply_extra_time(m, events)
     outcomes, source, meta = ingest.fetch_outcomes(c, m, day_lists, np=0)
     if meta.get("id"):

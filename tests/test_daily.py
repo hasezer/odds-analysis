@@ -176,3 +176,21 @@ def test_past_date_falls_back_to_new_site_markets(monkeypatch):
     outcomes, source, meta = ingest.fetch_outcomes(Client(), match, {}, np=0)
     rows, _ = ingest.odds_rows_from(match, outcomes, price_type="closing_history", source=source)
     assert (source, meta, rows[0]["source"], rows[0]["selection_key"]) == ("new", {}, "new", "1")
+
+
+def test_finished_match_kept_without_statistics(monkeypatch):
+    """Backfill second pass: a statistics page that keeps failing no longer drops the match's odds."""
+    import pytest
+
+    from odds_analysis import daily, ingest, www
+
+    m = {"match_id": "u1", "status": "finished", "season": "2024/25", "league_id": "TUR-1", "iddaa_event_code": "1",
+         "ft_home": 1, "ft_away": 0, "ht_home": 0, "ht_away": 0, "_substate": "fullTime"}
+    monkeypatch.setattr(www, "stats_page", lambda c, u: None)
+    monkeypatch.setattr(ingest, "fetch_outcomes", lambda c, m, d, np: (
+        [{"market_name": "Maç Sonucu", "market_type_id": 1, "selection": "1", "odds": 2.0, "mbs": 1, "highlight": True}],
+        "popup", {}))
+    with pytest.raises(RuntimeError, match="statistics page failed"):
+        daily.collect_finished(None, dict(m), {}, datetime(2026, 10, 10, tzinfo=UTC), set())
+    rows = daily.collect_finished(None, dict(m), {}, datetime(2026, 10, 10, tzinfo=UTC), set(), allow_missing_stats=True)
+    assert rows["stats"] == [] and len(rows["odds"]) == 1 and rows["settlements"][0]["hit"] is True

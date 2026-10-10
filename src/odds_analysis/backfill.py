@@ -140,7 +140,9 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
         quick = c.quick() if first_pass and hasattr(c, "quick") else nullcontext()
         try:
             with quick:
-                return "ok", daily.collect_finished(c, m, day_lists, now, unsettleable[(m["league_id"], m["season"])])
+                # second pass: a statistics page that still fails no longer holds back the odds of the match
+                return "ok", daily.collect_finished(c, m, day_lists, now, unsettleable[(m["league_id"], m["season"])],
+                                                    allow_missing_stats=not first_pass)
         except Exception as exc:  # noqa: BLE001 - logged; retried by the next backfill job
             return "error", exc
 
@@ -153,6 +155,10 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
                 elif kind == "ok":
                     collected.append(res)
                     stats["final" if m["status"] == "finished" else "void"] += 1
+                    if m["status"] == "finished" and not res.get("stats"):  # saved without corners: retried later
+                        stats["no_stats"] += 1
+                        failures.add("match", m["match_id"], "statistics page failed (saved without statistics)",
+                                     match_id=m["match_id"], match_date=d.isoformat())
                 elif first_pass:
                     again.append(m)
                 else:
