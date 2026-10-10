@@ -61,16 +61,25 @@ class FailedItems:
         self.previous = {(i["kind"], str(i["key"])): i for i in load_queue(job, root)}
         self.items: dict[tuple[str, str], dict] = {}
 
-    def add(self, kind: str, key, error: str, **info) -> None:
+    def add(self, kind: str, key, error: str, *, tried: bool = True, **info) -> None:
+        """tried=False: the item was not attempted in this run (it keeps its attempt count)."""
         prev = self.previous.get((kind, str(key)), {})
         self.items[(kind, str(key))] = {
             "job": self.job, "kind": kind, "key": str(key), **{k: "" if v is None else str(v) for k, v in info.items()},
             "first_failed_utc": prev.get("first_failed_utc") or self.run_at, "last_failed_utc": self.run_at,
-            "attempts": int(prev.get("attempts") or 0) + 1, "last_error": str(error)[:300]}
+            "attempts": int(prev.get("attempts") or 0) + int(tried),
+            "last_error": str(error)[:300] if tried else (prev.get("last_error") or str(error)[:300])}
 
     def pending(self, kind: str) -> list[dict]:
         """Items of the previous runs still waiting for a retry."""
         return [i for (k, _), i in self.previous.items() if k == kind]
+
+    def abandon(self, items: list[dict], reason: str) -> None:
+        """Log items that are no longer retried (they leave the retry queue)."""
+        append_log("failed_items", [{"logged_at_utc": self.run_at, "job": i["job"], "kind": f"abandoned_{i['kind']}",
+                                     "key": i["key"], "match_id": i.get("match_id", ""), "attempts": i.get("attempts", ""),
+                                     "error": f"{reason}; last error: {i.get('last_error', '')}"[:300]} for i in items],
+                   self.root)
 
     def finish(self) -> int:
         items = list(self.items.values())

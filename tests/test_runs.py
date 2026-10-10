@@ -38,6 +38,23 @@ def test_failed_items_queue(tmp_path):
     assert list(log["key"]) == ["3125554", "2026-10-08", "3125554"]
 
 
+def test_not_tried_keeps_attempts_and_abandon_logs(tmp_path):
+    f = FailedItems("backfill", "r1", root=tmp_path)
+    f.add("match", "m1", "statistics page failed", match_id="m1", match_date="2025-04-01")
+    f.finish()
+    f2 = FailedItems("backfill", "r2", root=tmp_path)
+    f2.add("match", "m1", "retry not reached yet", tried=False, match_id="m1", match_date="2025-04-01")
+    f2.finish()
+    q = load_queue("backfill", tmp_path)
+    assert q[0]["attempts"] == "1" and q[0]["last_error"] == "statistics page failed"
+    f3 = FailedItems("backfill", "r3", root=tmp_path)
+    f3.abandon(f3.pending("match"), "given up after 5 attempts")
+    f3.finish()  # not re-added: leaves the queue
+    assert load_queue("backfill", tmp_path) == []
+    log = pd.read_csv(tmp_path / "failed_items.csv", dtype=str)
+    assert log.iloc[-1]["kind"] == "abandoned_match" and "statistics page failed" in log.iloc[-1]["error"]
+
+
 def test_partial_runs_count_as_success_for_health():
     runs = pd.DataFrame({"errors": ["0", "3", "1", "2"], "status": ["ok", "partial", "failed", ""]})
     assert list(succeeded(runs)) == [True, True, False, False]

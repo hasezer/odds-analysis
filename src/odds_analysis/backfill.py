@@ -39,6 +39,7 @@ PROGRESS = DATA / "backfill_progress.csv"
 README = ROOT / "README.md"
 FIRST_SEASON = 2019
 BUDGET_CHECK_S = 15 * 60
+MAX_ATTEMPTS = 5  # jobs that tried a failed match before it is given up
 
 
 # ---------------------------------------------------------------- state
@@ -198,12 +199,19 @@ def run(c: H.MackolikClient) -> dict:
     oldest = date.fromisoformat(cfg.get("oldest_date", "2019-08-01"))
     cursor = date.fromisoformat(state["next_date"]) if state.get("next_date") else newest
     # retries: a failed date listing redoes the whole date, a failed match only that match
+    # a match that failed MAX_ATTEMPTS jobs in a row (no odds anywhere on Mackolik, a statistics page that never
+    # loads) is given up and logged as abandoned_match in data/failed_items.csv instead of being retried forever
+    pending = failures.pending("listing") + failures.pending("match")
+    hopeless = [i for i in pending if int(i.get("attempts") or 0) >= MAX_ATTEMPTS]
+    failures.abandon(hopeless, f"given up after {MAX_ATTEMPTS} attempts")
+    stats["abandoned"] = len(hopeless)
     retry: dict[str, set[str] | None] = {}
-    for i in failures.pending("listing"):
-        if i.get("match_date"):
+    for i in pending:
+        if i in hopeless or not i.get("match_date"):
+            continue
+        if i["kind"] == "listing":
             retry[i["match_date"]] = None
-    for i in failures.pending("match"):
-        if i.get("match_date") and retry.get(i["match_date"], set()) is not None:
+        elif retry.get(i["match_date"], set()) is not None:
             retry.setdefault(i["match_date"], set()).add(i["match_id"] or i["key"])
     touched: set[tuple[str, str]] = set()
     last_budget = time.monotonic()
@@ -244,9 +252,9 @@ def run(c: H.MackolikClient) -> dict:
             save_state(state)
     for d, only in queue:  # retries not reached in this job stay queued
         if only is None:
-            failures.add("listing", d.isoformat(), "retry not reached yet", match_date=d.isoformat())
+            failures.add("listing", d.isoformat(), "retry not reached yet", tried=False, match_date=d.isoformat())
         for mid in sorted(only or ()):
-            failures.add("match", mid, "retry not reached yet", match_id=mid, match_date=d.isoformat())
+            failures.add("match", mid, "retry not reached yet", tried=False, match_id=mid, match_date=d.isoformat())
     for season, lid in sorted(touched):
         flat.rebuild(season, lid)
     stats["failed_items"] = failures.finish()
