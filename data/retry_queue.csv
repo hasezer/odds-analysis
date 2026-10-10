@@ -1,35 +1,34 @@
 job,kind,key,match_id,match_date,kickoff_utc,first_failed_utc,last_failed_utc,attempts,last_error
-backfill,match,16g3yi5h7mwjbv8tkmjlbc8pg,16g3yi5h7mwjbv8tkmjlbc8pg,2025-03-03,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,18w47u91vk44dzbnrz4jv9zbo,18w47u91vk44dzbnrz4jv9zbo,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,28b5a4ez7egoxq626x2ltypec,28b5a4ez7egoxq626x2ltypec,2025-12-15,,2026-10-09T22:54:10Z,2026-10-10T02:28:04Z,3,"WrongMatch('popup 2510632 shows None, not 28b5a4ez7egoxq626x2ltypec; no fallback had the match')"
-backfill,match,2agkejms2f4bpvcodasowial0,2agkejms2f4bpvcodasowial0,2025-03-01,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,32jiojczibr9gcvlhi58ihp0,32jiojczibr9gcvlhi58ihp0,2025-03-22,,2026-10-10T00:40:48Z,2026-10-10T02:28:04Z,2,"WrongMatch('popup 2101389 shows None, not 32jiojczibr9gcvlhi58ihp0; no fallback had the match')"
-backfill,match,34squ0rzh4i2b02qugk20tu6s,34squ0rzh4i2b02qugk20tu6s,2025-05-05,,2026-10-09T22:54:10Z,2026-10-10T02:28:04Z,3,"WrongMatch('popup 2107849 shows None, not 34squ0rzh4i2b02qugk20tu6s; no fallback had the match')"
-backfill,match,4dyuvkzeqfhndj1t2skcg83ys,4dyuvkzeqfhndj1t2skcg83ys,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('popup ReadTimeout: The read operation timed out')
-backfill,match,4lvff6o0lsnvki8ea0wpa4vf8,4lvff6o0lsnvki8ea0wpa4vf8,2025-02-25,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,"WrongMatch('popup 2005178 shows None, not 4lvff6o0lsnvki8ea0wpa4vf8; no fallback had the match')"
-backfill,match,4peelmq7rdtngsz9xw7upg07o,4peelmq7rdtngsz9xw7upg07o,2025-02-28,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,4u1mo75qywkopz8bnd27slhxw,4u1mo75qywkopz8bnd27slhxw,2025-03-06,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,5i2pmx6mf27b8xxdcf5pylic4,5i2pmx6mf27b8xxdcf5pylic4,2025-05-06,,2026-10-09T19:19:53Z,2026-10-10T02:28:04Z,5,"WrongMatch('popup 2112948 shows None, not 5i2pmx6mf27b8xxdcf5pylic4; no fallback had the match')"
-backfill,match,6en5dr0s22k3wys37zh63le6s,6en5dr0s22k3wys37zh63le6s,2025-02-19,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,6gvwajgtke8yois2jpj1glyj8,6gvwajgtke8yois2jpj1glyj8,2025-02-22,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,6k1aicvsod0zumqsl0k9hgy6s,6k1aicvsod0zumqsl0k9hgy6s,2025-03-02,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,6zi3ez2jg9876krvmxckluk2c,6zi3ez2jg9876krvmxckluk2c,2025-03-01,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,72tycotobk2d0x9wklmnfp990,72tycotobk2d0x9wklmnfp990,2026-04-19,,2026-10-09T22:54:10Z,2026-10-10T02:28:04Z,3,"WrongMatch('popup 2805967 shows None, not 72tycotobk2d0x9wklmnfp990; no fallback had the match')"
-backfill,match,76mnmhrdfstftvbgakb1uzxg4,76mnmhrdfstftvbgakb1uzxg4,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,7bmjm4njqcqta2kvqgk4flt78,7bmjm4njqcqta2kvqgk4flt78,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,80mgsuqlhov0rsfdmxh5zd3o,80mgsuqlhov0rsfdmxh5zd3o,2025-03-01,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,a4n04ubufy2a1ibdr2x98bthw,a4n04ubufy2a1ibdr2x98bthw,2026-04-03,,2026-10-09T22:54:10Z,2026-10-10T02:28:04Z,3,"WrongMatch('popup 2765969 shows None, not a4n04ubufy2a1ibdr2x98bthw; no fallback had the match')"
-backfill,match,aeafmrv5aajbmfoskmgd3gxsk,aeafmrv5aajbmfoskmgd3gxsk,2025-02-16,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,as3lm3auvxty4mtydrkj03ro,as3lm3auvxty4mtydrkj03ro,2025-03-07,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,c3x6h3k4ob8779ikqs73xot1w,c3x6h3k4ob8779ikqs73xot1w,2025-02-16,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,cp2astkwfj6ge4p5yd1qiok5w,cp2astkwfj6ge4p5yd1qiok5w,2025-02-16,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('popup ReadTimeout: The read operation timed out')
-backfill,match,cufh4odkg82lgxptvrt889wr8,cufh4odkg82lgxptvrt889wr8,2025-05-23,,2026-10-09T21:08:00Z,2026-10-10T02:28:04Z,4,"WrongMatch('popup 2135559 shows None, not cufh4odkg82lgxptvrt889wr8; no fallback had the match')"
-backfill,match,d0x1goion7o4056jej5yivrbo,d0x1goion7o4056jej5yivrbo,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,d2xpx8uyo9mk8cqrtv7x6hst0,d2xpx8uyo9mk8cqrtv7x6hst0,2025-03-08,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,djbdw6udkekzf1xstg7ed7aj8,djbdw6udkekzf1xstg7ed7aj8,2025-02-22,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,e7pkbf5tl7tpz79c34070fuvo,e7pkbf5tl7tpz79c34070fuvo,2025-02-17,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,ee6ffia5yfgnhxdctqq361c7o,ee6ffia5yfgnhxdctqq361c7o,2025-02-27,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
-backfill,match,encst263o9zgov5yy0vg2aal0,encst263o9zgov5yy0vg2aal0,2025-03-15,,2026-10-10T00:40:48Z,2026-10-10T02:28:04Z,2,RuntimeError('statistics page failed')
-backfill,match,f23oosir7p3znnzcxu52f5yqc,f23oosir7p3znnzcxu52f5yqc,2025-04-21,,2026-10-09T21:08:00Z,2026-10-10T02:28:04Z,4,"WrongMatch('popup 2088535 shows None, not f23oosir7p3znnzcxu52f5yqc; no fallback had the match')"
-backfill,match,kfqrvgxbx7nknlx5vwc4w1zo,kfqrvgxbx7nknlx5vwc4w1zo,2025-02-18,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('popup ReadTimeout: The read operation timed out')
-backfill,match,ntzonv4urawwkmpf2iyuyexg,ntzonv4urawwkmpf2iyuyexg,2025-02-24,,2026-10-10T02:28:04Z,2026-10-10T02:28:04Z,1,RuntimeError('statistics page failed')
+backfill,listing,2025-02-25,,2025-02-25,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('date listing 2025-02-25 failed')
+backfill,match,1wstd1sima1bhu00bsokj3j10,1wstd1sima1bhu00bsokj3j10,2025-01-31,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,28b5a4ez7egoxq626x2ltypec,28b5a4ez7egoxq626x2ltypec,2025-12-15,,2026-10-09T22:54:10Z,2026-10-10T04:12:31Z,4,"WrongMatch('popup 2510632 shows None, not 28b5a4ez7egoxq626x2ltypec; no fallback had the match')"
+backfill,match,2dmgfz4tp7squo9bwabnyu5n8,2dmgfz4tp7squo9bwabnyu5n8,2025-02-07,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,2e17usaoghqlf93llrtlk4gt0,2e17usaoghqlf93llrtlk4gt0,2025-02-09,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,32jiojczibr9gcvlhi58ihp0,32jiojczibr9gcvlhi58ihp0,2025-03-22,,2026-10-10T00:40:48Z,2026-10-10T04:12:31Z,3,"WrongMatch('popup 2101389 shows None, not 32jiojczibr9gcvlhi58ihp0; no fallback had the match')"
+backfill,match,34squ0rzh4i2b02qugk20tu6s,34squ0rzh4i2b02qugk20tu6s,2025-05-05,,2026-10-09T22:54:10Z,2026-10-10T04:12:31Z,4,"WrongMatch('popup 2107849 shows None, not 34squ0rzh4i2b02qugk20tu6s; no fallback had the match')"
+backfill,match,4ccsus13nkmmpnse8tvjm50yc,4ccsus13nkmmpnse8tvjm50yc,2025-02-06,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,4d1sylxx9e382gy16z4racwlw,4d1sylxx9e382gy16z4racwlw,2025-02-07,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,4ehu8d29484u3u5ts11jy42z8,4ehu8d29484u3u5ts11jy42z8,2025-02-06,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,6e8894e74c1wdt9ovfqhrhlhw,6e8894e74c1wdt9ovfqhrhlhw,2025-02-05,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,72mzthtng0t6ny47hv2wh6m1g,72mzthtng0t6ny47hv2wh6m1g,2025-02-08,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,72tycotobk2d0x9wklmnfp990,72tycotobk2d0x9wklmnfp990,2026-04-19,,2026-10-09T22:54:10Z,2026-10-10T04:12:31Z,4,"WrongMatch('popup 2805967 shows None, not 72tycotobk2d0x9wklmnfp990; no fallback had the match')"
+backfill,match,734l85kravd015q1h45tyhk44,734l85kravd015q1h45tyhk44,2025-02-09,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,7rqkx00mgw9nmko25vpprsqvo,7rqkx00mgw9nmko25vpprsqvo,2025-02-09,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,7ub769rvd33lsd0lwok5vcic,7ub769rvd33lsd0lwok5vcic,2025-02-07,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,7ugwmiysltr9ml7mnhx4us4yc,7ugwmiysltr9ml7mnhx4us4yc,2025-01-31,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,9q01f707xjrc64jjywvo5zk7o,9q01f707xjrc64jjywvo5zk7o,2025-02-16,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,a4n04ubufy2a1ibdr2x98bthw,a4n04ubufy2a1ibdr2x98bthw,2026-04-03,,2026-10-09T22:54:10Z,2026-10-10T04:12:31Z,4,"WrongMatch('popup 2765969 shows None, not a4n04ubufy2a1ibdr2x98bthw; no fallback had the match')"
+backfill,match,aacpcr6tzurm4oeuioxzmbvh0,aacpcr6tzurm4oeuioxzmbvh0,2025-02-08,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,aubipe63wwks8ce51iow81qtw,aubipe63wwks8ce51iow81qtw,2025-02-03,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('popup ReadTimeout: The read operation timed out')
+backfill,match,avlm2j8951vwz2zkvqvzcu0ic,avlm2j8951vwz2zkvqvzcu0ic,2025-02-06,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,"WrongMatch('popup 2032776 shows None, not avlm2j8951vwz2zkvqvzcu0ic; no fallback had the match')"
+backfill,match,bcvoop0nt08hfnqajrwsqm3o4,bcvoop0nt08hfnqajrwsqm3o4,2025-02-10,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,bew1j6xa08s5dds5tux6vdv6c,bew1j6xa08s5dds5tux6vdv6c,2025-02-14,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,bzo70peil5jeh5podqsngja50,bzo70peil5jeh5podqsngja50,2025-02-09,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,cufh4odkg82lgxptvrt889wr8,cufh4odkg82lgxptvrt889wr8,2025-05-23,,2026-10-09T21:08:00Z,2026-10-10T04:12:31Z,5,"WrongMatch('popup 2135559 shows None, not cufh4odkg82lgxptvrt889wr8; no fallback had the match')"
+backfill,match,d7dfj65r3z8l1siiiv5v932tw,d7dfj65r3z8l1siiiv5v932tw,2025-02-16,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,dfmihgt8ofjt565xxhodlhjis,dfmihgt8ofjt565xxhodlhjis,2025-02-08,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,djbdw6udkekzf1xstg7ed7aj8,djbdw6udkekzf1xstg7ed7aj8,2025-02-22,,2026-10-10T02:28:04Z,2026-10-10T04:12:31Z,2,RuntimeError('statistics page failed')
+backfill,match,ee6ffia5yfgnhxdctqq361c7o,ee6ffia5yfgnhxdctqq361c7o,2025-02-27,,2026-10-10T02:28:04Z,2026-10-10T04:12:31Z,2,RuntimeError('statistics page failed')
+backfill,match,f23oosir7p3znnzcxu52f5yqc,f23oosir7p3znnzcxu52f5yqc,2025-04-21,,2026-10-09T21:08:00Z,2026-10-10T04:12:31Z,5,"WrongMatch('popup 2088535 shows None, not f23oosir7p3znnzcxu52f5yqc; no fallback had the match')"
+backfill,match,f2msyohhywgdpkocdb5meglck,f2msyohhywgdpkocdb5meglck,2025-02-07,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('statistics page failed')
+backfill,match,pyjxc8n18dqjrmghanskiplg,pyjxc8n18dqjrmghanskiplg,2025-02-03,,2026-10-10T04:12:31Z,2026-10-10T04:12:31Z,1,RuntimeError('popup HTTP 500')
