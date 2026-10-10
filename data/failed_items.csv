@@ -1625,3 +1625,8 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-10T10:15:05Z,backfill,match,5ydwa9mpw1qzigduin240aaz8,5ydwa9mpw1qzigduin240aaz8,1,RuntimeError('statistics page failed')
 2026-10-10T10:15:05Z,backfill,match,603ndku3q0smhvtqnxngjnpxw,603ndku3q0smhvtqnxngjnpxw,1,RuntimeError('statistics page failed')
 2026-10-10T10:15:05Z,backfill,match,60oms281jm4vvevygjvh38v10,60oms281jm4vvevygjvh38v10,1,RuntimeError('statistics page failed')
+2026-10-10T12:01:07Z,results,match,66usiwi2upqe1szwu3130e3o4,66usiwi2upqe1szwu3130e3o4,2,RuntimeError('popup ReadTimeout: The read operation timed out')
+2026-10-10T12:01:07Z,results,match,ait3n9616mft25464eqxqihas,ait3n9616mft25464eqxqihas,2,RuntimeError('statistics page failed')
+2026-10-10T12:01:07Z,results,match,3qb0alnf9bqwcq4e00vtvawic,3qb0alnf9bqwcq4e00vtvawic,2,RuntimeError('statistics page failed')
+2026-10-10T12:01:07Z,results,match,53hdtqrme0eged9icm4g3npxw,53hdtqrme0eged9icm4g3npxw,2,RuntimeError('statistics page failed')
+2026-10-10T12:01:07Z,results,match,1y28f885enhohgf49t7cuomj8,1y28f885enhohgf49t7cuomj8,1,RuntimeError('statistics page failed')
