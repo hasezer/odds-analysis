@@ -52,7 +52,7 @@ class FetchResult:
 @dataclass
 class MackolikClient:
     min_interval_s: float = 1.0
-    timeout_s: float = 20.0
+    timeout_s: float = 40.0  # Mackolik's odds popup can take 20+ s to answer when the site is busy
     raw_dir: Path | None = None
     retry_delays: tuple[int, ...] = BACKOFF_SECONDS  # used when get() is called without backoff=
     requests: int = field(default=0, init=False)  # HTTP attempts, retries included
