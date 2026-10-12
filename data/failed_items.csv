@@ -2685,3 +2685,21 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-12T12:40:44Z,backfill,match,b7fwro91vo38twkkabidao9w4,b7fwro91vo38twkkabidao9w4,1,RuntimeError('popup HTTP 502')
 2026-10-12T12:40:44Z,backfill,match,b8uj9w7gzrpk3jea91pnhomqc,b8uj9w7gzrpk3jea91pnhomqc,1,RuntimeError('popup HTTP 502')
 2026-10-12T12:40:44Z,backfill,match,dy74wkk29210m2xwcxc9xim8k,dy74wkk29210m2xwcxc9xim8k,1,RuntimeError('popup HTTP 500')
+2026-10-12T14:30:11Z,backfill,abandoned_match,ezqenalyx2yyd1ikwmw4hxqms,ezqenalyx2yyd1ikwmw4hxqms,5,"given up after 5 attempts; last error: WrongMatch('popup 1721397 shows None, not ezqenalyx2yyd1ikwmw4hxqms; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,cjwu9znjweq4tm3ij7sgi80es,cjwu9znjweq4tm3ij7sgi80es,5,"WrongMatch('popup 1700486 shows None, not cjwu9znjweq4tm3ij7sgi80es; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,egd7ral0rzjahq0p0mr7a3y8k,egd7ral0rzjahq0p0mr7a3y8k,5,"WrongMatch('popup 1686111 shows None, not egd7ral0rzjahq0p0mr7a3y8k; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,d7pkn22nahgs1xl7whncql4wk,d7pkn22nahgs1xl7whncql4wk,5,"WrongMatch('popup 1664346 shows None, not d7pkn22nahgs1xl7whncql4wk; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,coxsvcbbbjq4d8wd51q299rtg,coxsvcbbbjq4d8wd51q299rtg,4,"WrongMatch('popup 1633873 shows None, not coxsvcbbbjq4d8wd51q299rtg; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,9gp5m8w5msgt1x62a7b1boyz8,9gp5m8w5msgt1x62a7b1boyz8,4,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,cckxxk7oaao15535jlns2b310,cckxxk7oaao15535jlns2b310,4,"WrongMatch('popup 1617533 shows None, not cckxxk7oaao15535jlns2b310; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,bb52jw6ht9swlv6pfa1yawi6s,bb52jw6ht9swlv6pfa1yawi6s,3,"WrongMatch('popup 1622102 shows None, not bb52jw6ht9swlv6pfa1yawi6s; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,60n4bhj4ndiq2z593dgoqw0t0,60n4bhj4ndiq2z593dgoqw0t0,3,"WrongMatch('popup 1608523 shows None, not 60n4bhj4ndiq2z593dgoqw0t0; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,149rdw7iwps7zvje9111ky1w4,149rdw7iwps7zvje9111ky1w4,3,"WrongMatch('popup 1579572 shows None, not 149rdw7iwps7zvje9111ky1w4; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,1gtht0hna4bwbz4h2c7yy8o44,1gtht0hna4bwbz4h2c7yy8o44,1,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,o4kh7a3iw5fdheqgezn4xhck,o4kh7a3iw5fdheqgezn4xhck,1,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,q6ce312ut98fd1p4ys34crh0,q6ce312ut98fd1p4ys34crh0,1,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,4t4pc73ogyx63rj6nzdjx60pg,4t4pc73ogyx63rj6nzdjx60pg,1,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,8vyt9v2zn2llba60qckshp4wk,8vyt9v2zn2llba60qckshp4wk,1,"WrongMatch('popup 1498752 shows None, not 8vyt9v2zn2llba60qckshp4wk; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,fvxpucruszp8vkmpf7fhk2dw,fvxpucruszp8vkmpf7fhk2dw,1,statistics page failed (saved without statistics)
+2026-10-12T14:30:11Z,backfill,match,56eiu9qadr1re5jd9kmvyfo5w,56eiu9qadr1re5jd9kmvyfo5w,1,"WrongMatch('popup 1474536 shows None, not 56eiu9qadr1re5jd9kmvyfo5w; no fallback had the match')"
+2026-10-12T14:30:11Z,backfill,match,6eirjd1mbzxdpaf7o1eho0xlg,6eirjd1mbzxdpaf7o1eho0xlg,1,RuntimeError('popup HTTP 502')
