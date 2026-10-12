@@ -2585,3 +2585,15 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-12T03:40:24Z,backfill,match,cnpptazmxpk28pkjnvxmo178,cnpptazmxpk28pkjnvxmo178,1,RuntimeError('popup HTTP 500')
 2026-10-12T03:40:24Z,backfill,match,bourjwyr6szi4kbmbf2vob9w,bourjwyr6szi4kbmbf2vob9w,1,RuntimeError('popup HTTP 502')
 2026-10-12T03:40:24Z,backfill,match,56lpetbo25w2gd1ok6cqionbo,56lpetbo25w2gd1ok6cqionbo,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,9ibwgwy21kp21s5zo967dzx0,9ibwgwy21kp21s5zo967dzx0,4,"WrongMatch('popup 1789008 shows None, not 9ibwgwy21kp21s5zo967dzx0; no fallback had the match')"
+2026-10-12T05:40:11Z,backfill,match,8145i9g0gtwxd26tpeoegt4wk,8145i9g0gtwxd26tpeoegt4wk,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,a8konun677tzyryolm0f7muc4,a8konun677tzyryolm0f7muc4,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,bi6uat0ejnoryhnhvtf0lu13o,bi6uat0ejnoryhnhvtf0lu13o,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,3vbb2455t391lebu9r3yddzo,3vbb2455t391lebu9r3yddzo,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,96z7dkectwg5wy0he71841us4,96z7dkectwg5wy0he71841us4,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,8ygk2n9yjt0zq40jglaujjac4,8ygk2n9yjt0zq40jglaujjac4,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,a5e7h2zp0orfxiun81s46u42c,a5e7h2zp0orfxiun81s46u42c,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,9mvamfomnldj4trydxqysx0r8,9mvamfomnldj4trydxqysx0r8,1,RuntimeError('popup HTTP 500')
+2026-10-12T05:40:11Z,backfill,match,9lqpe0pw4jzz0w5tyleuqs7bo,9lqpe0pw4jzz0w5tyleuqs7bo,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,8olvrtlp4ozbevbelso9l38d0,8olvrtlp4ozbevbelso9l38d0,1,RuntimeError('popup HTTP 502')
+2026-10-12T05:40:11Z,backfill,match,ezqenalyx2yyd1ikwmw4hxqms,ezqenalyx2yyd1ikwmw4hxqms,1,"WrongMatch('popup 1721397 shows None, not ezqenalyx2yyd1ikwmw4hxqms; no fallback had the match')"
