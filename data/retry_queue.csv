@@ -1,13 +1,13 @@
 job,kind,key,match_id,match_date,kickoff_utc,first_failed_utc,last_failed_utc,attempts,last_error
-backfill,match,405wm1tsaliim5ppf0vorbwus,405wm1tsaliim5ppf0vorbwus,2024-06-04,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,RuntimeError('popup HTTP 502')
-backfill,match,41174k0ge458kpedqbfv4t3bo,41174k0ge458kpedqbfv4t3bo,2024-06-04,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,RuntimeError('popup HTTP 502')
-backfill,match,9ibwgwy21kp21s5zo967dzx0,9ibwgwy21kp21s5zo967dzx0,2024-10-06,,2026-10-12T00:08:23Z,2026-10-12T07:28:15Z,5,"WrongMatch('popup 1789008 shows None, not 9ibwgwy21kp21s5zo967dzx0; no fallback had the match')"
-backfill,match,ceyw66f8nthkj7dh4xikdpuz8,ceyw66f8nthkj7dh4xikdpuz8,2024-08-02,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,RuntimeError('popup HTTP 502')
-backfill,match,cjwu9znjweq4tm3ij7sgi80es,cjwu9znjweq4tm3ij7sgi80es,2024-07-14,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,"WrongMatch('popup 1700486 shows None, not cjwu9znjweq4tm3ij7sgi80es; no fallback had the match')"
-backfill,match,d7pkn22nahgs1xl7whncql4wk,d7pkn22nahgs1xl7whncql4wk,2024-06-15,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,"WrongMatch('popup 1664346 shows None, not d7pkn22nahgs1xl7whncql4wk; no fallback had the match')"
-backfill,match,dr4heyshsyppkicfq6f794hec,dr4heyshsyppkicfq6f794hec,2024-07-04,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,RuntimeError('popup HTTP 502')
-backfill,match,dsqivhaxxh8feeewg6a6wou1g,dsqivhaxxh8feeewg6a6wou1g,2024-06-01,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,statistics page failed (saved without statistics)
-backfill,match,du6mqsfr2m1y5z7b8tams3310,du6mqsfr2m1y5z7b8tams3310,2024-07-05,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,statistics page failed (saved without statistics)
-backfill,match,e6k2jm2bxmc4rvoq1nt07cdg4,e6k2jm2bxmc4rvoq1nt07cdg4,2024-07-18,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,RuntimeError('popup HTTP 500')
-backfill,match,egd7ral0rzjahq0p0mr7a3y8k,egd7ral0rzjahq0p0mr7a3y8k,2024-07-06,,2026-10-12T07:28:15Z,2026-10-12T07:28:15Z,1,"WrongMatch('popup 1686111 shows None, not egd7ral0rzjahq0p0mr7a3y8k; no fallback had the match')"
-backfill,match,ezqenalyx2yyd1ikwmw4hxqms,ezqenalyx2yyd1ikwmw4hxqms,2024-08-12,,2026-10-12T05:40:11Z,2026-10-12T07:28:15Z,2,"WrongMatch('popup 1721397 shows None, not ezqenalyx2yyd1ikwmw4hxqms; no fallback had the match')"
+backfill,match,63am1xu4ytoiwu4dx6tsht9g4,63am1xu4ytoiwu4dx6tsht9g4,2024-05-12,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,statistics page failed (saved without statistics)
+backfill,match,63tt6j6lkz5pu0jedr0o148pg,63tt6j6lkz5pu0jedr0o148pg,2024-05-12,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,RuntimeError('popup HTTP 502')
+backfill,match,9gp5m8w5msgt1x62a7b1boyz8,9gp5m8w5msgt1x62a7b1boyz8,2024-05-10,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,statistics page failed (saved without statistics)
+backfill,match,c3ujb457ol52f0zwu9cqh90yc,c3ujb457ol52f0zwu9cqh90yc,2024-05-12,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,statistics page failed (saved without statistics)
+backfill,match,c9zempo45ibjtz805j4xzor2s,c9zempo45ibjtz805j4xzor2s,2024-05-12,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,RuntimeError('popup HTTP 502')
+backfill,match,calfoifyyjgksjgcldwouo9w4,calfoifyyjgksjgcldwouo9w4,2024-05-12,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,RuntimeError('popup HTTP 502')
+backfill,match,cckxxk7oaao15535jlns2b310,cckxxk7oaao15535jlns2b310,2024-05-05,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,"WrongMatch('popup 1617533 shows None, not cckxxk7oaao15535jlns2b310; no fallback had the match')"
+backfill,match,cjwu9znjweq4tm3ij7sgi80es,cjwu9znjweq4tm3ij7sgi80es,2024-07-14,,2026-10-12T07:28:15Z,2026-10-12T09:14:23Z,2,"WrongMatch('popup 1700486 shows None, not cjwu9znjweq4tm3ij7sgi80es; no fallback had the match')"
+backfill,match,coxsvcbbbjq4d8wd51q299rtg,coxsvcbbbjq4d8wd51q299rtg,2024-05-19,,2026-10-12T09:14:23Z,2026-10-12T09:14:23Z,1,"WrongMatch('popup 1633873 shows None, not coxsvcbbbjq4d8wd51q299rtg; no fallback had the match')"
+backfill,match,d7pkn22nahgs1xl7whncql4wk,d7pkn22nahgs1xl7whncql4wk,2024-06-15,,2026-10-12T07:28:15Z,2026-10-12T09:14:23Z,2,"WrongMatch('popup 1664346 shows None, not d7pkn22nahgs1xl7whncql4wk; no fallback had the match')"
+backfill,match,egd7ral0rzjahq0p0mr7a3y8k,egd7ral0rzjahq0p0mr7a3y8k,2024-07-06,,2026-10-12T07:28:15Z,2026-10-12T09:14:23Z,2,"WrongMatch('popup 1686111 shows None, not egd7ral0rzjahq0p0mr7a3y8k; no fallback had the match')"
+backfill,match,ezqenalyx2yyd1ikwmw4hxqms,ezqenalyx2yyd1ikwmw4hxqms,2024-08-12,,2026-10-12T05:40:11Z,2026-10-12T09:14:23Z,3,"WrongMatch('popup 1721397 shows None, not ezqenalyx2yyd1ikwmw4hxqms; no fallback had the match')"

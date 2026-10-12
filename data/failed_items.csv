@@ -2609,3 +2609,16 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-12T07:28:15Z,backfill,match,41174k0ge458kpedqbfv4t3bo,41174k0ge458kpedqbfv4t3bo,1,RuntimeError('popup HTTP 502')
 2026-10-12T07:28:15Z,backfill,match,405wm1tsaliim5ppf0vorbwus,405wm1tsaliim5ppf0vorbwus,1,RuntimeError('popup HTTP 502')
 2026-10-12T07:28:15Z,backfill,match,dsqivhaxxh8feeewg6a6wou1g,dsqivhaxxh8feeewg6a6wou1g,1,statistics page failed (saved without statistics)
+2026-10-12T09:14:23Z,backfill,abandoned_match,9ibwgwy21kp21s5zo967dzx0,9ibwgwy21kp21s5zo967dzx0,5,"given up after 5 attempts; last error: WrongMatch('popup 1789008 shows None, not 9ibwgwy21kp21s5zo967dzx0; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,ezqenalyx2yyd1ikwmw4hxqms,ezqenalyx2yyd1ikwmw4hxqms,3,"WrongMatch('popup 1721397 shows None, not ezqenalyx2yyd1ikwmw4hxqms; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,cjwu9znjweq4tm3ij7sgi80es,cjwu9znjweq4tm3ij7sgi80es,2,"WrongMatch('popup 1700486 shows None, not cjwu9znjweq4tm3ij7sgi80es; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,egd7ral0rzjahq0p0mr7a3y8k,egd7ral0rzjahq0p0mr7a3y8k,2,"WrongMatch('popup 1686111 shows None, not egd7ral0rzjahq0p0mr7a3y8k; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,d7pkn22nahgs1xl7whncql4wk,d7pkn22nahgs1xl7whncql4wk,2,"WrongMatch('popup 1664346 shows None, not d7pkn22nahgs1xl7whncql4wk; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,coxsvcbbbjq4d8wd51q299rtg,coxsvcbbbjq4d8wd51q299rtg,1,"WrongMatch('popup 1633873 shows None, not coxsvcbbbjq4d8wd51q299rtg; no fallback had the match')"
+2026-10-12T09:14:23Z,backfill,match,c3ujb457ol52f0zwu9cqh90yc,c3ujb457ol52f0zwu9cqh90yc,1,statistics page failed (saved without statistics)
+2026-10-12T09:14:23Z,backfill,match,63am1xu4ytoiwu4dx6tsht9g4,63am1xu4ytoiwu4dx6tsht9g4,1,statistics page failed (saved without statistics)
+2026-10-12T09:14:23Z,backfill,match,63tt6j6lkz5pu0jedr0o148pg,63tt6j6lkz5pu0jedr0o148pg,1,RuntimeError('popup HTTP 502')
+2026-10-12T09:14:23Z,backfill,match,calfoifyyjgksjgcldwouo9w4,calfoifyyjgksjgcldwouo9w4,1,RuntimeError('popup HTTP 502')
+2026-10-12T09:14:23Z,backfill,match,c9zempo45ibjtz805j4xzor2s,c9zempo45ibjtz805j4xzor2s,1,RuntimeError('popup HTTP 502')
+2026-10-12T09:14:23Z,backfill,match,9gp5m8w5msgt1x62a7b1boyz8,9gp5m8w5msgt1x62a7b1boyz8,1,statistics page failed (saved without statistics)
+2026-10-12T09:14:23Z,backfill,match,cckxxk7oaao15535jlns2b310,cckxxk7oaao15535jlns2b310,1,"WrongMatch('popup 1617533 shows None, not cckxxk7oaao15535jlns2b310; no fallback had the match')"
