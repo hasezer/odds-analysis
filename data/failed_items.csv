@@ -2569,3 +2569,8 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-12T00:08:23Z,backfill,match,2sxfrjdudoknsnmimee3zvo4,2sxfrjdudoknsnmimee3zvo4,1,RuntimeError('popup HTTP 504')
 2026-10-12T00:08:23Z,backfill,match,6w2qm3jcv0ft1fbeujsur310,6w2qm3jcv0ft1fbeujsur310,1,RuntimeError('popup HTTP 502')
 2026-10-12T00:08:23Z,backfill,match,34sozckstxf4odslxtfmf4aok,34sozckstxf4odslxtfmf4aok,1,statistics page failed (saved without statistics)
+2026-10-12T01:55:09Z,backfill,match,9ibwgwy21kp21s5zo967dzx0,9ibwgwy21kp21s5zo967dzx0,2,"WrongMatch('popup 1789008 shows None, not 9ibwgwy21kp21s5zo967dzx0; no fallback had the match')"
+2026-10-12T01:55:09Z,backfill,match,942no6tngg8wtokwl7w6idul0,942no6tngg8wtokwl7w6idul0,1,statistics page failed (saved without statistics)
+2026-10-12T01:55:09Z,backfill,match,5f2pqx7r5o3dhaaubkj2q5jx0,5f2pqx7r5o3dhaaubkj2q5jx0,1,RuntimeError('popup HTTP 502')
+2026-10-12T01:55:09Z,backfill,match,31h1fm3zbimx4pzifcbtzssgk,31h1fm3zbimx4pzifcbtzssgk,1,RuntimeError('popup HTTP 500')
+2026-10-12T01:55:09Z,backfill,match,66l34ax3m29s58ud7hbv3bd3o,66l34ax3m29s58ud7hbv3bd3o,1,RuntimeError('popup HTTP 502')
