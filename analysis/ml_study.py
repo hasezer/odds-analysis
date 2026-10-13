@@ -53,7 +53,8 @@ def ml_section():
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("Prediction accuracy vs Nesine's own price, % (right of 0 = better than Nesine)")
     ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, frameon=False)
-    ax.set_title("1. Machine learning cannot out-predict Nesine's prices\n(unseen matches, 2025 → today)", pad=34)
+    ax.set_title("1. Machine learning barely improves on Nesine's prices\n(unseen matches, 2025 → today; the top two are a"
+                 " cut-splitting artefact)", pad=34, fontsize=14)
     fig.tight_layout(); fig.savefig(OUT / "ml_1_accuracy.png", dpi=150); plt.close(fig)
 
     b = bets[(bets["market"] != "ALL MARKETS") & (bets["bets_B"] >= 50) & (bets["bets_C"] >= 30)]
