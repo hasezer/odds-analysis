@@ -50,19 +50,22 @@ def tstat(profit):
 def learners():
     return {
         "lr": lambda: LogisticRegression(C=0.05, max_iter=3000),
-        "gbm": lambda: HistGradientBoostingClassifier(max_iter=300, learning_rate=.03, max_leaf_nodes=15,
+        "gbm": lambda: HistGradientBoostingClassifier(max_iter=150, learning_rate=.06, max_leaf_nodes=15, max_bins=63,
                                                       min_samples_leaf=100, l2_regularization=5.0,
-                                                      early_stopping=True, validation_fraction=.15, random_state=0),
+                                                      early_stopping=True, validation_fraction=.15,
+                                                      n_iter_no_change=15, random_state=0),
         "knn": lambda: KNeighborsClassifier(n_neighbors=300, weights="uniform"),
     }
 
 
-def run():
+def run(shard=0, nshards=1):
     z = mdat.build()
     X = design(z)
     O, Hm, per, names = z["O"], z["Hm"], z["per"], z["names"]
     rows = []
     for s in range(len(names)):
+        if s % nshards != shard:
+            continue
         ok = ~np.isnan(Hm[:, s]) & ~np.isnan(O[:, s])
         A, B, C = ok & (per == "A"), ok & (per == "B"), ok & (per == "C")
         if A.sum() < 2000 or B.sum() < 1000:
@@ -95,15 +98,16 @@ def run():
                 row.update({"passed_B": True, "edge": e, "bets_B": n, "roi_B": roi, "t_B": t,
                             "bets_C": int(betC.sum()), "roi_C": rC, "t_C": tC})
             rows.append(row)
-        if s % 10 == 0:
-            r = pd.DataFrame(rows)
-            print(f"{s + 1}/{len(names)} bet types done; passed B so far: {int(r['passed_B'].sum())}", flush=True)
+        r = pd.DataFrame(rows)
+        print(f"shard {shard}: bet type {s + 1}/{len(names)} done; passed B so far: {int(r['passed_B'].sum())}",
+              flush=True)
     r = pd.DataFrame(rows)
-    r.to_parquet(CACHE / "book_models.parquet")
+    r.to_parquet(CACHE / f"book_models_{shard}of{nshards}.parquet")
     return r
 
 
 if __name__ == "__main__":
-    r = run()
+    shard, nshards = (int(sys.argv[1]), int(sys.argv[2])) if len(sys.argv) > 2 else (0, 1)
+    r = run(shard, nshards)
     pd.set_option("display.width", 250)
     print(r[r["passed_B"]].round(2).to_string())

@@ -32,6 +32,12 @@ def build(refresh=False):
     mt, sel = md.build()
     mt = mt.sort_values("kickoff_utc").reset_index(drop=True)
     sel = sel[sel["match_id"].isin(mt["match_id"])].copy()
+    # data error: in Oct-Nov 2025 the four HT_2H_BTTS prices of 211 matches are stored under the wrong labels
+    # (NO/NO priced above YES/YES); drop that market for those matches
+    hb = sel[sel["market_key"] == "HT_2H_BTTS"].pivot_table(index="match_id", columns="selection_key",
+                                                              values="closing_odds")
+    swapped = hb.index[hb["NO/NO"] > hb["YES/YES"]]
+    sel = sel[~((sel["market_key"] == "HT_2H_BTTS") & sel["match_id"].isin(swapped))]
     sel["lab"] = [label(a, b, c) for a, b, c in zip(sel["market_key"], sel["line"], sel["selection_key"])]
     cover = sel.groupby("lab")["match_id"].nunique() / len(mt)
     keep = cover[cover >= MIN_COVER].index
