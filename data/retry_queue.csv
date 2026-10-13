@@ -38,3 +38,4 @@ backfill,match,er7k01q021c4kj75cvi1g5w5w,er7k01q021c4kj75cvi1g5w5w,2023-11-04,,2
 backfill,match,ergrz57hcihkra3r5h3ar455g,ergrz57hcihkra3r5h3ar455g,2023-11-06,,2026-10-12T23:18:53Z,2026-10-13T04:40:07Z,4,RuntimeError('popup HTTP 502')
 backfill,match,et04kafxrg56u0xke63mddses,et04kafxrg56u0xke63mddses,2023-11-06,,2026-10-12T23:18:53Z,2026-10-13T04:40:07Z,4,RuntimeError('popup HTTP 502')
 backfill,match,k4fdkclerspaovpzdrzpugwk,k4fdkclerspaovpzdrzpugwk,2023-11-03,,2026-10-13T02:53:46Z,2026-10-13T04:40:07Z,2,RuntimeError('popup HTTP 502')
+results,match,79fa13ynnhqppqplkd17bicd0,79fa13ynnhqppqplkd17bicd0,2026-10-12,2026-10-12T16:30:00+00:00,2026-10-13T06:27:10Z,2026-10-13T06:27:10Z,1,RuntimeError('popup HTTP 500')

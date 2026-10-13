@@ -3169,3 +3169,4 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-13T04:40:07Z,backfill,match,3t1hxyokppbzf3ha5jucstafo,3t1hxyokppbzf3ha5jucstafo,1,RuntimeError('popup HTTP 500')
 2026-10-13T04:40:07Z,backfill,match,ejfpzxsreo49pgdp0a5ocnxn8,ejfpzxsreo49pgdp0a5ocnxn8,1,RuntimeError('popup HTTP 502')
 2026-10-13T04:40:07Z,backfill,match,3tmm82mppffw5r6ox11ld9lhw,3tmm82mppffw5r6ox11ld9lhw,1,statistics page failed (saved without statistics)
+2026-10-13T06:27:10Z,results,match,79fa13ynnhqppqplkd17bicd0,79fa13ynnhqppqplkd17bicd0,1,RuntimeError('popup HTTP 500')
