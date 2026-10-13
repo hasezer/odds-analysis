@@ -30958,3 +30958,372 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-13T02:53:46+00:00,backfill,coverage_events,TUR-1 2023/24,ok,0.0,0 of 282 finished matches
 2026-10-13T02:53:46+00:00,backfill,coverage_stats,TUR-1 2023/24,ok,0.996,281 of 282 finished matches
 2026-10-13T02:53:46+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ARG-1 2023 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ARG-1 2023 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ARG-1 2023 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ARG-1 2023 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ARG-1 2023 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ARG-1 2023 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ARG-1 2023 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ARG-1 2023 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ARG-1 2023 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ARG-1 2023,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ARG-1 2023,ok,0,0 of 2304 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ARG-1 2023,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,ARG-1 2023,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ARG-1 2023,ok,1.0,88 of 88 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ARG-1 2023,ok,0.057,5 of 88 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ARG-1 2023,ok,1.0,88 of 88 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BRA-1 2023 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BRA-1 2023 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BRA-1 2023 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BRA-1 2023 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BRA-1 2023 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BRA-1 2023 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BRA-1 2023 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,BRA-1 2023,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,BRA-1 2023,ok,0,0 of 3626 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,BRA-1 2023,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,BRA-1 2023,ok,1.0,120 of 120 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,BRA-1 2023,ok,0.0,0 of 120 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,BRA-1 2023,ok,1.0,120 of 120 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,JPN-1 2023 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,JPN-1 2023 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,JPN-1 2023 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,JPN-1 2023 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,JPN-1 2023 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,JPN-1 2023 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,JPN-1 2023 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,JPN-1 2023,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,JPN-1 2023,ok,0,0 of 1288 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,JPN-1 2023,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,JPN-1 2023,ok,1.0,44 of 44 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,JPN-1 2023,ok,0.0,0 of 44 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,JPN-1 2023,ok,1.0,44 of 44 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NOR-1 2023 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NOR-1 2023 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NOR-1 2023 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NOR-1 2023 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NOR-1 2023 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NOR-1 2023 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NOR-1 2023 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,NOR-1 2023,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,NOR-1 2023,warn,2,2 of 1408 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.1%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,NOR-1 2023,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,NOR-1 2023,ok,1.0,48 of 48 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,NOR-1 2023,ok,0.0,0 of 48 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,NOR-1 2023,ok,1.0,48 of 48 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,USA-1 2023 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,USA-1 2023 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,USA-1 2023 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,USA-1 2023 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,USA-1 2023 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,USA-1 2023 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,USA-1 2023 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,USA-1 2023 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,USA-1 2023 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,USA-1 2023,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,USA-1 2023,ok,0,0 of 1215 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,USA-1 2023,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,USA-1 2023,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,USA-1 2023,ok,1.0,43 of 43 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,USA-1 2023,ok,0.14,6 of 43 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,USA-1 2023,ok,1.0,43 of 43 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,AUT-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,AUT-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,AUT-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,AUT-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,AUT-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,AUT-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,AUT-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,AUT-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,AUT-1 2023/24,ok,0,0 of 4143 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,AUT-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,AUT-1 2023/24,ok,1.0,133 of 133 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,AUT-1 2023/24,ok,0.0,0 of 133 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,AUT-1 2023/24,ok,1.0,133 of 133 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BEL-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BEL-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BEL-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BEL-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,BEL-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BEL-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BEL-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BEL-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,BEL-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,BEL-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,BEL-1 2023/24,ok,0,0 of 7416 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,BEL-1 2023/24,fail,1,finished matches without HT or FT score: 9gp5m8w5msgt1x62a7b1boyz8
+2026-10-13T04:40:07+00:00,backfill,events_match_score,BEL-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,BEL-1 2023/24,ok,1.0,235 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,BEL-1 2023/24,ok,0.004,1 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,BEL-1 2023/24,ok,0.996,234 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,DEN-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,DEN-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,DEN-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,DEN-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,DEN-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,DEN-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,DEN-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,DEN-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,DEN-1 2023/24,ok,0,0 of 3950 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,DEN-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,DEN-1 2023/24,ok,1.0,127 of 127 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,DEN-1 2023/24,ok,0.0,0 of 127 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,DEN-1 2023/24,ok,1.0,127 of 127 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ENG-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ENG-1 2023/24,warn,8,8 of 9725 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.1%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ENG-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ENG-1 2023/24,ok,1.0,299 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ENG-1 2023/24,ok,0.0,0 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ENG-1 2023/24,ok,1.0,299 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ENG-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ENG-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ENG-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ENG-2 2023/24,ok,0,0 of 13275 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ENG-2 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ENG-2 2023/24,ok,0.986,417 of 423 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ENG-2 2023/24,ok,0.0,0 of 423 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ENG-2 2023/24,ok,0.986,417 of 423 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ESP-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ESP-1 2023/24,warn,1,1 of 9082 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ESP-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ESP-1 2023/24,ok,1.0,290 of 290 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ESP-1 2023/24,ok,0.0,0 of 290 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ESP-1 2023/24,ok,1.0,290 of 290 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ESP-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ESP-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ESP-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ESP-2 2023/24,ok,0,0 of 10984 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ESP-2 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ESP-2 2023/24,ok,1.0,357 of 357 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ESP-2 2023/24,ok,0.0,0 of 357 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ESP-2 2023/24,ok,0.997,356 of 357 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,FRA-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,FRA-1 2023/24,ok,0,0 of 7618 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,FRA-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,FRA-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,FRA-1 2023/24,ok,1.0,236 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,FRA-1 2023/24,ok,0.004,1 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,FRA-1 2023/24,ok,1.0,236 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-2 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,FRA-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-2 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,FRA-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,FRA-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,FRA-2 2023/24,ok,0,0 of 8062 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,FRA-2 2023/24,fail,1,finished matches without HT or FT score: 81vkl6qtdh6g2zo9gh3vm0wes
+2026-10-13T04:40:07+00:00,backfill,events_match_score,FRA-2 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,FRA-2 2023/24,ok,1.0,281 of 281 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,FRA-2 2023/24,ok,0.004,1 of 281 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,FRA-2 2023/24,ok,1.0,281 of 281 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,GER-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,GER-1 2023/24,warn,9,9 of 7950 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.1%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,GER-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,GER-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,GER-1 2023/24,ok,1.0,244 of 244 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,GER-1 2023/24,ok,0.004,1 of 244 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,GER-1 2023/24,ok,1.0,244 of 244 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,GER-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,GER-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,GER-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,GER-2 2023/24,ok,0,0 of 7406 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,GER-2 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,GER-2 2023/24,ok,1.0,225 of 225 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,GER-2 2023/24,ok,0.0,0 of 225 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,GER-2 2023/24,ok,1.0,225 of 225 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ITA-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ITA-1 2023/24,warn,1,1 of 9251 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ITA-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ITA-1 2023/24,ok,0.997,298 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ITA-1 2023/24,ok,0.0,0 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ITA-1 2023/24,ok,0.997,298 of 299 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-2 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,ITA-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-2 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,ITA-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,ITA-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,ITA-2 2023/24,ok,0,0 of 9601 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,ITA-2 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,ITA-2 2023/24,warn,1,event goals != FT score: 7zdpkse0cerais51unpnt4wes
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,ITA-2 2023/24,ok,0.997,305 of 306 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,ITA-2 2023/24,ok,0.003,1 of 306 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,ITA-2 2023/24,ok,0.997,305 of 306 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,KSA-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,KSA-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,KSA-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,KSA-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,KSA-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,KSA-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,KSA-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,KSA-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,KSA-1 2023/24,warn,9,9 of 5558 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.2%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,KSA-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,KSA-1 2023/24,ok,1.0,224 of 224 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,KSA-1 2023/24,ok,0.0,0 of 224 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,KSA-1 2023/24,ok,1.0,224 of 224 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,MEX-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,MEX-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,MEX-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,MEX-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,MEX-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,MEX-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,MEX-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,MEX-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,MEX-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,MEX-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,MEX-1 2023/24,ok,0,0 of 6083 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,MEX-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,MEX-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,MEX-1 2023/24,ok,1.0,235 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,MEX-1 2023/24,ok,0.013,3 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,MEX-1 2023/24,ok,1.0,235 of 235 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,NED-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,NED-1 2023/24,warn,18,18 of 7477 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.2%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,NED-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,NED-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,NED-1 2023/24,ok,0.992,235 of 237 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,NED-1 2023/24,ok,0.004,1 of 237 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,NED-1 2023/24,ok,0.992,235 of 237 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-2 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-2 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-2 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,NED-2 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-2 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-2 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,NED-2 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,NED-2 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,NED-2 2023/24,ok,0,0 of 8212 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,NED-2 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,NED-2 2023/24,ok,1.0,298 of 298 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,NED-2 2023/24,ok,0.0,0 of 298 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,NED-2 2023/24,ok,1.0,298 of 298 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,POR-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,POR-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,POR-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,POR-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,POR-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,POR-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,POR-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,POR-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,POR-1 2023/24,warn,5,5 of 7300 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.1%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,POR-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,POR-1 2023/24,ok,1.0,236 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,POR-1 2023/24,ok,0.0,0 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,POR-1 2023/24,ok,1.0,236 of 236 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SCO-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SCO-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SCO-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SCO-1 2023/24 events,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SCO-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SCO-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SCO-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SCO-1 2023/24 events,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SCO-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,SCO-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,SCO-1 2023/24,warn,4,4 of 5148 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.1%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,SCO-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,events_match_score,SCO-1 2023/24,ok,0,event goals != FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,SCO-1 2023/24,ok,0.989,185 of 187 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,SCO-1 2023/24,ok,0.005,1 of 187 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,SCO-1 2023/24,ok,0.989,185 of 187 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SUI-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SUI-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SUI-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,SUI-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SUI-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SUI-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,SUI-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,SUI-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,SUI-1 2023/24,ok,0,0 of 4960 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,SUI-1 2023/24,ok,0,finished matches without HT or FT score: 
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,SUI-1 2023/24,ok,1.0,169 of 169 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,SUI-1 2023/24,ok,0.0,0 of 169 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,SUI-1 2023/24,ok,1.0,169 of 169 finished matches
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,TUR-1 2023/24 matches,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,TUR-1 2023/24 odds,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,TUR-1 2023/24 settlements,ok,0,
+2026-10-13T04:40:07+00:00,backfill,duplicate_keys,TUR-1 2023/24 stats,ok,0,
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,TUR-1 2023/24 odds,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,TUR-1 2023/24 settlements,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,orphan_rows,TUR-1 2023/24 stats,ok,0,rows whose match or market does not exist
+2026-10-13T04:40:07+00:00,backfill,odds_range,TUR-1 2023/24,ok,0,odds outside 1.01-1000
+2026-10-13T04:40:07+00:00,backfill,market_sum,TUR-1 2023/24,warn,3,3 of 8892 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-13T04:40:07+00:00,backfill,scores_present,TUR-1 2023/24,fail,1,finished matches without HT or FT score: f13tr9ow6hal0zaxf9h6zj40k
+2026-10-13T04:40:07+00:00,backfill,coverage_odds,TUR-1 2023/24,ok,0.997,299 of 300 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_events,TUR-1 2023/24,ok,0.0,0 of 300 finished matches
+2026-10-13T04:40:07+00:00,backfill,coverage_stats,TUR-1 2023/24,ok,0.997,299 of 300 finished matches
+2026-10-13T04:40:07+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
