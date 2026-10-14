@@ -197,7 +197,7 @@ def build(refresh=False):
                            (.5, .9, "second half of the season (before the end)", "sezonun ikinci yarısı"),
                            (.9, 1.01, "last 10% of the season", "sezonun son %10'u")]:
         add((phase > lo) & (phase <= hi) if lo else phase <= hi, f"Season stage: {te}", f"Sezon dönemi: {tt}", "context")
-    kick = pd.to_datetime(z["kick"]).tz_localize("UTC").tz_convert("Europe/Istanbul")
+    kick = pd.DatetimeIndex(mt["kickoff_utc"]).tz_convert("Europe/Istanbul")
     wd, hr, mo = kick.weekday.to_numpy(), kick.hour.to_numpy(), kick.month.to_numpy()
     days_en = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     days_tr = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]

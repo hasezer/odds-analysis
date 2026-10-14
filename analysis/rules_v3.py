@@ -29,6 +29,7 @@ from rules_targets import tr_labels  # noqa: E402
 
 BEAM = 300
 CAP = 3000          # candidates kept per track and number of conditions
+KEEP_AB = False     # also keep rules that passed A and B but not C (for the rule-stacking test, rules_v3_vote.py)
 P = "ABC"
 
 
@@ -166,20 +167,24 @@ def run(only=None):
                 nB, hB, nC, hC = st["B"]["V"], st["B"][pre + "Y"], st["C"]["V"], st["C"][pre + "Y"]
                 rB, rC = hB / np.maximum(nB, 1), hC / np.maximum(nC, 1)
                 zB = (rB - b) / np.sqrt(b * (1 - b) / np.maximum(nB, 1))
-                okh = (nB >= 100) & (zB >= 2) & (odds_ratio(rB, b) >= 1.3) & (nC >= 20) & (odds_ratio(rC, c_) >= 1.15)
-                okh &= np.array(["hit" in cands[k] for k in chunk])
+                abh = (nB >= 100) & (zB >= 2) & (odds_ratio(rB, b) >= 1.3)
+                abh &= np.array(["hit" in cands[k] for k in chunk])
+                okh = abh & (nC >= 20) & (odds_ratio(rC, c_) >= 1.15)
                 wB, wC = st["B"][pre + "W"], st["C"][pre + "W"]
                 zrB = st["B"][pre + "R"] / np.sqrt(np.maximum(st["B"][pre + "S"], 1e-6))
-                okp = (wB >= 100) & (zrB >= 2) & (wC >= 20) & (st["C"][pre + "R"] > 0)
-                okp &= np.array(["price" in cands[k] for k in chunk])
-                ok[tag] = (okh, okp)
+                abp = (wB >= 100) & (zrB >= 2)
+                abp &= np.array(["price" in cands[k] for k in chunk])
+                okp = abp & (wC >= 20) & (st["C"][pre + "R"] > 0)
+                ok[tag] = (okh, okp, abh, abp)
             kept_luck["hit"] += int(ok["luck"][0].sum()); kept_luck["price"] += int(ok["luck"][1].sum())
-            for q in np.where(ok["real"][0] | ok["real"][1])[0]:
+            keep = (ok["real"][2] | ok["real"][3]) if KEEP_AB else (ok["real"][0] | ok["real"][1])
+            for q in np.where(keep)[0]:
                 k = chunk[q]
                 tr_ = [n for n, f in (("hit", ok["real"][0][q]), ("price", ok["real"][1][q])) if f]
                 for x in tr_:
                     kept[x] += 1
                 row = {"target_key": t["key"], "target": t["name"], "target_tr": t["name_tr"], "tracks": ",".join(tr_),
+                       "ab_hit": bool(ok["real"][2][q]), "ab_price": bool(ok["real"][3][q]),
                        "conditions": len(k), "atoms": ",".join(map(str, k)),
                        "families": ",".join(sorted({fam[i] for i in k})),
                        "rule": "  AND  ".join(a["en"][i] for i in k), "kural": "  VE  ".join(a["tr"][i] for i in k)}
@@ -208,13 +213,16 @@ def run(only=None):
             r[f"return_per_100{p_}"] = r[f"ret{p_}"] / r[f"priced{p_}"] * 100
         r["normal_all"] = sum(r[f"normal_{p}"] * r[f"matches_{p}"] for p in P) / r["matches_all"]
         r["lift_all"] = r["hit_all"] / r["normal_all"]
-    tag = "" if not only else "_test"
+    tag = "_ab" if KEEP_AB else "" if not only else "_test"
     r.to_parquet(CACHE / f"rules_v3{tag}.parquet")
     pd.DataFrame(luck).to_parquet(CACHE / f"rules_v3_luck{tag}.parquet")
     return r
 
 
 if __name__ == "__main__":
+    if "--keep-ab" in sys.argv:
+        KEEP_AB = True
+        sys.argv.remove("--keep-ab")
     only = set(sys.argv[1:]) or None
     r = run(only)
     print(len(r))
