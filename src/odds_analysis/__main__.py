@@ -51,6 +51,8 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None, full: boo
     detail = stats.get("error_detail", [])[:20] + ([crash] if crash else [])
     status = run_status(calls=calls, failed=failed, saved=stats.get("saved", 0), due=stats.get("due", 0),
                         crashed=crash is not None, item_errors=errors + stats.get("failed_items", 0))
+    if client.rate_limited:  # Mackolik asked us to slow down: always reported as failed so it gets noticed
+        status = "failed"
     append_log("runs", [{
         "run_at": run_at,
         "job": job,

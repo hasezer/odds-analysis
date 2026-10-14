@@ -135,7 +135,7 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
     workers = max(1, int(load("backfill").get("parallel_requests", 1)))
 
     def one(m: dict, first_pass: bool):
-        if time.monotonic() > deadline:
+        if time.monotonic() > deadline or getattr(c, "rate_limited", False):  # the date is redone by the next job
             return "late", None
         quick = c.quick() if first_pass and hasattr(c, "quick") else nullcontext()
         try:
@@ -182,6 +182,10 @@ def run(c: H.MackolikClient) -> dict:
     stats = defaultdict(int, {"dates": [], "error_detail": []})
     allow = budget.allowance(now)
     stats["budget"] = allow
+    if cfg.get("paused"):
+        stats["paused"] = "paused in config/backfill.yaml"
+        write_progress(load_state(), allow)
+        return dict(stats)
     if not allow["ok"]:
         stats["paused"] = f"minutes left {allow['left']} < daily_reserve {allow['reserve']}"
         write_progress(load_state(), allow)
@@ -223,6 +227,8 @@ def run(c: H.MackolikClient) -> dict:
     last_budget = time.monotonic()
     queue = [(date.fromisoformat(d), retry[d]) for d in sorted(retry, reverse=True)]
     while True:
+        if getattr(c, "rate_limited", False):
+            break
         if time.monotonic() > deadline:
             stats["stopped"] = "job time limit"
             break
@@ -256,6 +262,9 @@ def run(c: H.MackolikClient) -> dict:
             cursor = d - timedelta(days=1)
             state["next_date"] = cursor.isoformat()
             save_state(state)
+    if getattr(c, "rate_limited", False):  # no next job: wait for the schedule (or a person) to start one
+        stats["paused"] = "Mackolik answered HTTP 429 (too many requests): stopped"
+        stats["error_detail"].append(stats["paused"])
     for d, only in queue:  # retries not reached in this job stay queued
         if only is None:
             failures.add("listing", d.isoformat(), "retry not reached yet", tried=False, match_date=d.isoformat())

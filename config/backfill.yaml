@@ -14,3 +14,5 @@ max_job_minutes: 100        # one job; the workflow limit is 120
 # Matches worked on at the same time (Mackolik's pages take 3-9 s to answer). Requests still START at most once
 # per second in total. Lower this to 2 (or 1) if Mackolik answers with many errors (busy evenings, outages).
 parallel_requests: 4
+# true: the backfill jobs stop at once without sending any request (set while Mackolik rate-limits us).
+paused: true
