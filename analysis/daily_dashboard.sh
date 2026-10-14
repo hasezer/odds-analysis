@@ -6,11 +6,12 @@
 #      are untouched
 #   4. builds analysis/output/dashboard.html
 set -euo pipefail
+# always install for the interpreter that runs the scripts (some containers have pip for another python)
 WORK="${1:-/tmp/matchday-radar}"
 mkdir -p "$WORK"
-pip install -q -r analysis/requirements.txt 2>&1 | grep -v WARN || true
-python -c "import httpx, selectolax" 2>/dev/null || pip install -q httpx==0.28.1 selectolax==1.0.0 2>&1 | grep -v WARN || true
-python -c "import yaml" 2>/dev/null || pip install -q PyYAML 2>&1 | grep -v WARN || true
+python -m pip install -q -r analysis/requirements.txt 2>&1 | grep -v WARN || true
+python -c "import httpx, selectolax" 2>/dev/null || python -m pip install -q httpx==0.28.1 selectolax==1.0.0 2>&1 | grep -v WARN || true
+python -c "import yaml" 2>/dev/null || python -m pip install -q PyYAML 2>&1 | grep -v WARN || true
 
 echo "== rule caches"
 [ -f analysis/cache/ml_sel.parquet ] || python analysis/ml_data.py > "$WORK/ml_data.log" 2>&1
