@@ -125,7 +125,7 @@ def run():
     NA2 = X["A"].T @ X["A"]
     OS = {p: {j: O[per == p, j] for j in range(len(names))} for p in "ABC"}
     FS = {p: {j: F[per == p, j] for j in range(len(names))} for p in "ABC"}
-    rows = []
+    rows, luck = [], []
     for tname, tv in T.items():
         t0 = time.time()
         Y = {p: np.nan_to_num(tv[per == p]).astype(np.float32) for p in "ABC"}
@@ -171,6 +171,9 @@ def run():
         # confirm on B, exam on C (vectorised over candidates)
         tsel = names.index(price_lab[tname]) if tname in price_lab and price_lab[tname] in names else None
         kept = 0
+        kept_luck = 0
+        rng = np.random.default_rng(0)
+        Ysh = {p: rng.permutation(np.where(V[p] > 0, Y[p], np.nan)) for p in "BC"}     # luck control
         for c0 in range(0, len(cands), 1000):
             chunk = cands[c0:c0 + 1000]
             st = {}
@@ -183,9 +186,19 @@ def run():
             rB, zB = zscore(hB, nB, base["B"])
             rC, _ = zscore(hC, nC, base["C"])
             okc = (nB >= 100) & (zB >= 2) & (rB >= 1.25 * base["B"]) & (nC >= 20) & (rC >= 1.1 * base["C"])
+            # same gates with the B/C results shuffled across matches: how many rules would pass by luck?
+            for p in "BC":
+                ysh = np.nan_to_num(Ysh[p]).astype(np.float32)
+                vsh = (~np.isnan(Ysh[p])).astype(np.float32)
+                Mk = st[p][2] / np.maximum(V[p][:, None], 1e-9) * vsh[:, None]
+                st[p] = st[p] + (Mk.sum(0), Mk.T @ ysh)
+            rBs, zBs = zscore(st["B"][4], st["B"][3], base["B"])
+            rCs, _ = zscore(st["C"][4], st["C"][3], base["C"])
+            kept_luck += int(((st["B"][3] >= 100) & (zBs >= 2) & (rBs >= 1.25 * base["B"]) & (st["C"][3] >= 20)
+                              & (rCs >= 1.1 * base["C"])).sum())
             for q in np.where(okc)[0]:
                 atoms_, nA, hA = chunk[q]
-                row = {"target": tname, "conditions": len(atoms_),
+                row = {"target": tname, "conditions": len(atoms_), "atoms": ",".join(str(int(a)) for a in atoms_),
                        "rule": "  AND  ".join(lab[a][0] for a in atoms_),
                        "kural": "  VE  ".join(lab[a][1] for a in atoms_)}
                 for p, n, h in (("A", nA, hA), ("B", nB[q], hB[q]), ("C", nC[q], hC[q])):
@@ -202,8 +215,9 @@ def run():
                     row["return_per_100"] = rs / cnt * 100 if cnt else np.nan
                 rows.append(row)
                 kept += 1
+        luck.append({"target": tname, "candidates": len(cands), "kept": kept, "kept_by_luck": kept_luck})
         print(f"{tname:32s} base {base['A'] * 100:5.1f}%  candidates {len(cands):5d}  kept {kept:5d}  "
-              f"({time.time() - t0:.0f}s)", flush=True)
+              f"luck {kept_luck:5d}  ({time.time() - t0:.0f}s)", flush=True)
     r = pd.DataFrame(rows)
     r["matches_all"] = r[["matches_A", "matches_B", "matches_C"]].sum(axis=1)
     r["hits_all"] = r[["hits_A", "hits_B", "hits_C"]].sum(axis=1)
@@ -211,6 +225,7 @@ def run():
     r["normal_all"] = sum(r[f"normal_{p}"] * r[f"matches_{p}"] for p in "ABC") / r["matches_all"]
     r["lift_all"] = r["hit_all"] / r["normal_all"]
     r.to_parquet(CACHE / "rules_deep.parquet")
+    pd.DataFrame(luck).to_parquet(CACHE / "rules_deep_luck.parquet")
     return r
 
 
