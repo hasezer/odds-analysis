@@ -22,6 +22,19 @@ import miner_data as mdat  # noqa: E402
 from htft_data import CACHE  # noqa: E402
 
 RANK = {"promising": 0, "watch": 1, "proven": 2}
+MARKET = {"CORRECT_SCORE": "Correct score", "HT_CORRECT_SCORE": "1st-half score", "HT_FT": "HT/FT"}
+
+
+def strongest_only(out):
+    """When the 5% and 10% band (or the 10% and 30% pack) of the same bet both fire, keep the stricter one."""
+    if not len(out):
+        return out
+    tiered = out["kind"].isin(["odds_band", "pack"])
+    t = out[tiered].copy()
+    t["fam"] = t["id"].str.rsplit("-", n=1).str[0]
+    t["share"] = t["id"].str.rsplit("-", n=1).str[1].astype(int)
+    t = t.sort_values("share").drop_duplicates(["match", "kickoff", "fam"]).drop(columns=["fam", "share"])
+    return pd.concat([out[~tiered], t], ignore_index=True)
 
 
 def live_tables(o):
@@ -52,6 +65,13 @@ def check(crit, odds_row, fair_row):
         if pd.isna(v) or not (v <= ref if c["op"] == "<=" else v > ref):
             return False
     return True
+
+
+def lift(ev):
+    """Last season's hit rate / normal rate (or / the same pack in every match)."""
+    v = list(ev.values())[-1]
+    ref = v.get("normal_pct") or v.get("every_match_pct")
+    return v["hit_pct"] / ref if v.get("hit_pct") and ref else np.nan
 
 
 def record(ev):
@@ -87,11 +107,11 @@ def scan(data_dir: Path, days: int):
                     continue
                 rows.append({**base, "status": s["status"], "kind": k, "bet": s["bet_name"],
                              "odds_now": orow.get(s["bet"], np.nan), "why": s["summary"], "record": record(s["evidence"]),
-                             "id": s["id"]})
+                             "id": s["id"], "lift": lift(s["evidence"])})
             elif k == "league" and r.league_id == s["league"]:
                 rows.append({**base, "status": s["status"], "kind": k, "bet": s["bet_name"],
                              "odds_now": orow.get(s["bet"], np.nan), "why": s["summary"], "record": record(s["evidence"]),
-                             "id": s["id"]})
+                             "id": s["id"], "lift": lift(s["evidence"])})
             elif k == "pack":
                 sel = [x for x in s["selections"] if pd.notna(frow.get(x, np.nan))]
                 if len(sel) < s["k"]:
@@ -104,9 +124,10 @@ def scan(data_dir: Path, days: int):
                 eff = 1 / sum(1 / v for v in od) if all(pd.notna(v) for v in od) else np.nan
                 picks = ", ".join(f"{x.split('|')[-1]} @ {v:.2f}" for x, v in zip(top, od))
                 rows.append({**base, "status": s["status"], "kind": k,
-                             "bet": f"{s['market'].replace('_', ' ').title()} pack: {picks}", "odds_now": eff,
-                             "why": s["summary"], "record": record(s["evidence"]), "id": s["id"]})
-    out = pd.DataFrame(rows)
+                             "bet": f"{MARKET.get(s['market'], s['market'])} pack: {picks}", "odds_now": eff,
+                             "why": s["summary"], "record": record(s["evidence"]), "id": s["id"],
+                             "lift": lift(s["evidence"])})
+    out = strongest_only(pd.DataFrame(rows))
     # rule book (older study) through the Matchday Radar engine, if its cache exists
     rb = pd.DataFrame()
     if (CACHE / "rules_deep.parquet").exists():
@@ -124,16 +145,19 @@ def scan(data_dir: Path, days: int):
                         "match": f"{mm['home']} – {mm['away']}", "status": "rule book", "kind": "rule_book",
                         "bet": x.bet, "odds_now": x.odds, "why": f"rule: {x.rule}",
                         "record": f"hit {x.hit_all:.1f}% in {x.n} past matches (normal {x.normal:.1f}%), "
-                                  f"expected now ≈ {x.hit:.1f}%", "id": "rule_book"}])])
+                                  f"expected now ≈ {x.hit:.1f}%", "id": "rule_book",
+                        "lift": x.hit_all / x.normal}])])
         except Exception as exc:  # noqa: BLE001
             print(f"rule book skipped: {exc}")
+    m = m.assign(priced=m["match_id"].isin(odds.index))
     return pd.concat([out, rb], ignore_index=True), m
 
 
 def write(res, m, out_md: Path, days: int):
     now = pd.Timestamp.now(tz="Europe/Istanbul")
     L = [f"# Daily scan — {now:%d %b %Y %H:%M} (Turkey time)", "",
-         f"{len(m)} upcoming matches in the next {days} days across the 26 leagues; "
+         f"{len(m)} upcoming matches in the next {days} days across the 26 leagues; {int(m['priced'].sum())} already "
+         f"have Nesine odds (the rest are checked on a later day); "
          f"{res['match'].nunique() if len(res) else 0} matches fit at least one strategy.", ""]
     if not len(res):
         out_md.write_text("\n".join(L + ["Nothing fits today."]))
@@ -141,18 +165,30 @@ def write(res, m, out_md: Path, days: int):
     res = res.sort_values(["kickoff", "match"])
     cnt = res.groupby("status").size().to_dict()
     L.append("Findings: " + ", ".join(f"{v} {k}" for k, v in sorted(cnt.items(), key=lambda kv: RANK.get(kv[0], 9))))
-    L += ["", "## Highlights (league tendencies, watch patterns, packs)", ""]
-    hi = res[res["kind"].isin(["league", "watch", "pack"])]
+    lgr = res[res["kind"] == "league"]
+    if len(lgr):
+        L += ["", "## League tendencies today", ""]
+        for sid, g in lgr.groupby("id", sort=False):
+            r = g.iloc[0]
+            ms = ", ".join(f"{x.match} {x.kickoff:%a %H:%M} @ " + (f"{x.odds_now:.2f}" if pd.notna(x.odds_now) else "–")
+                           for x in g.itertuples())
+            L.append(f"- **{r['why']}** [{r['status']}]  \n  Record: {r['record']}  \n  Today: {ms}")
+    hi = res[res["kind"].isin(["watch", "pack"])]
+    if len(hi):
+        L += ["", "## Packs and watch patterns", ""]
     for r in hi.itertuples():
         od = f"{r.odds_now:.2f}" if pd.notna(r.odds_now) else "not offered yet"
-        L.append(f"- **{r.kickoff:%a %H:%M} {r.match}** ({r.league_name}) — {r.bet} @ {od} [{r.status}]  \n"
+        L.append(f"- **{r.kickoff:%a %H:%M} {r.match}** ({r.league_name}) — {r.bet} → pack odds {od} [{r.status}]  \n"
                  f"  {r.why}. Record: {r.record}")
     L += ["", "## Every match", ""]
     for (k, mt), g in res.groupby(["kickoff", "match"], sort=True):
         L.append(f"### {k:%a %d %b %H:%M} — {mt} ({g['league_name'].iloc[0]})")
-        for r in g.sort_values("status", key=lambda s: s.map(RANK).fillna(9)).itertuples():
-            od = f"{r.odds_now:.2f}" if pd.notna(r.odds_now) else "–"
-            L.append(f"- {r.bet} @ {od} [{r.status}] — {r.record}")
+        g = g[g["kind"] != "league"].sort_values("lift", ascending=False)
+        for bet, gb in g.groupby("bet", sort=False):               # one line per bet: its strongest strategy
+            r = gb.iloc[0]
+            od = f"{r.odds_now:.2f}" if pd.notna(r.odds_now) else "no own odds"
+            more = f" (+{len(gb) - 1} more strategies agree)" if len(gb) > 1 else ""
+            L.append(f"- {bet} @ {od} [{r.status}, {r.lift:.1f}x normal] — {r.record}{more}")
         L.append("")
     out_md.write_text("\n".join(L))
     x = res.copy()

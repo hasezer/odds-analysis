@@ -1,3 +1,5 @@
 cache/
 __pycache__/
 output/dashboard.html
+output/daily_scan.md
+output/daily_scan.xlsx
