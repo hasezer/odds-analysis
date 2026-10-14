@@ -1,6 +1,7 @@
 """Rule stacking: when MANY rules point at the same bet in one match, does it hit even more often?
 
-Rules are taken from `rules_v3.py --keep-ab` (cache/rules_v3_ab.parquet): found on period A and confirmed on B,
+Three groups of rules per bet: "hit" and "price" (passed that track's A and B gates) and "money" (any of them that
+made money in both A and B). Rules are taken from `rules_v3.py --keep-ab` (cache/rules_v3_ab.parquet): found on period A and confirmed on B,
 WITHOUT looking at C. For every C match (2026/27 + 2026, never used to pick these rules) we count how many of the
 bet's rules are true, and compare hit rate, Nesine's price and return across those counts.
 Writes cache/rules_v3_vote.parquet.
@@ -31,7 +32,8 @@ def run():
     for tk, g in r.groupby("target_key"):
         t = tg[tk]
         y, f, o = t["y"][C], t["f"][C], t["o"][C]
-        for track in ("hit", "price"):
+        g = g.assign(ab_money=(g["priced_A"] >= 100) & (g["priced_B"] >= 100) & (g["ret_A"] > 0) & (g["ret_B"] > 0))
+        for track in ("hit", "price", "money"):
             rules = g[g[f"ab_{track}"]]
             if not len(rules):
                 continue

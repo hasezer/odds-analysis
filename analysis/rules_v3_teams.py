@@ -20,7 +20,7 @@ from dashboard import leagues  # noqa: E402
 from htft_data import CACHE  # noqa: E402
 from rule_miner import nice  # noqa: E402
 
-MIN_N = 25
+MIN_N = {"team (all matches)": 25, "team at home": 12, "team away": 12, "league": 25}
 
 
 def run():
@@ -55,7 +55,7 @@ def run():
             if not {"A", "B"} <= set(g.columns.get_level_values(1)):
                 continue
             zz = {p: g[("r", p)] / np.sqrt(g[("s", p)]) for p in "ABC" if ("r", p) in g.columns}
-            enough = (g[("n", "A")] >= MIN_N) & (g[("n", "B")] >= MIN_N)
+            enough = (g[("n", "A")] >= MIN_N[gname]) & (g[("n", "B")] >= MIN_N[gname])
             zA, zB = zz["A"][enough], zz["B"][enough]
             corr = np.corrcoef(zA, zB)[0, 1] if enough.sum() > 10 else np.nan
             # luck: shuffle B results across the groups (keep each match's result with its price)
@@ -65,7 +65,7 @@ def run():
             zBs = (gB["r"] / np.sqrt(gB["s"])).reindex(zA.index)
             nBs = gB["n"].reindex(zA.index)
             both = (zA >= 2) & (zB >= 2)
-            both_luck = int(((zA >= 2) & (zBs >= 2) & (nBs >= MIN_N)).sum())
+            both_luck = int(((zA >= 2) & (zBs >= 2) & (nBs >= MIN_N[gname])).sum())
             summ.append({"bet": nice(lab), "bet_key": lab, "group": gname, "pairs": int(enough.sum()),
                          "corr_A_B": corr, "beat_both": int(both.sum()), "beat_both_by_luck": both_luck})
             for w in zA.index[both]:
