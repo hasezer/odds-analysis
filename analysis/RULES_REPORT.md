@@ -49,3 +49,54 @@
 - **Nesine's own price for the bet already knows it.** In the matches where a rule is met, the price gives almost the same chance; see the "Nesine's price says %" column.
 - **They don't make money.** Flat betting on them still loses (see "Return per 100 TL"). Only 1 of the 60,910 rules was profitable in all three periods, which is what luck alone would produce.
 - **Use them to read a match quickly**, for example "this price list points to an away win in both halves", not as a betting edge.
+
+---
+
+## Part 2: HT/FT, both teams score, and both teams score in both halves
+
+**Rebuild:**
+1. `python analysis/rules_targets.py` (~1 min)
+2. `python -c "import sys; sys.path.insert(0,'analysis'); import rules_targets as r; r.study()"`
+
+**The file:** [`output/rules_htft_btts.xlsx`](output/rules_htft_btts.xlsx), one sheet per bet, with rules in English and Turkish (*Kural*).
+
+**The bets** are worked out from the scores, so all three periods count:
+- the 9 HT/FT outcomes
+- both teams score: yes
+- both teams score in **both** halves
+- both teams score in the 1st half
+- both teams score in the 2nd half
+
+**Rule types:**
+- one odds inside a price range ("Toplam Gol Aralığı 2-3 oranı 1.80–1.90")
+- **two** price ranges at once (… VE …)
+- equal or cheaper pairs
+
+**Rules found** (every one held in all three periods):
+
+| Bet | Normally | Rules | Best rule hits |
+|---|---|---|---|
+| HT/FT 1/1 | 26.6% | 5,744 | 66.5% |
+| HT/FT 2/2 | 16.7% | 4,002 | 50.2% |
+| HT/FT X/2 | 10.9% | 2,794 | 21.9% |
+| HT/FT X/X | 15.4% | 1,593 | 27.0% |
+| HT/FT X/1 | 14.5% | 477 | 23.1% |
+| HT/FT 1/2 | 2.3% | 142 | 6.8% |
+| HT/FT 2/X | 5.3% | 17 | 11.9% |
+| HT/FT 2/1 | 2.7% | 10 (moderate) | 6.0% |
+| HT/FT 1/X | 5.4% | 0 | — |
+| Both teams score: yes | 55.0% | 501 | 70.3% |
+| Both teams score in BOTH halves | 5.8% | 519 | 12.7% |
+| Both teams score in 1st half | 20.6% | 563 | 34.3% |
+| Both teams score in 2nd half | 27.5% | 134 | 38.5% |
+
+**Your example, Total goals 2-3 at 1.80–2.00 → under 2.5:** under 2.5 is *less* likely, not more.
+
+| Total goals 2-3 odds | Under 2.5 |
+|---|---|
+| ≤ 1.80 | 52–55% |
+| 1.80–1.90 | 46% |
+| 1.90–2.00 | 39% |
+| 2.00–2.20 | 30% |
+
+The normal rate is 47%. A higher "2-3 goals" price means Nesine expects an unusual number of goals, almost always *more*.
