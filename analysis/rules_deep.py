@@ -123,6 +123,8 @@ def run():
     X = {p: masks(spec, O[per == p]) for p in "ABC"}
     print(f"{K} atoms; computing A co-occurrence…", flush=True)
     NA2 = X["A"].T @ X["A"]
+    OS = {p: {j: O[per == p, j] for j in range(len(names))} for p in "ABC"}
+    FS = {p: {j: F[per == p, j] for j in range(len(names))} for p in "ABC"}
     rows = []
     for tname, tv in T.items():
         t0 = time.time()
@@ -166,38 +168,40 @@ def run():
                     continue
                 seen.add(key)
                 cands.append((key, n3[bi[o], kk[o]], h3[bi[o], kk[o]]))
-        # confirm on B, exam on C
+        # confirm on B, exam on C (vectorised over candidates)
         tsel = names.index(price_lab[tname]) if tname in price_lab and price_lab[tname] in names else None
         kept = 0
-        for p in "BC":
-            pass
-        for atoms_, nA, hA in cands:
-            stats = {}
-            for p in "BC":
-                m = np.prod(X[p][:, list(atoms_)], axis=1) * V[p]
-                n, h = m.sum(), (m * Y[p]).sum()
-                stats[p] = (n, h)
-            nB, hB = stats["B"]; nC, hC = stats["C"]
+        for c0 in range(0, len(cands), 1000):
+            chunk = cands[c0:c0 + 1000]
+            st = {}
+            for p in "ABC":
+                Xp = X[p]
+                Mk = np.stack([np.prod(Xp[:, list(a)], axis=1) for a, _, _ in chunk], 1) * V[p][:, None]
+                st[p] = (Mk.sum(0), Mk.T @ Y[p], Mk)
+            nB, hB = st["B"][0], st["B"][1]
+            nC, hC = st["C"][0], st["C"][1]
             rB, zB = zscore(hB, nB, base["B"])
             rC, _ = zscore(hC, nC, base["C"])
-            if not (nB >= 100 and zB >= 2 and rB >= 1.25 * base["B"] and nC >= 20 and rC >= 1.1 * base["C"]):
-                continue
-            row = {"target": tname, "conditions": len(atoms_),
-                   "rule": "  AND  ".join(lab[a][0] for a in atoms_),
-                   "kural": "  VE  ".join(lab[a][1] for a in atoms_)}
-            for p, n, h in (("A", nA, hA), ("B", nB, hB), ("C", nC, hC)):
-                row.update({f"matches_{p}": int(n), f"hits_{p}": int(round(h)), f"hit_{p}": h / max(n, 1) * 100,
-                            f"normal_{p}": base[p] * 100})
-            if tsel is not None:
-                allm = np.prod(np.concatenate([X[p] for p in "ABC"])[:, list(atoms_)], axis=1) > 0
-                fo = np.concatenate([F[per == p, tsel] for p in "ABC"])
-                oo = np.concatenate([O[per == p, tsel] for p in "ABC"])
-                yy = np.concatenate([Y[p] for p in "ABC"])
-                okp = allm & ~np.isnan(oo)
-                row["nesine_price_says"] = float(np.nanmean(fo[okp]) * 100) if okp.any() else np.nan
-                row["return_per_100"] = float(np.mean(yy[okp] * oo[okp] - 1) * 100) if okp.any() else np.nan
-            rows.append(row)
-            kept += 1
+            okc = (nB >= 100) & (zB >= 2) & (rB >= 1.25 * base["B"]) & (nC >= 20) & (rC >= 1.1 * base["C"])
+            for q in np.where(okc)[0]:
+                atoms_, nA, hA = chunk[q]
+                row = {"target": tname, "conditions": len(atoms_),
+                       "rule": "  AND  ".join(lab[a][0] for a in atoms_),
+                       "kural": "  VE  ".join(lab[a][1] for a in atoms_)}
+                for p, n, h in (("A", nA, hA), ("B", nB[q], hB[q]), ("C", nC[q], hC[q])):
+                    row.update({f"matches_{p}": int(n), f"hits_{p}": int(round(h)), f"hit_{p}": h / max(n, 1) * 100,
+                                f"normal_{p}": base[p] * 100})
+                if tsel is not None:
+                    ps, rs, cnt = 0.0, 0.0, 0
+                    for p in "ABC":
+                        m = st[p][2][:, q] > 0
+                        oo, fo, yy = OS[p][tsel], FS[p][tsel], Y[p]
+                        okp = m & ~np.isnan(oo) & ~np.isnan(fo)
+                        ps += np.nansum(fo[okp]); rs += np.sum(yy[okp] * oo[okp] - 1); cnt += okp.sum()
+                    row["nesine_price_says"] = ps / cnt * 100 if cnt else np.nan
+                    row["return_per_100"] = rs / cnt * 100 if cnt else np.nan
+                rows.append(row)
+                kept += 1
         print(f"{tname:32s} base {base['A'] * 100:5.1f}%  candidates {len(cands):5d}  kept {kept:5d}  "
               f"({time.time() - t0:.0f}s)", flush=True)
     r = pd.DataFrame(rows)
