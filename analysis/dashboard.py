@@ -154,20 +154,40 @@ def build(data_dir: Path, days: int):
         if len(fired):
             fr = rules.iloc[fired]
             for t, g in fr.groupby("target"):
-                best = g.sort_values(["cons_hit", "matches_all"], ascending=False).iloc[0]
                 lab_t = price_lab.get(t)
                 odds_now = fair_now = None
                 if lab_t and lab_t in col and not np.isnan(O[i, col[lab_t]]):
                     odds_now = float(O[i, col[lab_t]])
                     fr_o = o[(o["match_id"] == mid) & (o["lab"] == lab_t)]
                     fair_now = None if fr_o.empty or pd.isna(fr_o["fair"].iloc[0]) else float(fr_o["fair"].iloc[0])
-                value = None if odds_now is None else best["cons_hit"] / 100 * odds_now - 1
+                mkt = lab_t.split("|")[0] if lab_t else None
+                if odds_now is not None and mkt in CAPS and odds_now >= CAPS[mkt]:
+                    continue                                   # capped price: a trap, never a pick
+                if lab_t and fair_now is None:
+                    continue                                   # bet has a market but no price yet
+                g = g.copy()
+                if fair_now is not None and "nesine_price_says" in g and g["nesine_price_says"].notna().any():
+                    # context check: today's price must look like the prices the rule was learned on
+                    ratio = fair_now * 100 / g["nesine_price_says"]
+                    g = g[(ratio >= 1 / 1.5) & (ratio <= 1.5)]
+                    if g.empty:
+                        continue
+                    # expected hit today = today's price x HALF of how much the rule beat the price in the past
+                    # (careful hit; halved because the forward test showed past edges shrink on new matches)
+                    edge = g["cons_hit"] / g["nesine_price_says"]
+                    g["est"] = (fair_now * 100 * (1 + 0.5 * (edge - 1))).clip(upper=99)
+                else:
+                    g["est"] = g["cons_hit"]
+                best = g.sort_values(["est", "matches_all"], ascending=False).iloc[0]
+                est = float(best["est"])
+                value = None if odds_now is None else est / 100 * odds_now - 1
                 p = {"m": mid, "bet": t, "bet_tr": tr_bet(t), "group": bet_group(t),
                      "rules": int(len(g)), "rule": best["rule"], "kural": best["kural"],
                      "cond": int(best["conditions"]), "n": int(best["matches_all"]),
                      "hit_all": round(float(best["hit_all"]), 1), "hit_c": round(float(best["hit_C"]), 1),
                      "n_c": int(best["matches_C"]), "normal": round(float(best["normal_all"]), 1),
-                     "hit": round(float(best["cons_hit"]), 1),
+                     "hit": round(est, 1),
+                     "hist_price": None if pd.isna(best.get("nesine_price_says", np.nan)) else round(float(best["nesine_price_says"]), 1),
                      "per": [round(float(best["hit_A"]), 1), round(float(best["hit_B"]), 1),
                              round(float(best["hit_C"]), 1)],
                      "odds": None if odds_now is None else round(odds_now, 2),

@@ -138,7 +138,7 @@ input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px 
       <input type="search" id="f-q" placeholder="Search team or league" aria-label="Search team or league">
     </div>
     <div class="row">
-      <label class="ctl" for="f-min">Min hit <input type="range" id="f-min" min="0" max="80" step="5" value="0"><span class="num" id="f-min-v">0%</span></label>
+      <label class="ctl" for="f-min">Min expected hit <input type="range" id="f-min" min="0" max="80" step="5" value="0"><span class="num" id="f-min-v">0%</span></label>
       <label class="ctl" for="f-above"><input type="checkbox" id="f-above"> Above Nesine's price</label>
       <label class="ctl" for="f-rel"><input type="checkbox" id="f-rel"> Very reliable only</label>
       <label class="ctl" for="f-watch"><input type="checkbox" id="f-watch"> Watch list only</label>
@@ -152,7 +152,7 @@ input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px 
       <h3>What a pick is</h3>
       <p>Each pick is a rule from our rule book that fires on this match's current Nesine odds. A rule is up to three price conditions, for example "Draw 3.05–3.15 and away team under 0.5 at 3.34–4.00". Every rule was found in 2024/25, confirmed in 2025/26 and checked again in 2026/27 + 2026, on 20,000+ matches collected by this project.</p>
       <h3>The numbers on a pick</h3>
-      <p><b>Hit</b> is the careful hit rate: the lower of the rule's all-seasons rate and its latest-season rate. <b>Normally</b> is how often the bet lands in an average match. <b>Nesine</b> shows today's odds and the chance they imply once the bookmaker's cut is removed. <b>Value</b> is Hit × odds − 1: what 100 TL would return on average if the hit rate holds.</p>
+      <p><b>Expected hit</b> starts from the chance Nesine's price gives the bet today (cut removed) and adds half of the edge the rule had over Nesine's price in the past, using the careful rate (the lower of the rule's all-seasons and latest-season hit rates). Half, because on matches the rules had never seen, their edge shrank. A rule only counts when today's price looks like the prices it was learned on. <b>Normally</b> is how often the bet lands in an average match. <b>Value</b> is expected hit × odds − 1: what 100 TL would return on average if the estimate holds.</p>
       <h3>Read this before betting</h3>
       <p>The rules really raise hit rates on matches they have never seen. But Nesine's price usually rises with them, so most picks show negative value: you would still lose, just less than betting blindly. Picks marked <b>above price</b> are where the rule's hit rate beats Nesine's price today. History says treat those as a watch list, not a sure thing. Samples behind each rule are a few hundred matches.</p>
       <h3>Reliability</h3>
@@ -237,14 +237,14 @@ input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px 
       <div style="min-width:0"><div class="teams">${esc(m.home)}<span class="vs">–</span>${esc(m.away)}</div>
         <div class="lg">${esc(m.league_tr)}</div>
         <div class="betline"><span class="bet">${esc(p.bet)}</span><span class="bettr">${esc(p.bet_tr)}</span>${p.watch ? `<span class="pill p-warn">watch list</span>` : ""}</div></div>
-      <div class="stat"><div class="big">${p.hit}%<small> hit</small></div>
+      <div class="stat"><div class="big">${p.hit}%<small> expected</small></div>
         <div class="mini">normally ${p.normal}% · ${p.odds ? `Nesine ${p.odds.toFixed(2)} (${p.price ?? "–"}%)` : "no price yet"}</div>
         <div class="badges">${valuePill(p.value)}${ratingPill(p.rating)}</div></div>
     </summary><div class="body">
       <div class="rule"><b>Rule</b> (${p.cond} condition${p.cond > 1 ? "s" : ""}, ${p.n} past matches, ${p.rules} rule${p.rules > 1 ? "s" : ""} fire for this bet)<br>${esc(p.rule)}<div class="tr">${esc(p.kural)}</div></div>
-      <div class="kv"><div><span>Hit (careful)</span><b>${p.hit}%</b></div><div><span>All seasons</span><b>${p.hit_all}%</b></div>
-        <div><span>Latest season</span><b>${p.hit_c}%</b></div><div><span>Normally</span><b>${p.normal}%</b></div>
-        <div><span>Nesine odds</span><b>${p.odds ? p.odds.toFixed(2) : "–"}</b></div><div><span>Nesine says</span><b>${p.price ?? "–"}${p.price ? "%" : ""}</b></div></div>
+      <div class="kv"><div><span>Expected today</span><b>${p.hit}%</b></div><div><span>Rule hit, all seasons</span><b>${p.hit_all}%</b></div><div><span>Nesine said then</span><b>${p.hist_price ?? "–"}${p.hist_price ? "%" : ""}</b></div>
+        <div><span>Rule hit, latest season</span><b>${p.hit_c}%</b></div><div><span>Normally</span><b>${p.normal}%</b></div>
+        <div><span>Nesine odds</span><b>${p.odds ? p.odds.toFixed(2) : "–"}</b></div><div><span>Nesine says</span><b>${p.price ?? "–"}${p.price ? "%" : ""}</b></div><div><span>Past matches</span><b>${p.n}</b></div></div>
       ${bars(p)}
     </div></details>`;
   }
@@ -266,7 +266,7 @@ input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px 
       <div class="stat"><div class="keyodds">${keyOdds(m)}</div><div class="badges">${picks.length ? `<span class="pill p-good">${picks.length} pick${picks.length > 1 ? "s" : ""}</span>` : `<span class="pill p-neu">no picks</span>`}</div></div>
     </summary><div class="body">
       ${picks.length ? `<div class="minipicks">${picks.map(p => `<div class="mp"><b>${esc(p.bet)}</b><span class="bettr">${esc(p.bet_tr)}</span>
-        <span class="num">${p.hit}% hit</span><span class="mini">normally ${p.normal}% · ${p.odds ? "Nesine " + p.odds.toFixed(2) + " (" + (p.price ?? "–") + "%)" : "no price"}</span>${valuePill(p.value)}</div>`).join("")}</div>` : ""}
+        <span class="num">${p.hit}% expected</span><span class="mini">normally ${p.normal}% · ${p.odds ? "Nesine " + p.odds.toFixed(2) + " (" + (p.price ?? "–") + "%)" : "no price"}</span>${valuePill(p.value)}</div>`).join("")}</div>` : ""}
       ${m.odds.length ? marketGrid(m) : `<div class="mini">No odds captured for this match yet.</div>`}
     </div></details>`;
   }
