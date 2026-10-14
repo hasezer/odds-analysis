@@ -1,0 +1,303 @@
+<title>Matchday Radar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a matchday sheet — sticky filter rail on top, one column of kickoff-ordered rows that open in place. */
+:root {
+  --bg: #f2f5f3; --surface: #ffffff; --raise: #f8faf9; --ink: #13201a; --muted: #5b6a63; --line: #dce3df;
+  --accent: #0b6b4c; --accent-ink: #ffffff; --accent-soft: #e1f0e9; --chip: #eaf0ed;
+  --good: #137a3d; --good-soft: #dff3e6; --warn: #a75a06; --warn-soft: #fbeedb; --bad: #b42323; --bad-soft: #f9e2e2;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1412; --surface: #151d1a; --raise: #1a2420; --ink: #e5eee9; --muted: #92a39b; --line: #25312c;
+  --accent: #4cc497; --accent-ink: #0b1512; --accent-soft: #173529; --chip: #1d2925;
+  --good: #57d68c; --good-soft: #163824; --warn: #f0a33b; --warn-soft: #3a2a12; --bad: #f37b7b; --bad-soft: #3d1c1c;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e1412; --surface: #151d1a; --raise: #1a2420; --ink: #e5eee9; --muted: #92a39b; --line: #25312c;
+  --accent: #4cc497; --accent-ink: #0b1512; --accent-soft: #173529; --chip: #1d2925;
+  --good: #57d68c; --good-soft: #163824; --warn: #f0a33b; --warn-soft: #3a2a12; --bad: #f37b7b; --bad-soft: #3d1c1c;
+  color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.45 var(--font-body); margin: 0 }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px 48px }
+header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 24px }
+h1 { font: 700 34px/1 var(--font-display); letter-spacing: .01em; margin: 0; text-wrap: balance }
+.sub { color: var(--muted); font-size: 13px }
+.sub b { color: var(--ink); font-weight: 600 }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums }
+.tabs { display: flex; gap: 4px; margin-top: 14px; border-bottom: 1px solid var(--line) }
+.tab { appearance: none; border: 0; background: none; color: var(--muted); font: 600 15px var(--font-body);
+  padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent) }
+.tab .cnt { font: 500 12px var(--font-num); color: var(--muted); margin-left: 6px }
+.rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-block: 12px; border-bottom: 1px solid var(--line); display: grid; gap: 10px }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.chip { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  font: 500 13px var(--font-body); padding: 6px 11px; border-radius: 999px; cursor: pointer; white-space: nowrap }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+select, input[type="search"] { font: 500 13px var(--font-body); color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; min-width: 0 }
+input[type="search"] { flex: 1 1 180px }
+label.ctl { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted) }
+input[type="range"] { accent-color: var(--accent); width: 120px }
+input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.list { display: grid; gap: 8px; margin-top: 14px }
+.daylabel { font: 700 18px var(--font-display); letter-spacing: .04em; text-transform: uppercase; color: var(--muted);
+  margin: 14px 0 0 }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden }
+.card > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; gap: 4px 14px;
+  grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center }
+.card > summary::-webkit-details-marker { display: none }
+.card[open] > summary { border-bottom: 1px solid var(--line); background: var(--raise) }
+.ko { font: 600 15px var(--font-num) } .ko small { display: block; font: 500 11px var(--font-body); color: var(--muted) }
+.teams { font: 600 19px/1.15 var(--font-display); letter-spacing: .01em; min-width: 0; overflow-wrap: anywhere }
+.teams .vs { color: var(--muted); font-weight: 500; padding: 0 4px }
+.lg { font-size: 12px; color: var(--muted) }
+.betline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-top: 2px }
+.bet { font: 600 15px var(--font-body) } .bettr { font: 500 12px var(--font-num); color: var(--accent);
+  background: var(--accent-soft); padding: 1px 6px; border-radius: 4px }
+.stat { text-align: right; display: grid; justify-items: end; gap: 2px }
+.big { font: 600 24px/1 var(--font-num) } .big small { font-size: 13px; color: var(--muted) }
+.mini { font: 500 12px var(--font-num); color: var(--muted); white-space: nowrap }
+.pill { font: 600 11px var(--font-body); letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px;
+  border-radius: 999px; white-space: nowrap }
+.p-good { color: var(--good); background: var(--good-soft) } .p-warn { color: var(--warn); background: var(--warn-soft) }
+.p-bad { color: var(--bad); background: var(--bad-soft) } .p-neu { color: var(--muted); background: var(--chip) }
+.badges { display: flex; flex-wrap: wrap; gap: 5px; justify-content: end }
+.body { padding: 12px 14px 14px; display: grid; gap: 14px }
+.rule { font-size: 14px; overflow-wrap: anywhere } .rule .tr { color: var(--muted); font-size: 13px; margin-top: 4px }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px }
+.kv div { background: var(--raise); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px }
+.kv span { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em }
+.kv b { font: 600 17px var(--font-num) }
+.bars { display: grid; gap: 6px } .bar { display: grid; grid-template-columns: 92px 1fr 52px; gap: 8px; align-items: center;
+  font-size: 12px; color: var(--muted) }
+.track { height: 8px; background: var(--chip); border-radius: 4px; position: relative; overflow: hidden }
+.fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 4px }
+.norm { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .55 }
+.keyodds { display: flex; flex-wrap: wrap; gap: 6px; justify-content: end }
+.ko-cell { border: 1px solid var(--line); border-radius: 6px; padding: 3px 7px; text-align: center; min-width: 52px }
+.ko-cell span { display: block; font-size: 10px; color: var(--muted) } .ko-cell b { font: 600 14px var(--font-num) }
+.mk { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) }
+.mk section { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--raise) }
+.mk h4 { margin: 0 0 6px; font: 600 13px var(--font-body) }
+.sel { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding: 2px 0 }
+.sel .o { font: 600 13px var(--font-num) } .sel.cap .o { color: var(--bad); text-decoration: line-through }
+.sel.cap::after { content: "cap"; font: 600 10px var(--font-body); color: var(--bad); margin-left: 4px }
+.minipicks { display: grid; gap: 6px }
+.mp { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; font-size: 14px; padding: 6px 0;
+  border-bottom: 1px dashed var(--line) }
+.empty { padding: 40px 16px; text-align: center; color: var(--muted); background: var(--surface);
+  border: 1px dashed var(--line); border-radius: var(--r) }
+.how { max-width: 68ch; display: grid; gap: 12px; margin-top: 16px } .how h3 { margin: 6px 0 0; font: 700 20px var(--font-display) }
+.how p { margin: 0 }
+.more { text-align: center; margin-top: 12px }
+@media (max-width: 640px) {
+  .card > summary { grid-template-columns: 46px minmax(0, 1fr); }
+  .card > summary .stat { grid-column: 1 / -1; justify-items: start; text-align: left; grid-template-columns: auto auto;
+    display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center }
+  .badges, .keyodds { justify-content: start }
+  h1 { font-size: 28px }
+}
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s } .card:hover { border-color: var(--muted) } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Matchday Radar</h1>
+      <div class="sub" id="meta"></div>
+    </div>
+    <div class="sub" id="range"></div>
+  </header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-picks" aria-selected="true" data-view="picks">Picks<span class="cnt" id="c-picks"></span></button>
+    <button class="tab" role="tab" id="tab-matches" aria-selected="false" data-view="matches">Matches<span class="cnt" id="c-matches"></span></button>
+    <button class="tab" role="tab" id="tab-how" aria-selected="false" data-view="how">How it works</button>
+  </div>
+
+  <div class="rail" id="rail">
+    <div class="row" id="days"></div>
+    <div class="row">
+      <select id="f-league" aria-label="League"><option value="">All leagues</option></select>
+      <select id="f-group" aria-label="Bet type"><option value="">All bet types</option></select>
+      <select id="f-sort" aria-label="Sort picks">
+        <option value="value">Sort: value at today's odds</option>
+        <option value="hit">Sort: highest hit rate</option>
+        <option value="lift">Sort: biggest lift over normal</option>
+        <option value="ko">Sort: kickoff time</option>
+      </select>
+      <input type="search" id="f-q" placeholder="Search team or league" aria-label="Search team or league">
+    </div>
+    <div class="row">
+      <label class="ctl" for="f-min">Min hit <input type="range" id="f-min" min="0" max="80" step="5" value="0"><span class="num" id="f-min-v">0%</span></label>
+      <label class="ctl" for="f-above"><input type="checkbox" id="f-above"> Above Nesine's price</label>
+      <label class="ctl" for="f-rel"><input type="checkbox" id="f-rel"> Very reliable only</label>
+      <label class="ctl" for="f-watch"><input type="checkbox" id="f-watch"> Watch list only</label>
+    </div>
+  </div>
+
+  <main id="view-picks"><div class="list" id="picks"></div><div class="more"><button class="chip" id="more" hidden>Show more</button></div></main>
+  <main id="view-matches" hidden><div id="matches"></div></main>
+  <main id="view-how" hidden>
+    <div class="how">
+      <h3>What a pick is</h3>
+      <p>Each pick is a rule from our rule book that fires on this match's current Nesine odds. A rule is up to three price conditions, for example "Draw 3.05–3.15 and away team under 0.5 at 3.34–4.00". Every rule was found in 2024/25, confirmed in 2025/26 and checked again in 2026/27 + 2026, on 20,000+ matches collected by this project.</p>
+      <h3>The numbers on a pick</h3>
+      <p><b>Hit</b> is the careful hit rate: the lower of the rule's all-seasons rate and its latest-season rate. <b>Normally</b> is how often the bet lands in an average match. <b>Nesine</b> shows today's odds and the chance they imply once the bookmaker's cut is removed. <b>Value</b> is Hit × odds − 1: what 100 TL would return on average if the hit rate holds.</p>
+      <h3>Read this before betting</h3>
+      <p>The rules really raise hit rates on matches they have never seen. But Nesine's price usually rises with them, so most picks show negative value: you would still lose, just less than betting blindly. Picks marked <b>above price</b> are where the rule's hit rate beats Nesine's price today. History says treat those as a watch list, not a sure thing. Samples behind each rule are a few hundred matches.</p>
+      <h3>Reliability</h3>
+      <p>We repeated the search with shuffled results to see how many rules pure luck would produce. <span class="pill p-good">very reliable</span> means luck explains under 2% of a bet's rules, <span class="pill p-neu">reliable</span> under 10%, <span class="pill p-warn">mixed</span> under 50%. Bets where most rules could be luck are left out.</p>
+      <h3>Caps</h3>
+      <p>Prices struck through in red sit at Nesine's maximum (correct score 120+, HT/FT and combos 34+). At the cap the outcome is far less likely than the price suggests: these lost 40–95% in every season.</p>
+    </div>
+  </main>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const M = Object.fromEntries(D.matches.map(m => [m.id, m]));
+  const $ = id => document.getElementById(id);
+  const store = { get(k, d) { try { const v = localStorage.getItem("radar:" + k); return v === null ? d : JSON.parse(v) } catch (e) { return d } },
+                  set(k, v) { try { localStorage.setItem("radar:" + k, JSON.stringify(v)) } catch (e) {} } };
+  const st = Object.assign({ view: "picks", day: "", league: "", group: "", sort: "value", q: "", min: 0, above: false, rel: false, watch: false, limit: 60 },
+                           store.get("state", {}));
+  st.limit = 60;
+  const fmtDay = d => { const dt = new Date(d + "T12:00:00"); return dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }) };
+  const today = (D.meta.generated || "").slice(0, 10);
+  const dayName = d => d === today ? "Today" : (new Date(new Date(today + "T12:00:00").getTime() + 864e5).toISOString().slice(0, 10) === d ? "Tomorrow" : fmtDay(d));
+
+  $("meta").innerHTML = `Odds captured <b class="num">${D.meta.odds_time || "—"}</b> (TR) · built ${D.meta.generated}`;
+  $("range").innerHTML = `<b class="num">${D.meta.with_odds}</b> matches with odds · <b class="num">${D.meta.picks}</b> picks`;
+
+  const days = [...new Set(D.matches.map(m => m.date))].sort();
+  const dayRow = $("days");
+  [["", "All days"], ...days.map(d => [d, dayName(d)])].forEach(([v, t]) => {
+    const b = document.createElement("button"); b.className = "chip"; b.textContent = t; b.dataset.v = v;
+    b.addEventListener("click", () => { st.day = v; render() }); dayRow.appendChild(b) });
+  const lgs = [...new Map(D.matches.map(m => [m.league, m.league_tr])).entries()].sort((a, b) => a[1].localeCompare(b[1], "tr"));
+  lgs.forEach(([v, t]) => { const o = document.createElement("option"); o.value = v; o.textContent = t; $("f-league").appendChild(o) });
+  [...new Set(D.picks.map(p => p.group))].sort().forEach(g => { const o = document.createElement("option"); o.value = g; o.textContent = g; $("f-group").appendChild(o) });
+
+  const bind = (id, key, ev, get) => { const el = $(id); el.addEventListener(ev, () => { st[key] = get(el); st.limit = 60; render() }) };
+  bind("f-league", "league", "change", e => e.value); bind("f-group", "group", "change", e => e.value);
+  bind("f-sort", "sort", "change", e => e.value); bind("f-q", "q", "input", e => e.value.trim().toLowerCase());
+  bind("f-min", "min", "input", e => +e.value); bind("f-above", "above", "change", e => e.checked);
+  bind("f-rel", "rel", "change", e => e.checked); bind("f-watch", "watch", "change", e => e.checked);
+  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => { st.view = t.dataset.view; render() }));
+  $("more").addEventListener("click", () => { st.limit += 60; render() });
+
+  const ratingPill = r => r === "very reliable" ? `<span class="pill p-good">very reliable</span>` :
+    r === "reliable" ? `<span class="pill p-neu">reliable</span>` : `<span class="pill p-warn">${r}</span>`;
+  const valuePill = v => v === null ? `<span class="pill p-neu">no price</span>` :
+    v > 0 ? `<span class="pill p-good">above price +${v}%</span>` : `<span class="pill p-neu">value ${v}%</span>`;
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function matchOk(m) {
+    if (st.day && m.date !== st.day) return false;
+    if (st.league && m.league !== st.league) return false;
+    if (st.q && !(m.home + " " + m.away + " " + m.league_tr).toLowerCase().includes(st.q)) return false;
+    return true;
+  }
+  function pickOk(p) {
+    const m = M[p.m]; if (!m || !matchOk(m)) return false;
+    if (st.group && p.group !== st.group) return false;
+    if (p.hit < st.min) return false;
+    if (st.above && !(p.value !== null && p.value > 0)) return false;
+    if (st.rel && p.rating !== "very reliable") return false;
+    if (st.watch && !p.watch) return false;
+    return true;
+  }
+  const sorters = {
+    value: (a, b) => (b.value ?? -999) - (a.value ?? -999) || b.hit - a.hit,
+    hit: (a, b) => b.hit - a.hit, lift: (a, b) => b.hit / b.normal - a.hit / a.normal,
+    ko: (a, b) => (M[a.m].date + M[a.m].time).localeCompare(M[b.m].date + M[b.m].time) };
+
+  function bars(p) {
+    const lab = ["24/25 + 2024", "25/26 + 2025", "26/27 + 2026"], mx = Math.max(...p.per, p.normal, 1) * 1.15;
+    return `<div class="bars">${p.per.map((v, i) => `<div class="bar"><span>${lab[i]}</span><div class="track">
+      <div class="fill" style="width:${(v / mx * 100).toFixed(1)}%"></div><div class="norm" style="left:${(p.normal / mx * 100).toFixed(1)}%"></div></div>
+      <span class="num">${v}%</span></div>`).join("")}<div class="mini">Dark tick = normal rate (${p.normal}%)</div></div>`;
+  }
+  function pickCard(p) {
+    const m = M[p.m];
+    return `<details class="card"><summary>
+      <div class="ko num">${m.time}<small>${dayName(m.date)}</small></div>
+      <div style="min-width:0"><div class="teams">${esc(m.home)}<span class="vs">–</span>${esc(m.away)}</div>
+        <div class="lg">${esc(m.league_tr)}</div>
+        <div class="betline"><span class="bet">${esc(p.bet)}</span><span class="bettr">${esc(p.bet_tr)}</span>${p.watch ? `<span class="pill p-warn">watch list</span>` : ""}</div></div>
+      <div class="stat"><div class="big">${p.hit}%<small> hit</small></div>
+        <div class="mini">normally ${p.normal}% · ${p.odds ? `Nesine ${p.odds.toFixed(2)} (${p.price ?? "–"}%)` : "no price yet"}</div>
+        <div class="badges">${valuePill(p.value)}${ratingPill(p.rating)}</div></div>
+    </summary><div class="body">
+      <div class="rule"><b>Rule</b> (${p.cond} condition${p.cond > 1 ? "s" : ""}, ${p.n} past matches, ${p.rules} rule${p.rules > 1 ? "s" : ""} fire for this bet)<br>${esc(p.rule)}<div class="tr">${esc(p.kural)}</div></div>
+      <div class="kv"><div><span>Hit (careful)</span><b>${p.hit}%</b></div><div><span>All seasons</span><b>${p.hit_all}%</b></div>
+        <div><span>Latest season</span><b>${p.hit_c}%</b></div><div><span>Normally</span><b>${p.normal}%</b></div>
+        <div><span>Nesine odds</span><b>${p.odds ? p.odds.toFixed(2) : "–"}</b></div><div><span>Nesine says</span><b>${p.price ?? "–"}${p.price ? "%" : ""}</b></div></div>
+      ${bars(p)}
+    </div></details>`;
+  }
+  function keyOdds(m) {
+    const want = [["MS 1", "1X2||1"], ["MS X", "1X2||X"], ["MS 2", "1X2||2"], ["2,5 Alt", "OU|2.5|UNDER"], ["2,5 Üst", "OU|2.5|OVER"], ["KG Var", "BTTS||YES"], ["KG Yok", "BTTS||NO"]];
+    const by = Object.fromEntries(m.odds.map(o => [o[5], o[2]]));
+    return want.map(([t, k]) => `<div class="ko-cell"><span>${t}</span><b>${by[k] ? by[k].toFixed(2) : "–"}</b></div>`).join("");
+  }
+  function marketGrid(m) {
+    const g = new Map();
+    m.odds.forEach(o => { if (!g.has(o[0])) g.set(o[0], []); g.get(o[0]).push(o) });
+    return `<div class="mk">${[...g.entries()].map(([name, rows]) => `<section><h4>${esc(name)}</h4>${rows.map(o =>
+      `<div class="sel${o[4] ? " cap" : ""}"><span>${esc(o[1])}</span><span class="o">${o[2].toFixed(2)}</span></div>`).join("")}</section>`).join("")}</div>`;
+  }
+  function matchCard(m, picks) {
+    return `<details class="card"><summary>
+      <div class="ko num">${m.time}</div>
+      <div style="min-width:0"><div class="teams">${esc(m.home)}<span class="vs">–</span>${esc(m.away)}</div><div class="lg">${esc(m.league_tr)}</div></div>
+      <div class="stat"><div class="keyodds">${keyOdds(m)}</div><div class="badges">${picks.length ? `<span class="pill p-good">${picks.length} pick${picks.length > 1 ? "s" : ""}</span>` : `<span class="pill p-neu">no picks</span>`}</div></div>
+    </summary><div class="body">
+      ${picks.length ? `<div class="minipicks">${picks.map(p => `<div class="mp"><b>${esc(p.bet)}</b><span class="bettr">${esc(p.bet_tr)}</span>
+        <span class="num">${p.hit}% hit</span><span class="mini">normally ${p.normal}% · ${p.odds ? "Nesine " + p.odds.toFixed(2) + " (" + (p.price ?? "–") + "%)" : "no price"}</span>${valuePill(p.value)}</div>`).join("")}</div>` : ""}
+      ${m.odds.length ? marketGrid(m) : `<div class="mini">No odds captured for this match yet.</div>`}
+    </div></details>`;
+  }
+
+  function render() {
+    store.set("state", { view: st.view, day: st.day, league: st.league, group: st.group, sort: st.sort, min: st.min, above: st.above, rel: st.rel, watch: st.watch });
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.view === st.view));
+    $("view-picks").hidden = st.view !== "picks"; $("view-matches").hidden = st.view !== "matches"; $("view-how").hidden = st.view !== "how";
+    $("rail").hidden = st.view === "how";
+    dayRow.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === st.day));
+    $("f-league").value = st.league; $("f-group").value = st.group; $("f-sort").value = st.sort;
+    $("f-min").value = st.min; $("f-min-v").textContent = st.min + "%"; $("f-above").checked = st.above;
+    $("f-rel").checked = st.rel; $("f-watch").checked = st.watch;
+
+    const P = D.picks.filter(pickOk).sort(sorters[st.sort]);
+    const Ms = D.matches.filter(matchOk);
+    $("c-picks").textContent = P.length; $("c-matches").textContent = Ms.length;
+    if (st.view === "picks") {
+      $("picks").innerHTML = P.length ? P.slice(0, st.limit).map(pickCard).join("") :
+        `<div class="empty">${D.picks.length ? "No picks match these filters. Clear a filter or lower the minimum hit rate." :
+          "No upcoming matches with odds yet. Picks appear once Nesine publishes odds for the next days."}</div>`;
+      $("more").hidden = P.length <= st.limit;
+    }
+    if (st.view === "matches") {
+      const byDay = new Map(); Ms.forEach(m => { if (!byDay.has(m.date)) byDay.set(m.date, []); byDay.get(m.date).push(m) });
+      const pk = new Map(); D.picks.filter(pickOk).forEach(p => { if (!pk.has(p.m)) pk.set(p.m, []); pk.get(p.m).push(p) });
+      $("matches").innerHTML = Ms.length ? [...byDay.entries()].map(([d, ms]) => `<h2 class="daylabel">${dayName(d)} · ${fmtDay(d)}</h2>
+        <div class="list">${ms.map(m => matchCard(m, (pk.get(m.id) || []).sort(sorters.hit))).join("")}</div>`).join("") :
+        `<div class="empty">No matches for these filters.</div>`;
+    }
+  }
+  render();
+})();
+</script>
