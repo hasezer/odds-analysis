@@ -88,7 +88,8 @@ def record(ev):
 
 
 def scan(data_dir: Path, days: int):
-    book = yaml.safe_load((HERE / "strategies.yaml").read_text())["strategies"]
+    book = [s for s in yaml.safe_load((HERE / "strategies.yaml").read_text())["strategies"]
+            if s.get("status") != "retired"]
     m, o, teams, mknames = dashboard.load_upcoming(data_dir, days)
     lg = dashboard.leagues()
     odds, fair = live_tables(o)

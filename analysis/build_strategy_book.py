@@ -12,7 +12,12 @@ but small or not yet proven beyond chance; watch = only seen in 2026/27):
   odds_rule   readable rule with exact odds cut-offs (decision trees; found 2024/25, confirmed 2025/26)
   watch       2026/27 patterns beyond the odds, not yet proven
 Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagues.parquet.
+
+Nothing is ever lost: a strategy from the previous book that no longer passes is KEPT with status "retired" (date
+and reason); every strategy keeps its "first_added" date; each build that changes the book saves a dated copy in
+strategy_history/ and adds a line to strategy_history/CHANGELOG.md. LESSONS records what did NOT work.
 """
+import datetime as dt
 from pathlib import Path
 import re
 import sys
@@ -29,6 +34,24 @@ from rule_miner import nice  # noqa: E402
 from rules_targets import tr_labels  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
+HIST = HERE / "strategy_history"
+LESSONS = [
+    "No strategy beats Nesine's prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule "
+    "stacking and 'price + corrections' all lost money on unseen seasons (reports: ML_REPORT, MINER_REPORT, "
+    "RULES_V3_REPORT). Only exception so far: Portugal draw with 3+ goals (promising).",
+    "For hit rate on high-odds bets, the bet's own odds are the best filter (top 1% = 2.8x normal). Machine "
+    "learning, rule counts and 'odds + corrections' were all worse on unseen seasons (HIGH_ODDS_REPORT).",
+    "Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter "
+    "of the same size, and confirmed rules do not hit more than the odds of their own matches predict.",
+    "Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).",
+    "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
+    "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
+    "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
+    "2026/27 (so far) has more goals than the odds expect in all leagues; it is not a yearly pattern (no month repeats "
+    "it in 2024/25 or 2025/26). Remove this drift before calling a rule 'beyond the odds'.",
+    "Data traps: HT_2H_BTTS prices are label-swapped for 211 matches in Oct-Nov 2025 (excluded); 37 TUR-1 'macko*' "
+    "placeholder fixtures (excluded); referee data is empty; odds movement exists for only ~11 settled matches.",
+]
 PER = {"A": "2024/25", "B": "2025/26", "C": "2026/27"}
 
 
@@ -213,7 +236,7 @@ def to_md(book):
               "pack": "Packs (the most likely scores / results together)", "league": "League tendencies",
               "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)"}
     for kind, title in titles.items():
-        items = [s for s in book["strategies"] if s["kind"] == kind]
+        items = [s for s in book["strategies"] if s["kind"] == kind and s["status"] != "retired"]
         if not items:
             continue
         L += [f"## {title} ({len(items)})", ""]
@@ -221,9 +244,16 @@ def to_md(book):
             ev = "; ".join(f"{p}: {v.get('hit_pct')}%" + (f" (normal {v['normal_pct']}%)" if v.get("normal_pct") else "")
                            + (f", return {v['return_per_100']:+}" if "return_per_100" in v else "")
                            for p, v in s["evidence"].items())
-            L.append(f"- **{s['summary']}** [{s['status']}] — {ev}")
+            L.append(f"- **{s['summary']}** [{s['status']}, since {s.get('first_added', '?')}] — {ev}")
         L.append("")
-    L += ["## Rule book (older study)", "", "The 150,822 hit-rate rules of `rules_deep.py` (odds ranges and equal "
+    ret = [x for x in book["strategies"] if x["status"] == "retired"]
+    if ret:
+        L += [f"## Retired ({len(ret)}) — kept for the record, not checked any more", ""]
+        L += [f"- {x['summary']} — retired {x['retired_on']}: {x['retired_reason']}" for x in ret]
+        L.append("")
+    L += ["## Lessons: what did NOT work (do not redo without a new idea)", ""]
+    L += [f"- {x}" for x in book.get("lessons", [])]
+    L += ["", "## Rule book (older study)", "", "The 150,822 hit-rate rules of `rules_deep.py` (odds ranges and equal "
           "odds, 1–3 conditions) are checked too, through the Matchday Radar engine (`dashboard.compute`). They raise "
           "hit rates 1.5–3x, but the price already follows them.", ""]
     return "\n".join(L)
@@ -240,15 +270,54 @@ def plain(x):
     return x
 
 
+def merge_with_previous(items, today):
+    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not."""
+    f = HERE / "strategies.yaml"
+    prev = yaml.safe_load(f.read_text())["strategies"] if f.exists() else []
+    prev_by_id = {p["id"]: p for p in prev}
+    new_ids = {x["id"] for x in items}
+    for x in items:
+        old = prev_by_id.get(x["id"])
+        x["first_added"] = old.get("first_added", today) if old else today
+        x["last_confirmed"] = today
+    kept = []
+    for p in prev:
+        if p["id"] in new_ids:
+            continue
+        if p.get("status") != "retired":
+            p = {**p, "status": "retired", "retired_on": today,
+                 "retired_reason": "no longer passed the gates when the book was rebuilt on newer data"}
+        kept.append(p)
+    added = sum(1 for x in items if x["id"] not in prev_by_id)
+    retired = sum(1 for p in kept if p.get("retired_on") == today)
+    return items + kept, added, len(items) - added, retired
+
+
 def build():
+    today = dt.date.today().isoformat()
     d = hi_data.build()
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + tree_rules(d, trn) + watch_items(trn)
-    book = {"built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
-            "strategies": plain(items)}
-    (HERE / "strategies.yaml").write_text(yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120))
+    items, added, updated, retired = merge_with_previous(plain(items), today)
+    book = {"built_on": today,
+            "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
+            "lessons": LESSONS, "strategies": items}
+    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
+    (HERE / "strategies.yaml").write_text(text)
     (HERE / "STRATEGIES.md").write_text(to_md(book))
+    HIST.mkdir(exist_ok=True)
+    snaps = sorted(HIST.glob("strategies_*.yaml"))
+    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
+    if not snaps or strip(snaps[-1].read_text()) != strip(text):
+        (HIST / f"strategies_{today}.yaml").write_text(text)
+        with open(HIST / "CHANGELOG.md", "a") as fh:
+            if fh.tell() == 0:
+                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
+                         "strategies_<date>.yaml in this folder.\n\n")
+            fh.write(f"- {today}: {added} new, {updated} kept/updated, {retired} retired; "
+                     f"{sum(1 for x in items if x['status'] != 'retired')} active, "
+                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
     return book
 
 
