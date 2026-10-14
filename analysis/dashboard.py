@@ -89,7 +89,7 @@ def fair_probs(o):
     o["imp"] = 1 / o["odds"]
     key = ["match_id", "market_type_id", "line"]
     s = o.groupby(key, dropna=False)["imp"].transform("sum")
-    n = o.groupby(key, dropna=False)["imp"].transform("size")
+    n = o.groupby(key, dropna=False)["imp"].transform("count")
     div = np.where(o["market_key"] == "DC", s / 2, s)
     o["fair"] = np.where(n >= 2, o["imp"] / div, np.nan)
     return o
@@ -97,6 +97,13 @@ def fair_probs(o):
 
 def build(data_dir: Path, days: int):
     m, o, teams, mknames = load_upcoming(data_dir, days)
+    return compute(m, o, teams, mknames, days)
+
+
+def compute(m, o, teams, mknames, days, league_names=None):
+    """Picks for the matches in m (columns: match_id, league_id, kickoff_utc, home_team_id, away_team_id) from their
+    odds rows o (match_id, market_type_id, market_key, line, selection_key, selection_name_tr, odds,
+    captured_at_utc). teams maps team id -> name, mknames market_type_id -> Turkish market name."""
     o = fair_probs(o)
     o["lab"] = [mdat.label(a, b, c) for a, b, c in zip(o["market_key"], o["line"], o["selection_key"])]
     z = mdat.build()
@@ -145,6 +152,7 @@ def build(data_dir: Path, days: int):
         odds_by[mid] = rows
 
     lg = leagues()
+    lg.update(league_names or {})
     out_matches, out_picks = [], []
     for i, mr in m.iterrows():
         mid = mr["match_id"]
