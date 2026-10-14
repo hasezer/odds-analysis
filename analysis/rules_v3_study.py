@@ -149,6 +149,19 @@ def main():
     sheets["League scan luck"] = pd.DataFrame({"Real data: combinations found": [len(lgs)],
                                                "Shuffled leagues: average found": [lgl["found"].mean()],
                                                "Shuffled leagues: most found": [lgl["found"].max()]})
+    vt = pd.read_parquet(CACHE / "rules_v3_vote.parquet")
+    vt = vt[vt["priced_C"] > 0]
+    order = ["no rule", "1–4 rules", "5–19 rules", "20–99 rules", "100+ rules"]
+    stack = []
+    for (tr, b), d in vt.groupby(["track", "bucket"]):
+        stack.append({"Rules picked by": {"hit": "hit-rate test (2024/25 + 2025/26)",
+                                          "price": "beat-price test (2024/25 + 2025/26)",
+                                          "money": "made money in 2024/25 AND 2025/26"}[tr],
+                      "How many rules agreed": b, "_o": order.index(b), "Bets in 2026/27": int(d["priced_C"].sum()),
+                      "Hit % 2026/27": np.average(d["hit_C"], weights=d["matches_C"]),
+                      "Return per 100 staked, 2026/27": np.average(d["return_per_100_C"], weights=d["priced_C"])})
+    sheets["Rule stacking 2026-27"] = pd.DataFrame(stack).sort_values(["Rules picked by", "_o"]).drop(
+        columns="_o").round(1)
     sheets["Teams luck check"] = ts.groupby("group")[["pairs", "beat_both", "beat_both_by_luck"]].sum().reset_index()
 
     with pd.ExcelWriter(OUT / "rules_v3.xlsx") as xw:

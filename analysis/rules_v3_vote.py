@@ -43,11 +43,12 @@ def run():
             ok = ~np.isnan(y)
             for lo, hi, lab in BUCKETS:
                 m = ok & (cnt >= lo) & (cnt <= hi)
-                pm = m & ~np.isnan(f) & ~np.isnan(o)
+                pm = m & ~np.isnan(o)                      # every bet that had odds
+                fm = m & ~np.isnan(f)
                 out.append({"bet": t["name"], "bet_key": tk, "track": track, "rules": len(rules), "bucket": lab,
                             "matches_C": int(m.sum()), "hit_C": y[m].mean() * 100 if m.sum() else np.nan,
                             "normal_C": y[ok].mean() * 100,
-                            "price_says_C": f[pm].mean() * 100 if pm.sum() else np.nan,
+                            "price_says_C": f[fm].mean() * 100 if fm.sum() else np.nan, "priced_C": int(pm.sum()),
                             "return_per_100_C": (y[pm] * o[pm] - 1).mean() * 100 if pm.sum() else np.nan})
     v = pd.DataFrame(out)
     v.to_parquet(CACHE / "rules_v3_vote.parquet")

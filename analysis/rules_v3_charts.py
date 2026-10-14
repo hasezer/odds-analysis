@@ -102,11 +102,11 @@ def stacking():
     if not f.exists():
         return
     v = pd.read_parquet(f)
-    v = v[(v["track"] == "money") & (v["matches_C"] > 0)]
+    v = v[(v["track"] == "price") & (v["priced_C"] > 0)]
     order = [b[2] for b in __import__("rules_v3_vote").BUCKETS]
     g = v.groupby("bucket").apply(lambda d: pd.Series({
-        "bets": d["matches_C"].sum(),
-        "ret": np.average(d["return_per_100_C"].fillna(0), weights=d["matches_C"])})).reindex(order).dropna()
+        "bets": d["priced_C"].sum(), "hit": np.average(d["hit_C"], weights=d["matches_C"]),
+        "ret": np.average(d["return_per_100_C"], weights=d["priced_C"])})).reindex(order).dropna()
     fig, ax = plt.subplots(figsize=(10, 5), facecolor=SURF)
     style(ax)
     x = np.arange(len(g))
@@ -114,12 +114,13 @@ def stacking():
     ax.axhline(0, color=INK2, lw=1)
     for b_, (k, r) in zip(bars, g.iterrows()):
         ax.text(b_.get_x() + b_.get_width() / 2, r["ret"] + (1 if r["ret"] >= 0 else -1),
-                f"{r['ret']:+.1f}\n{int(r['bets']):,} bets", ha="center", va="bottom" if r["ret"] >= 0 else "top",
+                f"{r['ret']:+.1f}\nhit {r['hit']:.0f}%\n{int(r['bets']):,} bets", ha="center", va="bottom" if r["ret"] >= 0 else "top",
                 fontsize=10, color=INK)
     ax.set_xticks(x, g.index, fontsize=11)
     ax.set_ylabel("Return per 100 staked, 2026/27", color=INK2)
-    ax.set_title("Rules that made money in 2024/25 AND 2025/26, bet blindly in 2026/27", loc="left", fontsize=14,
-                 color=INK, fontweight="bold")
+    ax.set_title("More rules agreeing = more wins, but still a loss (2026/27, rules picked before it)", loc="left",
+                 fontsize=13.5, color=INK, fontweight="bold")
+    ax.set_ylim(min(g["ret"].min() * 1.45, -5), 5)
     fig.text(.01, .005, "x axis: how many of those rules pointed at the bet in that match. All bet types together.",
              fontsize=10, color=INK2)
     fig.tight_layout(rect=(0, .03, 1, 1))
