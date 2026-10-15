@@ -19,7 +19,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import dashboard  # noqa: E402
 import miner_data as mdat  # noqa: E402
-from htft_data import CACHE  # noqa: E402
+from htft_data import CACHE, EXPECTED_SIZE  # noqa: E402
 
 RANK = {"promising": 0, "watch": 1, "proven": 2}
 MARKET = {"CORRECT_SCORE": "Correct score", "HT_CORRECT_SCORE": "1st-half score", "HT_FT": "HT/FT"}
@@ -38,7 +38,14 @@ def strongest_only(out):
 
 
 def live_tables(o):
+    """Odds and Nesine's chance per selection label. The chance is only computed for COMPLETE markets (all
+    selections priced), exactly like the historical data (ml_data._fair); a partly listed market gets NaN."""
     o = dashboard.fair_probs(o)
+    key = ["match_id", "market_key", "line"]
+    n = o.groupby(key, dropna=False)["odds"].transform("count")
+    need = o["market_key"].map(EXPECTED_SIZE).fillna(2)
+    complete = (n == need) | o["market_key"].isin(["CORRECT_SCORE", "HT_CORRECT_SCORE"])
+    o["fair"] = np.where(complete, o["fair"], np.nan)
     o["lab"] = [mdat.label(a, b, c) for a, b, c in zip(o["market_key"], o["line"], o["selection_key"])]
     odds = o.pivot_table(index="match_id", columns="lab", values="odds", aggfunc="last")
     fair = o.pivot_table(index="match_id", columns="lab", values="fair", aggfunc="last")
