@@ -1,0 +1,326 @@
+"""Build the strategy book: every strategy we found, as checkable criteria plus its evidence by season.
+
+Writes analysis/strategies.yaml (read by daily_scan.py) and analysis/STRATEGIES.md (plain language).
+Both files are committed: they are the project's memory of what was found; the caches they come from are not.
+Every criterion needs only the current Nesine odds of a match (and its league), so the daily scan can check it.
+
+Kinds of strategy (status: proven = held in every season incl. the 2026/27 exam; promising = held every season
+but small or not yet proven beyond chance; watch = only seen in 2026/27):
+  odds_band   a high-odds bet when its own odds are among the cheapest 5% / 10% of matches     (hi_rank study)
+  pack        back the k most likely selections of a market, only in the most predictable matches (packs)
+  league      a league that produces a result more often than normal (and than the odds) every season
+  odds_rule   readable rule with exact odds cut-offs (decision trees; found 2024/25, confirmed 2025/26)
+  watch       2026/27 patterns beyond the odds, not yet proven
+Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagues.parquet.
+
+Nothing is ever lost: a strategy from the previous book that no longer passes is KEPT with status "retired" (date
+and reason); every strategy keeps its "first_added" date; each build that changes the book saves a dated copy in
+strategy_history/ and adds a line to strategy_history/CHANGELOG.md. LESSONS records what did NOT work.
+"""
+import datetime as dt
+from pathlib import Path
+import re
+import sys
+
+import numpy as np
+import pandas as pd
+import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hi_data  # noqa: E402
+from dashboard import leagues  # noqa: E402
+from htft_data import CACHE  # noqa: E402
+from rule_miner import nice  # noqa: E402
+from rules_targets import tr_labels  # noqa: E402
+
+HERE = Path(__file__).resolve().parent
+HIST = HERE / "strategy_history"
+LESSONS = [
+    "No strategy beats Nesine's prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule "
+    "stacking and 'price + corrections' all lost money on unseen seasons (reports: ML_REPORT, MINER_REPORT, "
+    "RULES_V3_REPORT). Only exception so far: Portugal draw with 3+ goals (promising).",
+    "For hit rate on high-odds bets, the bet's own odds are the best filter (top 1% = 2.8x normal). Machine "
+    "learning, rule counts and 'odds + corrections' were all worse on unseen seasons (HIGH_ODDS_REPORT).",
+    "Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter "
+    "of the same size, and confirmed rules do not hit more than the odds of their own matches predict.",
+    "Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).",
+    "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
+    "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
+    "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
+    "2026/27 (so far) has more goals than the odds expect in all leagues; it is not a yearly pattern (no month repeats "
+    "it in 2024/25 or 2025/26). Remove this drift before calling a rule 'beyond the odds'.",
+    "Data traps: HT_2H_BTTS prices are label-swapped for 211 matches in Oct-Nov 2025 (excluded); 37 TUR-1 'macko*' "
+    "placeholder fixtures (excluded); referee data is empty; odds movement exists for only ~11 settled matches.",
+]
+PER = {"A": "2024/25", "B": "2025/26", "C": "2026/27"}
+
+
+def stats(y, m, per, odds=None):
+    out = {}
+    for p, nm in PER.items():
+        mp = m & (per == p) & ~np.isnan(y)
+        base = (per == p) & ~np.isnan(y)
+        out[nm] = {"matches": int(mp.sum()), "hit_pct": round(float(y[mp].mean() * 100), 1) if mp.sum() else None,
+                   "normal_pct": round(float(y[base].mean() * 100), 1)}
+        if odds is not None:
+            mo = mp & ~np.isnan(odds)
+            out[nm]["avg_odds"] = round(float(np.nanmean(odds[mo])), 2) if mo.sum() else None
+    return out
+
+
+def holds(st, lift=1.3, min_c=30):
+    s = list(st.values())
+    return all(x["hit_pct"] is not None and x["hit_pct"] >= lift * x["normal_pct"] for x in s) and \
+        s[-1]["matches"] >= min_c
+
+
+def odds_bands(d, trn):
+    per, O, Y = d["per"], d["O"], d["Y"]
+    AB = np.isin(per, ["A", "B"])
+    out = []
+    for j, (tn, tk, ti) in enumerate(zip(d["tnames"], d["tkeys"], d["tprice"])):
+        if ti < 0 or (~np.isnan(O[AB, ti])).mean() < .5:
+            continue
+        o, y = O[:, ti], Y[:, j]
+        ok = ~np.isnan(o) & ~np.isnan(y)
+        for share in (.05, .10):
+            thr = float(np.round(np.nanquantile(o[AB & ok], share), 2))
+            m = ok & (o <= thr)
+            st = stats(y, m, per, o)
+            if not holds(st):
+                continue
+            out.append({"id": f"band-{tk}-{int(share * 100)}", "kind": "odds_band", "status": "proven",
+                        "bet": tk, "bet_name": tn, "bet_name_tr": trn.get(tk, tn),
+                        "criteria": [{"bet": tk, "op": "<=", "odds": thr}],
+                        "summary": f"{tn} when its odds are ≤ {thr:.2f} (cheapest {int(share * 100)}% of matches)",
+                        "evidence": st})
+    return out
+
+
+def packs(d):
+    per, O, F, Y = d["per"], d["O"], d["F"], d["Y"]
+    names, tk = list(d["names"]), list(d["tkeys"])
+    AB = np.isin(per, ["A", "B"])
+    out = []
+    for gname, pre, k in (("Correct score", "CORRECT_SCORE|", 3), ("Correct score", "CORRECT_SCORE|", 2),
+                          ("1st-half score", "HT_CORRECT_SCORE|", 3), ("HT/FT", "HT_FT|", 2)):
+        ks = [x for x in tk if x.startswith(pre)]
+        ti, oi = [tk.index(x) for x in ks], [names.index(x) for x in ks]
+        P, Yk, Ok = F[:, oi], Y[:, ti], O[:, oi]
+        ok = ~np.isnan(Yk).any(1) & (np.isnan(P).mean(1) < .5)
+        order = np.argsort(-np.nan_to_num(P, nan=-1), axis=1)[:, :k]
+        pp = np.take_along_axis(np.nan_to_num(P), order, 1).sum(1)
+        hit = np.take_along_axis(Yk, order, 1).max(1)
+        eff = 1 / (1 / np.take_along_axis(Ok, order, 1)).sum(1)
+        for share in (.10, .30):
+            thr = float(np.round(np.nanquantile(pp[AB & ok], 1 - share), 4))
+            m = ok & (pp >= thr)
+            st = stats(hit, m, per, eff)
+            for p in st.values():                         # "normal" for a pack = the same pack in every match
+                p["normal_pct"] = None
+            allm = stats(hit, ok, per, eff)
+            for nm in st:
+                st[nm]["every_match_pct"] = allm[nm]["hit_pct"]
+            out.append({"id": f"pack-{pre.rstrip('|')}-{k}-{int(share * 100)}", "kind": "pack", "status": "proven",
+                        "market": pre.rstrip("|"), "k": k, "min_pack_chance": thr,
+                        "selections": [x for x in ks],
+                        "summary": f"{gname}: back the {k} most likely together, only when they add up to "
+                                   f"≥ {thr * 100:.1f}% (top {int(share * 100)}% most predictable matches)",
+                        "evidence": st})
+    return out
+
+
+def league_items(d, trn, lgn):
+    out = []
+    lg = pd.read_parquet(CACHE / "hi_leagues.parquet")
+    lg["beyond"] = (lg["hit_A"] > lg["model_A"]) & (lg["hit_B"] > lg["model_B"]) & (lg["hit_C"] > lg["model_C"])
+    name2key = dict(zip(d["tnames"], d["tkeys"]))
+    for r in lg[lg["beyond"] & lg["held_in_C"]].itertuples():
+        key = name2key[r.target]
+        st = {PER[p]: {"matches": int(getattr(r, f"matches_{p}")), "hit_pct": round(getattr(r, f"hit_{p}"), 1),
+                       "normal_pct": round(getattr(r, f"normal_{p}"), 1),
+                       "odds_say_pct": round(getattr(r, f"model_{p}"), 1)} for p in "ABC"}
+        out.append({"id": f"league-{r.league}-{key}", "kind": "league", "status": "promising", "league": r.league,
+                    "league_name": lgn.get(r.league, {}).get("en", r.league), "bet": key, "bet_name": r.target,
+                    "bet_name_tr": trn.get(key, r.target),
+                    "summary": f"{lgn.get(r.league, {}).get('en', r.league)}: {r.target} — above normal AND above "
+                               f"what the odds say, every season",
+                    "evidence": st})
+    pt = pd.read_parquet(CACHE / "rules_v3_leagues.parquet")
+    for r in pt.drop_duplicates("league").itertuples():
+        st = {PER[p]: {"matches": int(getattr(r, f"matches_{p}")), "hit_pct": round(getattr(r, f"hit_{p}"), 1),
+                       "return_per_100": round(getattr(r, f"return_per_100_{p}"), 1)} for p in "ABC"}
+        out.append({"id": f"money-{r.league}-{r.bet_key}", "kind": "league", "status": "promising",
+                    "league": r.league, "league_name": lgn.get(r.league, {}).get("en", r.league), "bet": r.bet_key,
+                    "bet_name": r.bet, "bet_name_tr": trn.get(r.bet_key, r.bet),
+                    "summary": f"{lgn.get(r.league, {}).get('en', r.league)}: {r.bet} — made money in every "
+                               f"season (only league x bet out of ~4,200 to do so)",
+                    "evidence": st})
+    return out
+
+
+COND = [(re.compile(r"^(.*) odds (≤|>) ([\d.]+)$"), "odds"),
+        (re.compile(r"^Nesine's chance for (.*) (≤|>) ([\d.]+)%$"), "chance"),
+        (re.compile(r"^Nesine's cut on (.*) (≤|>) ([\d.]+)%$"), "cut")]
+
+
+def parse_rule(text, nice2key):
+    out = []
+    for part in text.split("  AND  "):
+        for rx, kind in COND:
+            m = rx.match(part)
+            if m:
+                what, op, v = m.group(1), "<=" if m.group(2) == "≤" else ">", float(m.group(3))
+                if kind == "cut":
+                    out.append({"cut": what, "op": op, "pct": v})
+                elif what in nice2key:
+                    out.append({"bet": nice2key[what], "op": op, ("odds" if kind == "odds" else "chance_pct"): v})
+                else:
+                    return None
+                break
+        else:
+            return None                    # needs form / disagreement / other data: not checkable from odds alone
+    return out
+
+
+def tree_rules(d, trn):
+    f = CACHE / "hi_trees.parquet"
+    if not f.exists():
+        return []
+    t = pd.read_parquet(f)
+    nice2key = {nice(n): n for n in d["names"]}
+    name2key = dict(zip(d["tnames"], d["tkeys"]))
+    t = t[(t["matches_C"] >= 30) & (t["hit_C"] >= 1.3 * t["normal_C"]) & (t["hit_A"] >= 1.3 * t["normal_A"])]
+    out = []
+    for tn, g in t.sort_values("hit_B", ascending=False).groupby("target"):
+        n = 0
+        for r in g.itertuples():
+            crit = parse_rule(r.rule, nice2key)
+            if not crit:
+                continue
+            st = {PER[p]: {"matches": int(getattr(r, f"matches_{p}")), "hit_pct": round(getattr(r, f"hit_{p}"), 1),
+                           "normal_pct": round(getattr(r, f"normal_{p}"), 1)} for p in "ABC"}
+            st["2026/27"]["odds_say_pct"] = round(r.odds_say_C, 1)
+            st["2026/27"]["odds_filter_same_size_pct"] = round(r.odds_filter_same_size_C, 1)
+            key = name2key[tn]
+            out.append({"id": f"tree-{key}-{n}", "kind": "odds_rule", "status": "proven", "bet": key, "bet_name": tn,
+                        "bet_name_tr": trn.get(key, tn), "criteria": crit, "summary": f"{tn} when {r.rule}",
+                        "evidence": st})
+            n += 1
+            if n == 3:
+                break
+    return out
+
+
+def watch_items(trn):
+    return [{
+        "id": "watch-ht02-away-fav", "kind": "watch", "status": "watch", "bet": "HT_CORRECT_SCORE||0-2",
+        "bet_name": "1st-half score 0-2", "bet_name_tr": trn.get("HT_CORRECT_SCORE||0-2", "İY skor 0-2"),
+        "criteria": [{"bet": "1X2_AND_OU|4.5|2&UNDER", "op": "<=", "odds": 2.01},
+                     {"bet": "HT_FT||1/1", "op": ">", "odds": 5.83}],
+        "summary": "1st-half score 0-2 when Result & goals away & under 4.5 odds ≤ 2.01 AND HT/FT 1/1 odds > 5.83 "
+                   "(strong away favourite)",
+        "evidence": {"2025/26": {"matches": 173, "hit_pct": 9.2, "normal_pct": 4.4},
+                     "2026/27": {"matches": 167, "hit_pct": 16.8, "normal_pct": 4.4, "odds_say_pct": 10.1}}}]
+
+
+def to_md(book):
+    L = ["# Strategy book", "",
+         "Every strategy found so far, with its exact criteria and its record by season. Built by "
+         "`build_strategy_book.py`; checked every day by `daily_scan.py`. Data: our own Nesine/Mackolik collection.",
+         "", "Status: **proven** = held in 2024/25, 2025/26 and the 2026/27 exam. **promising** = held every season, "
+         "not yet proven beyond chance. **watch** = only seen in 2026/27.", "",
+         "None of these beats Nesine's prices in general (the Portugal draw bet is the only one that made money in "
+         "every season). They raise the hit rate; the odds usually fall with it.", ""]
+    titles = {"odds_band": "Odds bands (bet a high-odds market only when its odds are low for it)",
+              "pack": "Packs (the most likely scores / results together)", "league": "League tendencies",
+              "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)"}
+    for kind, title in titles.items():
+        items = [s for s in book["strategies"] if s["kind"] == kind and s["status"] != "retired"]
+        if not items:
+            continue
+        L += [f"## {title} ({len(items)})", ""]
+        for s in items:
+            ev = "; ".join(f"{p}: {v.get('hit_pct')}%" + (f" (normal {v['normal_pct']}%)" if v.get("normal_pct") else "")
+                           + (f", return {v['return_per_100']:+}" if "return_per_100" in v else "")
+                           for p, v in s["evidence"].items())
+            L.append(f"- **{s['summary']}** [{s['status']}, since {s.get('first_added', '?')}] — {ev}")
+        L.append("")
+    ret = [x for x in book["strategies"] if x["status"] == "retired"]
+    if ret:
+        L += [f"## Retired ({len(ret)}) — kept for the record, not checked any more", ""]
+        L += [f"- {x['summary']} — retired {x['retired_on']}: {x['retired_reason']}" for x in ret]
+        L.append("")
+    L += ["## Lessons: what did NOT work (do not redo without a new idea)", ""]
+    L += [f"- {x}" for x in book.get("lessons", [])]
+    L += ["", "## Rule book (older study)", "", "The 150,822 hit-rate rules of `rules_deep.py` (odds ranges and equal "
+          "odds, 1–3 conditions) are checked too, through the Matchday Radar engine (`dashboard.compute`). They raise "
+          "hit rates 1.5–3x, but the price already follows them.", ""]
+    return "\n".join(L)
+
+
+def plain(x):
+    """numpy scalars/strings -> plain Python, so the YAML stays readable."""
+    if isinstance(x, dict):
+        return {str(k): plain(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [plain(v) for v in x]
+    if isinstance(x, np.generic):
+        return x.item()
+    return x
+
+
+def merge_with_previous(items, today):
+    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not."""
+    f = HERE / "strategies.yaml"
+    prev = yaml.safe_load(f.read_text())["strategies"] if f.exists() else []
+    prev_by_id = {p["id"]: p for p in prev}
+    new_ids = {x["id"] for x in items}
+    for x in items:
+        old = prev_by_id.get(x["id"])
+        x["first_added"] = old.get("first_added", today) if old else today
+        x["last_confirmed"] = today
+    kept = []
+    for p in prev:
+        if p["id"] in new_ids:
+            continue
+        if p.get("status") != "retired":
+            p = {**p, "status": "retired", "retired_on": today,
+                 "retired_reason": "no longer passed the gates when the book was rebuilt on newer data"}
+        kept.append(p)
+    added = sum(1 for x in items if x["id"] not in prev_by_id)
+    retired = sum(1 for p in kept if p.get("retired_on") == today)
+    return items + kept, added, len(items) - added, retired
+
+
+def build():
+    today = dt.date.today().isoformat()
+    d = hi_data.build()
+    trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
+    lgn = leagues()
+    items = odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + tree_rules(d, trn) + watch_items(trn)
+    items, added, updated, retired = merge_with_previous(plain(items), today)
+    book = {"built_on": today,
+            "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
+            "lessons": LESSONS, "strategies": items}
+    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
+    (HERE / "strategies.yaml").write_text(text)
+    (HERE / "STRATEGIES.md").write_text(to_md(book))
+    HIST.mkdir(exist_ok=True)
+    snaps = sorted(HIST.glob("strategies_*.yaml"))
+    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
+    if not snaps or strip(snaps[-1].read_text()) != strip(text):
+        (HIST / f"strategies_{today}.yaml").write_text(text)
+        with open(HIST / "CHANGELOG.md", "a") as fh:
+            if fh.tell() == 0:
+                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
+                         "strategies_<date>.yaml in this folder.\n\n")
+            fh.write(f"- {today}: {added} new, {updated} kept/updated, {retired} retired; "
+                     f"{sum(1 for x in items if x['status'] != 'retired')} active, "
+                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
+    return book
+
+
+if __name__ == "__main__":
+    b = build()
+    print(pd.Series([s["kind"] for s in b["strategies"]]).value_counts().to_string())
