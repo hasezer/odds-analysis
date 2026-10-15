@@ -47,6 +47,9 @@ LESSONS = [
     "League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real "
     "odds (Argentina draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every "
     "season; Ligue 1 half-time 'away ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).",
+    "Rule hunt v4 (money scans, every bet type x odds band, Nesine's cut, league, weekday, kick-off hour, month, "
+    "season stage, rest days, league x odds): nothing made money in all three seasons except Portugal draws with "
+    "3+ goals (strongest at odds > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
@@ -222,6 +225,37 @@ def tree_rules(d, trn):
     return out
 
 
+def v4_items(trn, lgn):
+    """Rule hunt v4 (money scans): league + odds-range cells that made money in every season."""
+    f = CACHE / "rules_v4.parquet"
+    if not f.exists():
+        return []
+    r = pd.read_parquet(f)
+    out = []
+    cells = {("1X2_AND_OU|2.5|X&OVER", "POR-1"): (">", 13.95, "promising"),
+             ("OU_AND_BTTS|2.5|UNDER&YES", "ESP-1"): ("range", (5.61, 6.48), "watch")}
+    for (key, league), (op, thr, status) in cells.items():
+        g = r[(r["bet_key"] == key) & (r["dimension"] == "league_x_odds") &
+              r["cell"].str.startswith(lgn.get(league, {}).get("en", league))]
+        if not len(g):
+            continue
+        x = g.iloc[0]
+        crit = [{"bet": key, "op": ">", "odds": thr}] if op == ">" else \
+            [{"bet": key, "op": ">", "odds": thr[0]}, {"bet": key, "op": "<=", "odds": thr[1]}]
+        rng = f"odds > {thr:.2f}" if op == ">" else f"odds {thr[0]:.2f}–{thr[1]:.2f}"
+        st = {PER[p]: {"matches": int(x[f"bets_{p}"]), "hit_pct": round(float(x[f"hit_{p}"]), 1),
+                       "return_per_100": round(float(x[f"return_per_100_{p}"]), 1)} for p in "ABC"}
+        note = "" if status == "promising" else " — but the same market loses in La Liga overall (-10/-3/-9): " \
+                                                "likely a slicing artefact"
+        out.append({"id": f"v4-{league}-{key}-{rng}", "kind": "league_rule", "status": status, "league": league,
+                    "league_name": lgn.get(league, {}).get("en", league), "bet": key, "bet_name": nice(key),
+                    "bet_name_tr": trn.get(key, nice(key)), "criteria": crit,
+                    "summary": f"{lgn.get(league, {}).get('en', league)}: {nice(key)} when its {rng} — made money "
+                               f"in every season{note}",
+                    "evidence": st})
+    return out
+
+
 def watch_items(trn):
     return [{
         "id": "watch-ht02-away-fav", "kind": "watch", "status": "watch", "bet": "HT_CORRECT_SCORE||0-2",
@@ -244,6 +278,7 @@ def to_md(book):
          "every season). They raise the hit rate; the odds usually fall with it.", ""]
     titles = {"odds_band": "Odds bands (bet a high-odds market only when its odds are low for it)",
               "pack": "Packs (the most likely scores / results together)", "league": "League tendencies",
+              "league_rule": "League + odds rules (money scans, v4)",
               "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)"}
     for kind, title in titles.items():
         items = [s for s in book["strategies"] if s["kind"] == kind and s["status"] != "retired"]
@@ -308,7 +343,8 @@ def build():
     d = hi_data.build()
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
-    items = odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + tree_rules(d, trn) + watch_items(trn)
+    items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
+             + watch_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",

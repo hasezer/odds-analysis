@@ -12,6 +12,9 @@ lessons:
 - League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real odds (Argentina
   draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every season; Ligue 1 half-time 'away
   ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).
+- 'Rule hunt v4 (money scans, every bet type x odds band, Nesine''s cut, league, weekday, kick-off hour, month, season stage,
+  rest days, league x odds): nothing made money in all three seasons except Portugal draws with 3+ goals (strongest at odds
+  > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - '''Fair price'' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate
   needed to break even at the odds paid, not by the ''fair'' chance.'
@@ -3073,6 +3076,66 @@ strategies:
       hit_pct: 12.9
       return_per_100: 144.1
   first_added: '2026-10-14'
+  last_confirmed: '2026-10-15'
+- id: v4-POR-1-1X2_AND_OU|2.5|X&OVER-odds > 13.95
+  kind: league_rule
+  status: promising
+  league: POR-1
+  league_name: Portugal Primeira Liga
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: Result & goals X & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&OVER
+    op: '>'
+    odds: 13.95
+  summary: 'Portugal Primeira Liga: Result & goals X & over 2.5 when its odds > 13.95 — made money in every season'
+  evidence:
+    2024/25:
+      matches: 203
+      hit_pct: 7.4
+      return_per_100: 39.4
+    2025/26:
+      matches: 177
+      hit_pct: 7.9
+      return_per_100: 45.1
+    2026/27:
+      matches: 49
+      hit_pct: 12.2
+      return_per_100: 173.1
+  first_added: '2026-10-15'
+  last_confirmed: '2026-10-15'
+- id: v4-ESP-1-OU_AND_BTTS|2.5|UNDER&YES-odds 5.61–6.48
+  kind: league_rule
+  status: watch
+  league: ESP-1
+  league_name: Spain La Liga
+  bet: OU_AND_BTTS|2.5|UNDER&YES
+  bet_name: Goals & both score under & yes 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Alt & Var'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|UNDER&YES
+    op: '>'
+    odds: 5.61
+  - bet: OU_AND_BTTS|2.5|UNDER&YES
+    op: <=
+    odds: 6.48
+  summary: 'Spain La Liga: Goals & both score under & yes 2.5 when its odds 5.61–6.48 — made money in every season — but the
+    same market loses in La Liga overall (-10/-3/-9): likely a slicing artefact'
+  evidence:
+    2024/25:
+      matches: 89
+      hit_pct: 18.0
+      return_per_100: 7.4
+    2025/26:
+      matches: 152
+      hit_pct: 25.0
+      return_per_100: 48.3
+    2026/27:
+      matches: 27
+      hit_pct: 22.2
+      return_per_100: 27.9
+  first_added: '2026-10-15'
   last_confirmed: '2026-10-15'
 - id: tree-HT_1X2_AND_HT_BTTS||1&YES-0
   kind: odds_rule

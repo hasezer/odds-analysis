@@ -103,6 +103,9 @@ def run():
                 if k == "league":
                     if r.league_id != s["league"]:
                         continue
+                elif k == "league_rule":
+                    if r.league_id != s["league"] or not ds.check(s["criteria"], orow, frow):
+                        continue
                 elif not ds.check(s["criteria"], orow, frow):
                     continue
                 hit, price, bet = y[i], orow.get(s["bet"], np.nan), s["bet_name"]

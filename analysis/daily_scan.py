@@ -103,8 +103,8 @@ def scan(data_dir: Path, days: int):
                 "match": f"{teams.get(r.home_team_id, r.home_team_id)} – {teams.get(r.away_team_id, r.away_team_id)}"}
         for s in book:
             k = s["kind"]
-            if k in ("odds_band", "odds_rule", "watch"):
-                if not check(s["criteria"], orow, frow):
+            if k in ("odds_band", "odds_rule", "watch", "league_rule"):
+                if (k == "league_rule" and r.league_id != s["league"]) or not check(s["criteria"], orow, frow):
                     continue
                 rows.append({**base, "status": s["status"], "kind": k, "bet": s["bet_name"],
                              "odds_now": orow.get(s["bet"], np.nan), "why": s["summary"], "record": record(s["evidence"]),
@@ -174,12 +174,12 @@ def write(res, m, out_md: Path, days: int):
             ms = ", ".join(f"{x.match} {x.kickoff:%a %H:%M} @ " + (f"{x.odds_now:.2f}" if pd.notna(x.odds_now) else "–")
                            for x in g.itertuples())
             L.append(f"- **{r['why']}** [{r['status']}]  \n  Record: {r['record']}  \n  Today: {ms}")
-    hi = res[res["kind"].isin(["watch", "pack"])]
+    hi = res[res["kind"].isin(["league_rule", "watch", "pack"])]
     if len(hi):
-        L += ["", "## Packs and watch patterns", ""]
+        L += ["", "## Money leads, packs and watch patterns", ""]
     for r in hi.itertuples():
         od = f"{r.odds_now:.2f}" if pd.notna(r.odds_now) else "not offered yet"
-        L.append(f"- **{r.kickoff:%a %H:%M} {r.match}** ({r.league_name}) — {r.bet} → pack odds {od} [{r.status}]  \n"
+        L.append(f"- **{r.kickoff:%a %H:%M} {r.match}** ({r.league_name}) — {r.bet} @ {od} [{r.status}]  \n"
                  f"  {r.why}. Record: {r.record}")
     L += ["", "## Every match", ""]
     for (k, mt), g in res.groupby(["kickoff", "match"], sort=True):

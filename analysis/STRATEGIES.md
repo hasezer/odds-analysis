@@ -117,6 +117,11 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **France Ligue 1: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.2% (normal 3.7%), return +19.6; 2025/26: 5.9% (normal 3.7%), return -2.5; 2026/27: 5.8% (normal 3.8%), return -2.7
 - **Portugal Primeira Liga: Result & goals X & over 2.5 — made money in every season (only league x bet out of ~4,200 to do so)** [promising, since 2026-10-14] — 2024/25: 7.7%, return +27.4; 2025/26: 10.8%, return +64.9; 2026/27: 12.9%, return +144.1
 
+## League + odds rules (money scans, v4) (2)
+
+- **Portugal Primeira Liga: Result & goals X & over 2.5 when its odds > 13.95 — made money in every season** [promising, since 2026-10-15] — 2024/25: 7.4%, return +39.4; 2025/26: 7.9%, return +45.1; 2026/27: 12.2%, return +173.1
+- **Spain La Liga: Goals & both score under & yes 2.5 when its odds 5.61–6.48 — made money in every season — but the same market loses in La Liga overall (-10/-3/-9): likely a slicing artefact** [watch, since 2026-10-15] — 2024/25: 18.0%, return +7.4; 2025/26: 25.0%, return +48.3; 2026/27: 22.2%, return +27.9
+
 ## Readable odds rules (decision trees) (72)
 
 - **1st-half result & both score 1 & yes when 1st-half result & both score 1 & yes odds ≤ 13.47  AND  Result & goals 1 & over 4.5 odds ≤ 3.87** [proven, since 2026-10-14] — 2024/25: 12.3% (normal 4.8%); 2025/26: 10.0% (normal 4.6%); 2026/27: 12.9% (normal 5.4%)
@@ -203,6 +208,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter of the same size, and confirmed rules do not hit more than the odds of their own matches predict.
 - Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).
 - League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real odds (Argentina draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every season; Ligue 1 half-time 'away ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).
+- Rule hunt v4 (money scans, every bet type x odds band, Nesine's cut, league, weekday, kick-off hour, month, season stage, rest days, league x odds): nothing made money in all three seasons except Portugal draws with 3+ goals (strongest at odds > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - 'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate needed to break even at the odds paid, not by the 'fair' chance.
 - 2026/27 (so far) has more goals than the odds expect in all leagues; it is not a yearly pattern (no month repeats it in 2024/25 or 2025/26). Remove this drift before calling a rule 'beyond the odds'.
