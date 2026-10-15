@@ -57,6 +57,20 @@ def build_targets(match_ids):
     T["Total goals 5+"] = (fh + fa) >= 5; own["Total goals 5+"] = {"GOAL_RANGE"}
     T["Both teams score in BOTH halves"] = (h1 > 0) & (a1 > 0) & (h2 > 0) & (a2 > 0)
     own["Both teams score in BOTH halves"] = {"HT_2H_BTTS"}
+    tot = fh + fa
+    extra = {
+        "Both teams score: yes": ((fh > 0) & (fa > 0), {"BTTS"}, "BTTS||YES"),
+        "Both teams score: no": (~((fh > 0) & (fa > 0)), {"BTTS"}, "BTTS||NO"),
+        "Over 2.5 goals": (tot > 2.5, {"OU"}, "OU|2.5|OVER"),
+        "Under 2.5 goals": (tot < 2.5, {"OU"}, "OU|2.5|UNDER"),
+        "Over 3.5 goals": (tot > 3.5, {"OU"}, "OU|3.5|OVER"),
+        "Home win": (ft == "1", {"1X2"}, "1X2||1"),
+        "Draw": (ft == "X", {"1X2"}, "1X2||X"),
+        "Away win": (ft == "2", {"1X2"}, "1X2||2"),
+        "1st-half draw": (ht == "X", {"HT_1X2"}, "HT_1X2||X"),
+    }
+    for k, (v, o, _) in extra.items():
+        T[k] = v; own[k] = o
     T = {k: np.where(ok, v.astype(float), np.nan) for k, v in T.items()}
     # Nesine's own price for the target (where the market exists): label in the miner matrices
     price_lab = {f"HT/FT {a}/{b}": f"HT_FT||{a}/{b}" for a in "1X2" for b in "1X2"}
@@ -65,6 +79,8 @@ def build_targets(match_ids):
                        "2-3", "4-0", "4-1", "3-3"]})
     price_lab.update({f"1st-half score {s}": f"HT_CORRECT_SCORE||{s}" for s in ["1-1", "2-0", "0-2", "2-1", "1-2"]})
     price_lab["Total goals 6+"] = "GOAL_RANGE||6+"
+    price_lab["Both teams score in BOTH halves"] = "HT_2H_BTTS||YES/YES"
+    price_lab.update({k: lab for k, (_, _, lab) in extra.items()})
     return T, own, price_lab
 
 
