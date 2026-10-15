@@ -50,6 +50,12 @@ LESSONS = [
     "Rule hunt v4 (money scans, every bet type x odds band, Nesine's cut, league, weekday, kick-off hour, month, "
     "season stage, rest days, league x odds): nothing made money in all three seasons except Portugal draws with "
     "3+ goals (strongest at odds > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).",
+    "Rule hunt v5 (new information): corners from team corner/cross/shot stats predict exactly as well as Nesine's "
+    "line (error 2.68 vs 2.68) and corner bets need 61-70% to break even (lose 8-18%); teams' first/second-half habits "
+    "do not persist (correlation ~0); late-season motivation from rebuilt league tables shows no steady effect; "
+    "popular teams (Turkey big 4, global giants) are NOT over-priced - their opponents lose 41-56%; a money scan of "
+    "915 non-odds conditions x 162 bet types (~148,000 cells) kept only Portugal draw with 3+ goals (shuffled: 0) "
+    "(RULES_V5_REPORT).",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
