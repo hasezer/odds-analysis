@@ -105,16 +105,16 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 
 ## League tendencies (11)
 
-- **Argentina Liga Profesional: Result & goals X & under 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 28.8% (normal 19.2%); 2025/26: 29.2% (normal 19.0%); 2026/27: 27.1% (normal 18.2%)
-- **Germany Bundesliga: Both halves over yes 1.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 22.4% (normal 15.9%); 2025/26: 26.2% (normal 16.1%); 2026/27: 31.8% (normal 19.1%)
-- **Germany Bundesliga: Away goals over 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 20.7% (normal 12.5%); 2025/26: 20.7% (normal 13.1%); 2026/27: 22.7% (normal 14.3%)
-- **USA MLS: Away goals over 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 16.6% (normal 12.5%); 2025/26: 16.9% (normal 13.1%); 2026/27: 17.5% (normal 14.3%)
-- **Germany Bundesliga: Result & goals 2 & over 3.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 14.5% (normal 8.6%); 2025/26: 13.1% (normal 8.8%); 2026/27: 20.5% (normal 9.6%)
-- **USA MLS: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 5.6% (normal 3.7%); 2025/26: 5.8% (normal 3.7%); 2026/27: 5.5% (normal 3.8%)
-- **Switzerland Super League: Both halves over yes 1.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 21.8% (normal 15.9%); 2025/26: 22.0% (normal 16.1%); 2026/27: 31.7% (normal 19.1%)
-- **USA MLS: 1st-half result & both score 1 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.8% (normal 4.8%); 2025/26: 6.7% (normal 4.6%); 2026/27: 8.5% (normal 5.4%)
-- **Italy Serie B: Result & goals X & under 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 24.2% (normal 19.2%); 2025/26: 23.1% (normal 19.0%); 2026/27: 21.7% (normal 18.2%)
-- **France Ligue 1: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.2% (normal 3.7%); 2025/26: 5.9% (normal 3.7%); 2026/27: 5.8% (normal 3.8%)
+- **Argentina Liga Profesional: Result & goals X & under 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 28.8% (normal 19.2%), return -9.4; 2025/26: 29.2% (normal 19.0%), return -19.0; 2026/27: 27.1% (normal 18.2%), return -19.6
+- **Germany Bundesliga: Both halves over yes 1.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 22.4% (normal 15.9%), return -26.8; 2025/26: 26.2% (normal 16.1%), return -4.6; 2026/27: 31.8% (normal 19.1%), return +5.5
+- **Germany Bundesliga: Away goals over 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 20.7% (normal 12.5%), return -13.3; 2025/26: 20.7% (normal 13.1%), return -23.3; 2026/27: 22.7% (normal 14.3%), return +5.2
+- **USA MLS: Away goals over 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 16.6% (normal 12.5%), return -20.3; 2025/26: 16.9% (normal 13.1%), return -18.5; 2026/27: 17.5% (normal 14.3%), return -20.0
+- **Germany Bundesliga: Result & goals 2 & over 3.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 14.5% (normal 8.6%), return -17.8; 2025/26: 13.1% (normal 8.8%), return -20.5; 2026/27: 20.5% (normal 9.6%), return +63.1
+- **USA MLS: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 5.6% (normal 3.7%), return -10.2; 2025/26: 5.8% (normal 3.7%), return +0.4; 2026/27: 5.5% (normal 3.8%), return -10.2
+- **Switzerland Super League: Both halves over yes 1.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 21.8% (normal 15.9%), return -19.5; 2025/26: 22.0% (normal 16.1%), return -17.9; 2026/27: 31.7% (normal 19.1%), return -3.2
+- **USA MLS: 1st-half result & both score 1 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.8% (normal 4.8%), return -25.5; 2025/26: 6.7% (normal 4.6%), return -21.7; 2026/27: 8.5% (normal 5.4%), return -16.9
+- **Italy Serie B: Result & goals X & under 2.5 — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 24.2% (normal 19.2%), return -18.7; 2025/26: 23.1% (normal 19.0%), return -20.5; 2026/27: 21.7% (normal 18.2%), return -19.3
+- **France Ligue 1: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.2% (normal 3.7%), return +19.6; 2025/26: 5.9% (normal 3.7%), return -2.5; 2026/27: 5.8% (normal 3.8%), return -2.7
 - **Portugal Primeira Liga: Result & goals X & over 2.5 — made money in every season (only league x bet out of ~4,200 to do so)** [promising, since 2026-10-14] — 2024/25: 7.7%, return +27.4; 2025/26: 10.8%, return +64.9; 2026/27: 12.9%, return +144.1
 
 ## Readable odds rules (decision trees) (72)
@@ -202,6 +202,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - For hit rate on high-odds bets, the bet's own odds are the best filter (top 1% = 2.8x normal). Machine learning, rule counts and 'odds + corrections' were all worse on unseen seasons (HIGH_ODDS_REPORT).
 - Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter of the same size, and confirmed rules do not hit more than the odds of their own matches predict.
 - Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).
+- League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real odds (Argentina draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every season; Ligue 1 half-time 'away ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - 'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate needed to break even at the odds paid, not by the 'fair' chance.
 - 2026/27 (so far) has more goals than the odds expect in all leagues; it is not a yearly pattern (no month repeats it in 2024/25 or 2025/26). Remove this drift before calling a rule 'beyond the odds'.

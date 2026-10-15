@@ -44,6 +44,9 @@ LESSONS = [
     "Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter "
     "of the same size, and confirmed rules do not hit more than the odds of their own matches predict.",
     "Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).",
+    "League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real "
+    "odds (Argentina draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every "
+    "season; Ligue 1 half-time 'away ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
@@ -140,6 +143,13 @@ def league_items(d, trn, lgn):
         st = {PER[p]: {"matches": int(getattr(r, f"matches_{p}")), "hit_pct": round(getattr(r, f"hit_{p}"), 1),
                        "normal_pct": round(getattr(r, f"normal_{p}"), 1),
                        "odds_say_pct": round(getattr(r, f"model_{p}"), 1)} for p in "ABC"}
+        if key in list(d["names"]):                      # what it paid at Nesine's actual odds, per season
+            i = list(d["names"]).index(key)
+            y, o = d["Y"][:, list(d["tkeys"]).index(key)], d["O"][:, i]
+            for p in "ABC":
+                mm = (d["league"].astype(str) == r.league) & (d["per"] == p) & ~np.isnan(o) & ~np.isnan(y)
+                if mm.sum():
+                    st[PER[p]]["return_per_100"] = round(float((y[mm] * o[mm] - 1).mean() * 100), 1)
         out.append({"id": f"league-{r.league}-{key}", "kind": "league", "status": "promising", "league": r.league,
                     "league_name": lgn.get(r.league, {}).get("en", r.league), "bet": key, "bet_name": r.target,
                     "bet_name_tr": trn.get(key, r.target),
