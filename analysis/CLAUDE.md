@@ -32,6 +32,9 @@
   - `bash analysis/daily_scan.sh /tmp/daily-scan 2` checks every active strategy on today's and tomorrow's fixtures. It writes `output/daily_scan.md` and `.xlsx`.
   - The Claude routine "Daily strategy scan (26 leagues)" runs it every morning at 08:56 Turkey time.
 
+- Live tracker: `python analysis/tracker.py` replays every strategy (as stored, from the day after `first_added`) on
+  finished matches at closing odds -> `output/tracker.md` / `.xlsx`. The daily routine runs it after the scan.
+
 ## Reports, in order
 - `REPORT.md` (first look)
 - `HTFT_REPORT.md`
