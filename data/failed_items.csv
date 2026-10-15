@@ -4647,3 +4647,6 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-15T05:56:19Z,backfill,abandoned_match,ji6ychirylznl95rbde1ous,ji6ychirylznl95rbde1ous,5,given up after 5 attempts; last error: statistics page failed (saved without statistics)
 2026-10-15T05:56:19Z,backfill,abandoned_match,mnjl0g1d6ytgctpka6jemd5g,mnjl0g1d6ytgctpka6jemd5g,5,given up after 5 attempts; last error: statistics page failed (saved without statistics)
 2026-10-15T05:56:19Z,backfill,abandoned_match,tta0dsshh2ew622blu7eac,tta0dsshh2ew622blu7eac,5,given up after 5 attempts; last error: statistics page failed (saved without statistics)
+2026-10-15T09:38:42Z,results,match,2183k4fcf0xqfc67qfret4e8k,2183k4fcf0xqfc67qfret4e8k,1,RuntimeError('popup HTTP 502')
+2026-10-15T09:38:42Z,results,match,bj127bpsoeqwkd2kbriyv3ok4,bj127bpsoeqwkd2kbriyv3ok4,1,RuntimeError('popup HTTP 502')
+2026-10-15T09:38:42Z,results,match,bnaz9wwri583j024mn7j5muqc,bnaz9wwri583j024mn7j5muqc,1,RuntimeError('popup HTTP 502')
