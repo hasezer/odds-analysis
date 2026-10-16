@@ -63,6 +63,10 @@ LESSONS = [
     "many raise the hit rate (e.g. 0-1 goals odds > 4.20 -> over 3.5: 42% vs 30%; HT score 'other' < 5 & score "
     "'other' < 8 -> 6+ goals: 23% vs 6%) but every rule stays below break-even (-8 to -33 per 100); 'all three "
     "half-by-half BTTS bets every game' loses 16%; the only plus (#21, HT/FT 2/1, +88) is 2 wins in 34 matches.",
+    "Tipster rule 5 by league (tipster_rule5.py, output/rule5_by_league.xlsx/.png): a higher 'total goals 0-1' price "
+    "raises 6+ goals in every league (all leagues: 3.6% at <= 3.50 -> 19-23% above 7.00), but no league x odds range "
+    "made money in all three seasons (0 cells; shuffled leagues 0.6). Closest: Switzerland, 0-1 > 5.00: 19% vs "
+    "break-even 18% (-0.4 per 100, 126 bets).",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
@@ -269,6 +273,73 @@ def v4_items(trn, lgn):
     return out
 
 
+between = lambda k, lo, hi: [{"bet": k, "op": ">=", "odds": lo}, {"bet": k, "op": "<=", "odds": hi}]
+TIPSTER = [  # (rule name in tipster_rules.py, id suffix, criteria, bet)
+    ("1. Home or away odds 1.81-1.90 -> both teams score: yes", "1",
+     [{"any": [between("1X2||1", 1.81, 1.90), between("1X2||2", 1.81, 1.90)]}], "BTTS||YES"),
+    ("3. 1st-half BTTS yes ~ half-by-half 'No/Yes' (within 0.10) -> 1st-half BTTS yes", "3",
+     [{"near": ["HT_BTTS||YES", "HT_2H_BTTS||NO/YES"], "tol": 0.10}], "HT_BTTS||YES"),
+    ("6. Total goals 4-5 odds 2.75-3.10 -> over 3.5", "6a", between("GOAL_RANGE||4-5", 2.75, 3.10), "OU|3.5|OVER"),
+    ("6. Total goals 4-5 odds 2.75-3.10 -> 1st-half over 1.5", "6b", between("GOAL_RANGE||4-5", 2.75, 3.10),
+     "HT_OU|1.5|OVER"),
+    ("7. Total goals 0-1 odds > 4.20 -> over 3.5", "7", [{"bet": "GOAL_RANGE||0-1", "op": ">", "odds": 4.20}],
+     "OU|3.5|OVER"),
+    ("8. Total goals 2-3 odds 1.80-2.00 -> total goals 2-3", "8", between("GOAL_RANGE||2-3", 1.80, 2.00),
+     "GOAL_RANGE||2-3"),
+    ("9. 1st-half score 'other' < 5 & score 'other' < 8 -> over 3.5", "9a",
+     [{"bet": "HT_CORRECT_SCORE||OTHER", "op": "<", "odds": 5}, {"bet": "CORRECT_SCORE||OTHER", "op": "<", "odds": 8}],
+     "OU|3.5|OVER"),
+    ("9. 1st-half score 'other' < 5 & score 'other' < 8 -> 6+ goals", "9b",
+     [{"bet": "HT_CORRECT_SCORE||OTHER", "op": "<", "odds": 5}, {"bet": "CORRECT_SCORE||OTHER", "op": "<", "odds": 8}],
+     "GOAL_RANGE||6+"),
+    ("11. Over 4.5 ~ both halves over 1.5 (within 0.20) -> 6+ goals", "11",
+     [{"near": ["OU|4.5|OVER", "BOTH_HALVES_OVER|1.5|YES"], "tol": 0.20}], "GOAL_RANGE||6+"),
+    ("12. 1st-half home/away lead & both scored < 8 -> both halves over 1.5", "12",
+     [{"any": [[{"bet": "HT_1X2_AND_HT_BTTS||1&YES", "op": "<", "odds": 8}],
+               [{"bet": "HT_1X2_AND_HT_BTTS||2&YES", "op": "<", "odds": 8}]]}], "BOTH_HALVES_OVER|1.5|YES"),
+    ("13. 1st-half score 2-2 odds < 38 -> 1st-half BTTS yes", "13",
+     [{"bet": "HT_CORRECT_SCORE||2-2", "op": "<", "odds": 38}], "HT_BTTS||YES"),
+    ("14. BTTS no odds > 2.20 -> BTTS yes", "14", [{"bet": "BTTS||NO", "op": ">", "odds": 2.20}], "BTTS||YES"),
+    ("16. A team's odds exactly 1.65 / 1.67 / 1.75 -> that team wins the 1st half", "16h",
+     [{"bet": "1X2||1", "op": "in", "values": [1.65, 1.67, 1.75]}], "HT_1X2||1"),
+    ("16. A team's odds exactly 1.65 / 1.67 / 1.75 -> that team wins the 1st half", "16a",
+     [{"bet": "1X2||2", "op": "in", "values": [1.65, 1.67, 1.75]}], "HT_1X2||2"),
+    ("19. Draw & under 2.5 odds 2.86-2.99 -> HT/FT X/X", "19", between("1X2_AND_OU|2.5|X&UNDER", 2.86, 2.99),
+     "HT_FT||X/X"),
+    ("20. Home 2.04-2.77 & away 2.64-2.77 -> HT/FT 1/2", "20", between("1X2||1", 2.04, 2.77) + between("1X2||2", 2.64,
+                                                                                                    2.77), "HT_FT||1/2"),
+]
+
+
+def tipster_items(trn):
+    """The owner's tipster rules that raised the hit rate: above normal in EVERY season and >= 15% above overall."""
+    f = CACHE / "tipster_rules.parquet"
+    if not f.exists():
+        return []
+    r = pd.read_parquet(f)
+    names = {"2024/25": "2024/25", "2025/26": "2025/26", "2026/27": "2026/27"}
+    out = []
+    for name, suffix, crit, bet in TIPSTER:
+        g = r[r["rule"] == name].set_index("period")
+        if "all" not in g.index or g.loc["all", "matches"] < 50:
+            continue
+        seasons = [p for p in names if p in g.index and g.loc[p, "matches"] > 0]
+        held = all(g.loc[p, "hit_pct"] > g.loc[p, "normal_pct"] for p in seasons)
+        if not held or g.loc["all", "hit_pct"] < 1.15 * g.loc["all", "normal_pct"]:
+            continue
+        st = {p: {"matches": int(g.loc[p, "matches"]), "hit_pct": round(float(g.loc[p, "hit_pct"]), 1),
+                  "normal_pct": round(float(g.loc[p, "normal_pct"]), 1),
+                  "return_per_100": round(float(g.loc[p, "return_per_100"]), 1)} for p in seasons}
+        text = name.split(". ", 1)[1]
+        if suffix in ("16h", "16a"):
+            text = text.replace("A team's odds", "Home team's odds" if suffix == "16h" else "Away team's odds") \
+                .replace("that team", "home" if suffix == "16h" else "away") + " (record: home and away together)"
+        out.append({"id": f"tipster-{suffix}", "kind": "tipster", "status": "proven", "bet": bet, "bet_name": nice(bet),
+                    "bet_name_tr": trn.get(bet, nice(bet)), "criteria": crit,
+                    "summary": f"Tipster rule {suffix}: {text}", "evidence": st})
+    return out
+
+
 def watch_items(trn):
     return [{
         "id": "watch-ht02-away-fav", "kind": "watch", "status": "watch", "bet": "HT_CORRECT_SCORE||0-2",
@@ -292,6 +363,7 @@ def to_md(book):
     titles = {"odds_band": "Odds bands (bet a high-odds market only when its odds are low for it)",
               "pack": "Packs (the most likely scores / results together)", "league": "League tendencies",
               "league_rule": "League + odds rules (money scans, v4)",
+              "tipster": "Tipster rules that raised the hit rate (owner's list, 16 Oct 2026)",
               "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)"}
     for kind, title in titles.items():
         items = [s for s in book["strategies"] if s["kind"] == kind and s["status"] != "retired"]
@@ -357,7 +429,7 @@ def build():
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
-             + watch_items(trn))
+             + tipster_items(trn) + watch_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",

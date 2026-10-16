@@ -27,6 +27,10 @@ lessons:
   hit rate (e.g. 0-1 goals odds > 4.20 -> over 3.5: 42% vs 30%; HT score ''other'' < 5 & score ''other'' < 8 -> 6+ goals:
   23% vs 6%) but every rule stays below break-even (-8 to -33 per 100); ''all three half-by-half BTTS bets every game'' loses
   16%; the only plus (#21, HT/FT 2/1, +88) is 2 wins in 34 matches.'
+- 'Tipster rule 5 by league (tipster_rule5.py, output/rule5_by_league.xlsx/.png): a higher ''total goals 0-1'' price raises
+  6+ goals in every league (all leagues: 3.6% at <= 3.50 -> 19-23% above 7.00), but no league x odds range made money in all
+  three seasons (0 cells; shuffled leagues 0.6). Closest: Switzerland, 0-1 > 5.00: 19% vs break-even 18% (-0.4 per 100, 126
+  bets).'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - '''Fair price'' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate
   needed to break even at the odds paid, not by the ''fair'' chance.'
@@ -5493,6 +5497,375 @@ strategies:
       odds_say_pct: 24.5
       odds_filter_same_size_pct: 34.0
   first_added: '2026-10-14'
+  last_confirmed: '2026-10-16'
+- id: tipster-3
+  kind: tipster
+  status: proven
+  bet: HT_BTTS||YES
+  bet_name: 1st-half both score yes
+  bet_name_tr: '1. Yarı Karşılıklı Gol: Var'
+  criteria:
+  - near:
+    - HT_BTTS||YES
+    - HT_2H_BTTS||NO/YES
+    tol: 0.1
+  summary: 'Tipster rule 3: 1st-half BTTS yes ~ half-by-half ''No/Yes'' (within 0.10) -> 1st-half BTTS yes'
+  evidence:
+    2025/26:
+      matches: 1094
+      hit_pct: 22.8
+      normal_pct: 19.9
+      return_per_100: -22.9
+    2026/27:
+      matches: 672
+      hit_pct: 25.0
+      normal_pct: 21.8
+      return_per_100: -16.1
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-6a
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: GOAL_RANGE||4-5
+    op: '>='
+    odds: 2.75
+  - bet: GOAL_RANGE||4-5
+    op: <=
+    odds: 3.1
+  summary: 'Tipster rule 6a: Total goals 4-5 odds 2.75-3.10 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 1742
+      hit_pct: 37.0
+      normal_pct: 29.8
+      return_per_100: -19.0
+    2025/26:
+      matches: 1778
+      hit_pct: 34.6
+      normal_pct: 29.7
+      return_per_100: -22.3
+    2026/27:
+      matches: 635
+      hit_pct: 38.0
+      normal_pct: 32.3
+      return_per_100: -14.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-7
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: GOAL_RANGE||0-1
+    op: '>'
+    odds: 4.2
+  summary: 'Tipster rule 7: Total goals 0-1 odds > 4.20 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 2359
+      hit_pct: 42.8
+      normal_pct: 29.8
+      return_per_100: -17.2
+    2025/26:
+      matches: 2112
+      hit_pct: 40.9
+      normal_pct: 29.7
+      return_per_100: -21.9
+    2026/27:
+      matches: 903
+      hit_pct: 44.9
+      normal_pct: 32.3
+      return_per_100: -15.8
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-9a
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: HT_CORRECT_SCORE||OTHER
+    op: <
+    odds: 5
+  - bet: CORRECT_SCORE||OTHER
+    op: <
+    odds: 8
+  summary: 'Tipster rule 9a: 1st-half score ''other'' < 5 & score ''other'' < 8 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 86
+      hit_pct: 59.3
+      normal_pct: 29.8
+      return_per_100: -11.5
+    2025/26:
+      matches: 15
+      hit_pct: 46.7
+      normal_pct: 29.7
+      return_per_100: -32.1
+    2026/27:
+      matches: 36
+      hit_pct: 58.3
+      normal_pct: 32.3
+      return_per_100: -17.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-9b
+  kind: tipster
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: HT_CORRECT_SCORE||OTHER
+    op: <
+    odds: 5
+  - bet: CORRECT_SCORE||OTHER
+    op: <
+    odds: 8
+  summary: 'Tipster rule 9b: 1st-half score ''other'' < 5 & score ''other'' < 8 -> 6+ goals'
+  evidence:
+    2024/25:
+      matches: 86
+      hit_pct: 24.4
+      normal_pct: 6.1
+      return_per_100: -5.8
+    2025/26:
+      matches: 15
+      hit_pct: 26.7
+      normal_pct: 6.2
+      return_per_100: -8.9
+    2026/27:
+      matches: 36
+      hit_pct: 16.7
+      normal_pct: 7.3
+      return_per_100: -49.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-11
+  kind: tipster
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - near:
+    - OU|4.5|OVER
+    - BOTH_HALVES_OVER|1.5|YES
+    tol: 0.2
+  summary: 'Tipster rule 11: Over 4.5 ~ both halves over 1.5 (within 0.20) -> 6+ goals'
+  evidence:
+    2024/25:
+      matches: 1951
+      hit_pct: 11.0
+      normal_pct: 6.1
+      return_per_100: -29.8
+    2025/26:
+      matches: 2533
+      hit_pct: 10.3
+      normal_pct: 6.2
+      return_per_100: -32.9
+    2026/27:
+      matches: 946
+      hit_pct: 13.1
+      normal_pct: 7.3
+      return_per_100: -18.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-12
+  kind: tipster
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - any:
+    - - bet: HT_1X2_AND_HT_BTTS||1&YES
+        op: <
+        odds: 8
+    - - bet: HT_1X2_AND_HT_BTTS||2&YES
+        op: <
+        odds: 8
+  summary: 'Tipster rule 12: 1st-half home/away lead & both scored < 8 -> both halves over 1.5'
+  evidence:
+    2024/25:
+      matches: 459
+      hit_pct: 30.3
+      normal_pct: 16.0
+      return_per_100: -21.1
+    2025/26:
+      matches: 361
+      hit_pct: 30.7
+      normal_pct: 16.0
+      return_per_100: -21.8
+    2026/27:
+      matches: 154
+      hit_pct: 32.5
+      normal_pct: 18.8
+      return_per_100: -19.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-13
+  kind: tipster
+  status: proven
+  bet: HT_BTTS||YES
+  bet_name: 1st-half both score yes
+  bet_name_tr: '1. Yarı Karşılıklı Gol: Var'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-2
+    op: <
+    odds: 38
+  summary: 'Tipster rule 13: 1st-half score 2-2 odds < 38 -> 1st-half BTTS yes'
+  evidence:
+    2024/25:
+      matches: 34
+      hit_pct: 32.4
+      normal_pct: 20.5
+      return_per_100: -17.3
+    2025/26:
+      matches: 34
+      hit_pct: 44.1
+      normal_pct: 19.9
+      return_per_100: 12.4
+    2026/27:
+      matches: 53
+      hit_pct: 28.3
+      normal_pct: 21.8
+      return_per_100: -28.0
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-14
+  kind: tipster
+  status: proven
+  bet: BTTS||YES
+  bet_name: Both teams score yes
+  bet_name_tr: 'Karşılıklı Gol: Var'
+  criteria:
+  - bet: BTTS||NO
+    op: '>'
+    odds: 2.2
+  summary: 'Tipster rule 14: BTTS no odds > 2.20 -> BTTS yes'
+  evidence:
+    2024/25:
+      matches: 719
+      hit_pct: 66.8
+      normal_pct: 54.0
+      return_per_100: -14.2
+    2025/26:
+      matches: 830
+      hit_pct: 65.8
+      normal_pct: 54.4
+      return_per_100: -15.4
+    2026/27:
+      matches: 514
+      hit_pct: 67.1
+      normal_pct: 56.8
+      return_per_100: -13.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-16h
+  kind: tipster
+  status: proven
+  bet: HT_1X2||1
+  bet_name: 1st-half result home
+  bet_name_tr: '1. Yarı Sonucu: 1'
+  criteria:
+  - bet: 1X2||1
+    op: in
+    values:
+    - 1.65
+    - 1.67
+    - 1.75
+  summary: 'Tipster rule 16h: Home team''s odds exactly 1.65 / 1.67 / 1.75 -> home wins the 1st half (record: home and away
+    together)'
+  evidence:
+    2024/25:
+      matches: 256
+      hit_pct: 39.8
+      normal_pct: 25.1
+      return_per_100: -11.4
+    2025/26:
+      matches: 226
+      hit_pct: 37.6
+      normal_pct: 25.1
+      return_per_100: -14.9
+    2026/27:
+      matches: 92
+      hit_pct: 37.0
+      normal_pct: 25.5
+      return_per_100: -18.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-16a
+  kind: tipster
+  status: proven
+  bet: HT_1X2||2
+  bet_name: 1st-half result away
+  bet_name_tr: '1. Yarı Sonucu: 2'
+  criteria:
+  - bet: 1X2||2
+    op: in
+    values:
+    - 1.65
+    - 1.67
+    - 1.75
+  summary: 'Tipster rule 16a: Away team''s odds exactly 1.65 / 1.67 / 1.75 -> away wins the 1st half (record: home and away
+    together)'
+  evidence:
+    2024/25:
+      matches: 256
+      hit_pct: 39.8
+      normal_pct: 25.1
+      return_per_100: -11.4
+    2025/26:
+      matches: 226
+      hit_pct: 37.6
+      normal_pct: 25.1
+      return_per_100: -14.9
+    2026/27:
+      matches: 92
+      hit_pct: 37.0
+      normal_pct: 25.5
+      return_per_100: -18.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: tipster-19
+  kind: tipster
+  status: proven
+  bet: HT_FT||X/X
+  bet_name: HT/FT X/X
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/X'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>='
+    odds: 2.86
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: <=
+    odds: 2.99
+  summary: 'Tipster rule 19: Draw & under 2.5 odds 2.86-2.99 -> HT/FT X/X'
+  evidence:
+    2024/25:
+      matches: 273
+      hit_pct: 24.2
+      normal_pct: 15.9
+      return_per_100: -14.0
+    2025/26:
+      matches: 277
+      hit_pct: 23.1
+      normal_pct: 15.7
+      return_per_100: -16.0
+    2026/27:
+      matches: 91
+      hit_pct: 27.5
+      normal_pct: 14.7
+      return_per_100: -4.1
+  first_added: '2026-10-16'
   last_confirmed: '2026-10-16'
 - id: watch-ht02-away-fav
   kind: watch

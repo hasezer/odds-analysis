@@ -40,7 +40,7 @@ def expected_hit(ev):
 
 def candidates(m, o, teams, lg_name):
     book = [s for s in yaml.safe_load((HERE / "strategies.yaml").read_text())["strategies"]
-            if s.get("status") != "retired" and s["kind"] in ("odds_band", "odds_rule", "pack", "watch")]
+            if s.get("status") != "retired" and s["kind"] in ("odds_band", "odds_rule", "pack", "watch", "tipster")]
     odds, fair = ds.live_tables(o)
     rows = []
     for r in m.itertuples():

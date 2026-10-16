@@ -111,6 +111,8 @@ def run():
     add(21, "Home 2.70-2.75 & away 2.04-2.07 -> HT/FT 2/1", between(one, 2.70, 2.75) & between(two, 2.04, 2.07),
         *bet("HT_FT||2/1"))
     out = pd.concat(res, ignore_index=True)
+    from htft_data import CACHE
+    out.to_parquet(CACHE / "tipster_rules.parquet")
     with pd.ExcelWriter(OUT) as xw:
         summ = out[out["period"] == "all"].drop(columns="period")
         summ.round(2).to_excel(xw, sheet_name="Summary (all seasons)", index=False)

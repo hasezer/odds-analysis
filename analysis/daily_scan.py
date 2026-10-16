@@ -59,8 +59,28 @@ def cut(row, what):
     return (sum(1 / row[c] for c in cols) - 1) * 100 if len(cols) >= 2 else np.nan
 
 
+OPS = {"<=": lambda v, r: v <= r, "<": lambda v, r: v < r, ">": lambda v, r: v > r, ">=": lambda v, r: v >= r}
+
+
 def check(crit, odds_row, fair_row):
+    """All criteria must hold. Kinds: {bet, op, odds} | {bet, op, chance_pct} | {cut, op, pct} |
+    {bet, op: "in", values: [...]} (odds exactly one of) | {near: [bet_a, bet_b], tol} (odds within tol) |
+    {any: [[criteria], [criteria], ...]} (at least one group holds)."""
     for c in crit:
+        if "any" in c:
+            if not any(check(g, odds_row, fair_row) for g in c["any"]):
+                return False
+            continue
+        if "near" in c:
+            a, b = (odds_row.get(k, np.nan) for k in c["near"])
+            if pd.isna(a) or pd.isna(b) or abs(a - b) > c["tol"] + 1e-9:
+                return False
+            continue
+        if c.get("op") == "in":
+            v = odds_row.get(c["bet"], np.nan)
+            if pd.isna(v) or not any(abs(v - x) < 1e-9 for x in c["values"]):
+                return False
+            continue
         if "cut" in c:
             v = cut(odds_row, c["cut"])
             ref = c["pct"]
@@ -69,7 +89,7 @@ def check(crit, odds_row, fair_row):
         else:
             f = fair_row.get(c["bet"], np.nan)
             v, ref = f * 100 if pd.notna(f) else np.nan, c["chance_pct"]
-        if pd.isna(v) or not (v <= ref if c["op"] == "<=" else v > ref):
+        if pd.isna(v) or not OPS[c["op"]](v, ref):
             return False
     return True
 
@@ -110,7 +130,7 @@ def scan(data_dir: Path, days: int):
                 "match": f"{teams.get(r.home_team_id, r.home_team_id)} – {teams.get(r.away_team_id, r.away_team_id)}"}
         for s in book:
             k = s["kind"]
-            if k in ("odds_band", "odds_rule", "watch", "league_rule"):
+            if k in ("odds_band", "odds_rule", "watch", "league_rule", "tipster"):
                 if (k == "league_rule" and r.league_id != s["league"]) or not check(s["criteria"], orow, frow):
                     continue
                 rows.append({**base, "status": s["status"], "kind": k, "bet": s["bet_name"],
