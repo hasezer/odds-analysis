@@ -45,6 +45,7 @@
 - `HIGH_ODDS_REPORT.md`
 - `RULES_V4_REPORT.md`
 - `RULES_V5_REPORT.md`
+- `SIX_PLUS_REPORT.md`
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`).

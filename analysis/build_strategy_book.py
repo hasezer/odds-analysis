@@ -67,6 +67,11 @@ LESSONS = [
     "raises 6+ goals in every league (all leagues: 3.6% at <= 3.50 -> 19-23% above 7.00), but no league x odds range "
     "made money in all three seasons (0 cells; shuffled leagues 0.6). Closest: Switzerland, 0-1 > 5.00: 19% vs "
     "break-even 18% (-0.4 per 100, 126 bets).",
+    "6+ goals deep dive (SIX_PLUS_REPORT): Nesine's 6+ price is the best 6+ signal; 555 signals, structure ratios, a "
+    "small combined model and 5,168 confirmed threshold rules add nothing beyond it (1 rule beat the cheapest-6+ filter "
+    "of the same size). Nesine OVERSTATES 6+ almost everywhere; 6+ loses 22-42 per 100 at every odds level. If you "
+    "expect a 6+ game, over 3.5 (-18) or 1st-half over 1.5 (-16) lose far less than 6+ (-29). 75% of 6+ games are "
+    "shootouts; 3-3 is the most common 6+ score.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
