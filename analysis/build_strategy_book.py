@@ -59,6 +59,10 @@ LESSONS = [
     "Every bet type loses over time at Nesine's closing odds: the least bad lose ~11-15 per 100 (both score in both "
     "halves, 1st-half 1-1, BTTS yes, 2nd-half BTTS, low totals); correct scores lose ~47 on average and capped long "
     "shots 55-93; HT/FT ~26; corners ~18 (output/bet_type_returns.xlsx).",
+    "Owner's tipster list (16 Oct 2026, tipster_rules.py, output/tipster_rules.xlsx): 21 of 22 rules testable; "
+    "many raise the hit rate (e.g. 0-1 goals odds > 4.20 -> over 3.5: 42% vs 30%; HT score 'other' < 5 & score "
+    "'other' < 8 -> 6+ goals: 23% vs 6%) but every rule stays below break-even (-8 to -33 per 100); 'all three "
+    "half-by-half BTTS bets every game' loses 16%; the only plus (#21, HT/FT 2/1, +88) is 2 wins in 34 matches.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
