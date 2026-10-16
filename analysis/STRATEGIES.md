@@ -117,10 +117,11 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **France Ligue 1: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season** [promising, since 2026-10-14] — 2024/25: 6.2% (normal 3.7%), return +19.6; 2025/26: 5.9% (normal 3.7%), return -2.5; 2026/27: 5.8% (normal 3.8%), return -2.7
 - **Portugal Primeira Liga: Result & goals X & over 2.5 — made money in every season (only league x bet out of ~4,200 to do so)** [promising, since 2026-10-14] — 2024/25: 7.7%, return +27.4; 2025/26: 10.8%, return +64.9; 2026/27: 12.9%, return +144.1
 
-## League + odds rules (money scans, v4) (2)
+## League + odds rules (money scans, v4) (3)
 
 - **Portugal Primeira Liga: Result & goals X & over 2.5 when its odds > 13.95 — made money in every season** [promising, since 2026-10-15] — 2024/25: 7.4%, return +39.4; 2025/26: 7.9%, return +45.1; 2026/27: 12.2%, return +173.1
 - **Spain La Liga: Goals & both score under & yes 2.5 when its odds 5.61–6.48 — made money in every season — but the same market loses in La Liga overall (-10/-3/-9): likely a slicing artefact** [watch, since 2026-10-15] — 2024/25: 18.0%, return +7.4; 2025/26: 25.0%, return +48.3; 2026/27: 22.2%, return +27.9
+- **Portugal: HT/FT 1/X (home ahead at half-time, ends level) - follows from the Portugal 2-2 effect (+15 / -3 / +10 per 100); not proven, the away version 2/X loses** [watch, since 2026-10-16] — 2024/25: 6.8%, return +14.7; 2025/26: 6.4%, return -2.9; 2026/27: 4.3%, return +10.0
 
 ## Tipster rules that raised the hit rate (owner's list, 16 Oct 2026) (12)
 
@@ -212,9 +213,11 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **Winner by 3+ goals when Result & goals X & under 2.5 odds > 4.39  AND  Goals & both score under & yes 2.5 odds > 9.23** [proven, since 2026-10-14] — 2024/25: 34.4% (normal 14.2%); 2025/26: 32.4% (normal 14.2%); 2026/27: 31.6% (normal 15.2%)
 - **Winner by 3+ goals when Result & goals X & under 2.5 odds > 4.39  AND  Result & goals X & over 1.5 odds > 4.87  AND  2nd-half result draw odds ≤ 3.23** [proven, since 2026-10-14] — 2024/25: 25.3% (normal 14.2%); 2025/26: 26.0% (normal 14.2%); 2026/27: 28.3% (normal 15.2%)
 
-## Watch list (not proven) (1)
+## Watch list (not proven) (3)
 
 - **1st-half score 0-2 when Result & goals away & under 4.5 odds ≤ 2.01 AND HT/FT 1/1 odds > 5.83 (strong away favourite)** [watch, since 2026-10-14] — 2025/26: 9.2% (normal 4.4%); 2026/27: 16.8% (normal 4.4%)
+- **HT/FT 1/X when the home team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time, match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck** [watch, since 2026-10-16] — 2024/25: 7.3% (normal 5.7%), return +19.5; 2025/26: 6.1% (normal 5.3%), return -3.5; 2026/27: 10.7% (normal 5.5%), return +64.4
+- **HT/FT 2/X when the away team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time, match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck** [watch, since 2026-10-16] — 2024/25: 12.5% (normal 5.7%), return +120.8; 2025/26: 11.4% (normal 5.3%), return +75.4; 2026/27: 4.0% (normal 5.5%), return -41.6
 
 ## Your 10-game system (3-4-5): whole coupons, one per weekend (2)
 
@@ -240,6 +243,8 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - Which bet per game matters more than which games: in the same 10 games, 'draw & over 2.5' returns ~0.9 per unit vs ~0.7 for 6+; over 3.5 / 1st-half over 1.5 / 4-5 goals ~0.82; BTTS ~0.86. Within a bet type, odds bands that look better (e.g. draw & over 2.5 at 14-19) are not beyond luck (no-edge twin gives as many).
 - 6+ value by league does not persist (season-to-season correlation 0.04-0.30); 'draw & over 2.5' value by league does (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without Portugal 0.92 / 1.05; shuffled leagues p <= 0.06) - Portugal is the only league clearly above 1.
 - Both teams score in both halves (1. Yari / 2. Yari KG Evet/Evet; data only since Nov 2025, 7,190 games): 6.2% won, 0.89 back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return 0.91-1.04. The tipster way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. One season only: not confirmed. Outside tipsters' picks are graded in tipster_log.csv / tipster_log.py.
+- HT/FT deep dive 2 (HTFT2_REPORT, favourite's side): every HT/FT result loses at every favourite strength (0.41-0.89 back per unit; least bad: favourite ahead at HT & wins with a 70%+ favourite, 0.84). After each half-time state Nesine's HT/FT gives the UNDERDOG 1-10 points too much, so the underdog's results lose most. 180 result x favourite x goals cells + 86 own-odds deciles + 45 result x favourite cells: 1 cell at break-even in 2024/25 and 2025/26 (luck twin 1.1 on average) - kept as a watch lead. Nesine's most likely HT/FT result happens as often as it says (63% vs 55% when it says 50%+). The 2nd-half share of goals is priced right (55.5% vs 56.0%) and no league keeps scoring late (season-to-season correlation -0.42 / 0.48 / -0.28). First-half goals barely change the chance of 2nd-half goals; the pre-match goal odds do.
+- Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both score in the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, against 0.63-0.76 for HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).
 - No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus (mostly August) is a one-off.
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - 'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate needed to break even at the odds paid, not by the 'fair' chance.
