@@ -95,6 +95,17 @@ LESSONS = [
     "won, 0.89 back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return "
     "0.91-1.04. The tipster way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. "
     "One season only: not confirmed. Outside tipsters' picks are graded in tipster_log.csv / tipster_log.py.",
+    "HT/FT deep dive 2 (HTFT2_REPORT, favourite's side): every HT/FT result loses at every favourite strength "
+    "(0.41-0.89 back per unit; least bad: favourite ahead at HT & wins with a 70%+ favourite, 0.84). After each "
+    "half-time state Nesine's HT/FT gives the UNDERDOG 1-10 points too much, so the underdog's results lose most. "
+    "180 result x favourite x goals cells + 86 own-odds deciles + 45 result x favourite cells: 1 cell at break-even "
+    "in 2024/25 and 2025/26 (luck twin 1.1 on average) - kept as a watch lead. Nesine's most likely HT/FT result "
+    "happens as often as it says (63% vs 55% when it says 50%+). The 2nd-half share of goals is priced right (55.5% "
+    "vs 56.0%) and no league keeps scoring late (season-to-season correlation -0.42 / 0.48 / -0.28). First-half "
+    "goals barely change the chance of 2nd-half goals; the pre-match goal odds do.",
+    "Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both "
+    "score in the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, "
+    "against 0.63-0.76 for HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -446,6 +457,58 @@ def system_items():
     ]
 
 
+def htft2_items(trn):
+    """HT/FT deep dive 2 watch leads (HTFT2_REPORT): not proven, tracked live."""
+    f = CACHE / "htft2.parquet"
+    if not f.exists():
+        return []
+    d = pd.read_parquet(f)
+    lgn = leagues()
+
+    def ev(mask, label_of):
+        out = {}
+        for p, nm in PER.items():
+            x = d[d["per"] == p]
+            m = mask(x)
+            y = (x["htft_f"] == label_of).astype(float)
+            o = x[f"o_{label_of}"]
+            out[nm] = {"matches": int(m.sum()), "hit_pct": round(float(y[m].mean() * 100), 1),
+                       "normal_pct": round(float(y.mean() * 100), 1),
+                       "return_per_100": round(float(((y * o)[m].mean() - 1) * 100), 1)}
+        return out
+    items = []
+    for side, k, lab in (("home", "1X2||1", "HT_FT||1/X"), ("away", "1X2||2", "HT_FT||2/X")):
+        fav_home = side == "home"
+        items.append({
+            "id": f"watch-htft-fav-ahead-draw-{side}", "kind": "watch", "status": "watch", "bet": lab,
+            "bet_name": f"HT/FT {lab.split('|')[-1]} ({side} favourite ahead at half-time, ends level)",
+            "bet_name_tr": trn.get(lab, lab),
+            "criteria": [{"bet": k, "op": ">", "chance_pct": 60}, {"bet": k, "op": "<=", "chance_pct": 70},
+                         {"bet": "OU|2.5|OVER", "op": ">", "chance_pct": 65}],
+            "summary": f"HT/FT {lab.split('|')[-1]} when the {side} team is a 60-70% favourite and over 2.5 goals is "
+                       f"65%+ likely (favourite ahead at half-time, match ends level) - one lone cell above "
+                       f"break-even in every season; neighbouring cells do not confirm it, so likely luck",
+            "evidence": ev(lambda x: (x["fav_home"] == fav_home) & (x["fav_p"] > .6) & (x["fav_p"] <= .7) &
+                           (x["over25_p"] > .65), "F/X")})
+    hd = pd.read_parquet(CACHE / "htft_wide.parquet")
+    hd = hd[hd["league_id"] == "POR-1"]
+    import htft2_data as h2
+    st = {}
+    for p, nm in PER.items():
+        x = hd[hd["season"].map(h2.PER) == p]
+        y = (x["htft"] == "1/X").astype(float)
+        st[nm] = {"matches": len(x), "hit_pct": round(float(y.mean() * 100), 1),
+                  "return_per_100": round(float(((y * x["o_1/X"]).mean() - 1) * 100), 1)}
+    items.append({"id": "watch-POR-1-HT_FT||1/X", "kind": "league_rule", "status": "watch", "league": "POR-1",
+                  "league_name": lgn.get("POR-1", {}).get("en", "POR-1"), "bet": "HT_FT||1/X",
+                  "bet_name": "HT/FT 1/X (home ahead at half-time, ends level)",
+                  "bet_name_tr": trn.get("HT_FT||1/X", "HT_FT||1/X"), "criteria": [],
+                  "summary": "Portugal: HT/FT 1/X (home ahead at half-time, ends level) - follows from the Portugal "
+                             "2-2 effect (+15 / -3 / +10 per 100); not proven, the away version 2/X loses",
+                  "evidence": st})
+    return items
+
+
 def to_md(book):
     L = ["# Strategy book", "",
          "Every strategy found so far, with its exact criteria and its record by season. Built by "
@@ -531,7 +594,7 @@ def build():
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
-             + tipster_items(trn) + watch_items(trn) + system_items())
+             + tipster_items(trn) + watch_items(trn) + system_items() + htft2_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",

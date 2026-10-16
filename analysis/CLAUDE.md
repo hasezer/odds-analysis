@@ -50,6 +50,7 @@
 - `RULES_V5_REPORT.md`
 - `SIX_PLUS_REPORT.md`
 - `SIX_SYSTEM_REPORT.md` (the owner's 10-game 3-4-5 system: Goals coupon)
+- `HTFT2_REPORT.md` (HT/FT from the favourite's side: map, half-time live table, prices)
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`).
