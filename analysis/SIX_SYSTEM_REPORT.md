@@ -143,6 +143,8 @@ Notes on the table:
 ## 7. What if Portugal's edge is smaller than measured?
 I replayed the real weekend coupons with smaller edges for Portugal: 30 weekends a season, 4,000 simulated seasons. Portugal's measured return is 1.57 per unit.
 
+**Best honest guess of the real edge:** about **1.00–1.16 per unit**, not 1.57. Part of any league's past return is luck; comparing Portugal with all 26 leagues pulls its 1.57 down to that range. Treat the 1.15 row below as the realistic case.
+
 | Portugal returns | Singles: long run / seasons up | System 3-4-5: long run / seasons up |
 |---|---|---|
 | 0.86 (no edge) | −14 / 26% | −46 / 5% |
