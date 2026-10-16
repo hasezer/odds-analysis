@@ -82,6 +82,15 @@ def test_retries_500_502_with_5_15_45(monkeypatch):
     assert (c.calls, c.failed, sleeps) == (1, 1, [5, 15, 45])
 
 
+def test_429_is_not_retried_and_stops_all_further_requests(monkeypatch):
+    c, sleeps = _client([429], monkeypatch)
+    r = c.get("x")
+    assert not r.ok and r.error == "HTTP 429" and r.attempts == 1 and sleeps == []
+    assert c.rate_limited and (c.calls, c.failed, c.requests) == (1, 1, 1)
+    r = c.get("y")  # nothing is sent any more in this job (the mock has no response left)
+    assert not r.ok and r.attempts == 0 and "429" in r.error and c.requests == 1
+
+
 def test_client_starts_at_most_one_request_per_interval_across_threads():
     import time
     from concurrent.futures import ThreadPoolExecutor
