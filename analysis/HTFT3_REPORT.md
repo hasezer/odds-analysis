@@ -125,9 +125,11 @@ How much each technique raised the hit rate on 2025/26 and 2026/27 (1.00× = no 
 | Happened | 6.0% | 6.7% | 5–6% | 5.4% | 4.2% |
 
 - Nesine's 1/X and 2/X prices sit in a narrow band (12–16), so they can't separate games.
-- **Nothing held:**
-  - no rule passed 2026/27;
-  - rules found on 2024/25 held in 2025/26 no more often than on shuffled results;
+- **Nothing held up beyond luck:**
+  - rules found on 2024/25 held in 2025/26 no more often than on shuffled results:
+    - 1/X: 7–9 rules, against about 16–19 in the luck runs;
+    - 2/X: 4–66 rules, against about 16–24 (up to 72);
+  - the 2/X rules that also held in 2026/27 mix league history with a strong-away sign (about 7–9%). In 2026/27 they were no better than taking the same number of games with the lowest 2/X odds;
   - "low-scoring game" signs (under 2.5, score 1-1, half-time 1-0 / 0-1) stay near normal.
 - **The one small exception:** for 2/X, "both halves over 1.5: NO" priced ≤ 1.05 gives 8.3% / 8.1% / 9.5%. But that is only 264 / 149 / 74 matches, and the 1/X mirror doesn't confirm it, so treat it as luck.
 - **The honest answer:** these two results can't be picked reliably. The best you can do is about 6–7%.
