@@ -34,6 +34,9 @@
 
 - Live tracker: `python analysis/tracker.py` replays every strategy (as stored, from the day after `first_added`) on
   finished matches at closing odds -> `output/tracker.md` / `.xlsx`. The daily routine runs it after the scan.
+- **The owner plays a 10-game system coupon (system 3-4-5 = 582 combos).** Strategy kind `system` stores whole
+  coupons (groups of leagues + bets, lowest odds first, one per weekend Fri-Mon). The daily scan prints the coming
+  weekend's coupons (section "Your 10-game system") and the tracker replays them weekly (SIX_SYSTEM_REPORT).
 
 ## Reports, in order
 - `REPORT.md` (first look)
@@ -46,6 +49,7 @@
 - `RULES_V4_REPORT.md`
 - `RULES_V5_REPORT.md`
 - `SIX_PLUS_REPORT.md`
+- `SIX_SYSTEM_REPORT.md` (the owner's 10-game 3-4-5 system: Goals coupon)
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`).

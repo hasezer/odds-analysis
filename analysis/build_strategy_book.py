@@ -11,7 +11,9 @@ but small or not yet proven beyond chance; watch = only seen in 2026/27):
   league      a league that produces a result more often than normal (and than the odds) every season
   odds_rule   readable rule with exact odds cut-offs (decision trees; found 2024/25, confirmed 2025/26)
   watch       2026/27 patterns beyond the odds, not yet proven
-Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagues.parquet.
+  system      a whole coupon for the owner's 10-game system (3-4-5): which games, which bet, and its record per
+              season as one coupon per weekend (six_sys_study.py); status info = shown for comparison only
+Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagues.parquet, six_sys*.parquet.
 
 Nothing is ever lost: a strategy from the previous book that no longer passes is KEPT with status "retired" (date
 and reason); every strategy keeps its "first_added" date; each build that changes the book saves a dated copy in
@@ -50,6 +52,9 @@ LESSONS = [
     "Rule hunt v4 (money scans, every bet type x odds band, Nesine's cut, league, weekday, kick-off hour, month, "
     "season stage, rest days, league x odds): nothing made money in all three seasons except Portugal draws with "
     "3+ goals (strongest at odds > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).",
+    "Portugal 'draw & over 2.5' is really a Portugal 2-2 effect: 53 of its 62 wins were 2-2 (8 were 3-3), 22 teams, "
+    "every part of the season, every odds band >= 0.95. Portugal draws are high-scoring for its goal rate (2-2 is "
+    "75% as common as 1-1; Spain 28%, Argentina 18%) and Nesine prices X & under 2.5 there at 0.51-0.64.",
     "Rule hunt v5 (new information): corners from team corner/cross/shot stats predict exactly as well as Nesine's "
     "line (error 2.68 vs 2.68) and corner bets need 61-70% to break even (lose 8-18%); teams' first/second-half habits "
     "do not persist (correlation ~0); late-season motivation from rebuilt league tables shows no steady effect; "
@@ -72,6 +77,22 @@ LESSONS = [
     "of the same size). Nesine OVERSTATES 6+ almost everywhere; 6+ loses 22-42 per 100 at every odds level. If you "
     "expect a 6+ game, over 3.5 (-18) or 1st-half over 1.5 (-16) lose far less than 6+ (-29). 75% of 6+ games are "
     "shootouts; 3-3 is the most common 6+ score.",
+    "System coupons (owner's 10 games, system 3-4-5; SIX_SYSTEM_REPORT): a combo returns the PRODUCT of its games' "
+    "returns, so the cut is multiplied. 6+ returns ~0.70 per unit in the games a 6+ player picks, so 10 lowest-6+ "
+    "coupons lost 87% (daily) / ~80% (weekend pool); 0 of 20,000 simulated seasons ended up. Picking from the whole "
+    "weekend doubles the chance of 3+ hits (8% -> 15-18% of coupons) but not the return; at those odds (~7-8) 3 hits "
+    "only gives the stake back.",
+    "6+ games are NOT linked between matches (same league same day: joint 6+ lift 0.96, different leagues 0.99, "
+    "placebo 7 days apart 1.06; goal-residual correlation ~0); league 'hot streaks' and same-day momentum predict "
+    "nothing (correlation ~0, beyond-price AUC ~0.5) -> no correlated-combo edge for system coupons.",
+    "Which bet per game matters more than which games: in the same 10 games, 'draw & over 2.5' returns ~0.9 per "
+    "unit vs ~0.7 for 6+; over 3.5 / 1st-half over 1.5 / 4-5 goals ~0.82; BTTS ~0.86. Within a bet type, odds "
+    "bands that look better (e.g. draw & over 2.5 at 14-19) are not beyond luck (no-edge twin gives as many).",
+    "6+ value by league does not persist (season-to-season correlation 0.04-0.30); 'draw & over 2.5' value by "
+    "league does (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without "
+    "Portugal 0.92 / 1.05; shuffled leagues p <= 0.06) - Portugal is the only league clearly above 1.",
+    "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
+    "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
     "'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the "
     "hit rate needed to break even at the odds paid, not by the 'fair' chance.",
@@ -357,25 +378,97 @@ def watch_items(trn):
                      "2026/27": {"matches": 167, "hit_pct": 16.8, "normal_pct": 4.4, "odds_say_pct": 10.1}}}]
 
 
+XO = ["1X2_AND_OU|2.5|X&OVER", "1X2_AND_OU|3.5|X&OVER"]   # the same result (draw with 4+ goals): take the higher price
+
+
+def system_items():
+    """The owner's 10-game system (3-4-5): the recommended 'Goals coupon' and his 6+ coupon for comparison."""
+    f, fc = CACHE / "six_sys.parquet", CACHE / "six_sys_study_coupons.parquet"
+    if not f.exists() or not fc.exists():
+        return []
+    import six_sys_study as ss
+    S = pd.read_parquet(f)
+    C = pd.read_parquet(fc)
+    C = C[(C["windows"] == "weekend / midweek") & (C["window kind"] == "weekend")]
+    top = ss.xo_leagues(S, ["A", "B", "C"])
+
+    def evidence(strategy, leg):
+        g = C[(C["strategy"] == strategy) & (C["leg"] == leg)]
+        out = {}
+        for p, nm in PER.items():
+            x = g[g["season"] == nm]
+            if not len(x):
+                continue
+            st = x[["stake 3", "stake 4", "stake 5"]].sum(axis=1)
+            ret = x[["return 3", "return 4", "return 5"]].sum(axis=1)
+            out[nm] = {"coupons": len(x), "games_per_coupon": round(float(x["legs"].mean()), 1),
+                       "avg_odds": round(float(x["avg odds"].mean()), 2),
+                       "hit_pct": round(float(x["hits"].sum() / x["legs"].sum() * 100), 1),
+                       "return_per_unit_per_game": round(float((x["leg value"] * x["legs"]).sum() / x["legs"].sum()), 3),
+                       "coupons_3plus_hits_pct": round(float((x["hits"] >= 3).mean() * 100), 1),
+                       "coupons_4plus_hits_pct": round(float((x["hits"] >= 4).mean() * 100), 1),
+                       "return_per_100": round(float((x["return 1"].sum() / x["stake 1"].sum() - 1) * 100), 1),
+                       "system_345_return_per_100": round(float((ret.sum() / st.sum() - 1) * 100), 1)}
+        return out
+
+    d6 = S[S["o6"].notna()]
+    bins = [0, 4.5, 6, 7.5, 9, 11, 14, 20, 1000]
+    lad = d6.groupby(pd.cut(d6["o6"], bins), observed=True).apply(lambda g: (g["y6"] * g["o6"]).mean())
+    ladder6 = [[float(b.right), round(float(v), 3)] for b, v in lad.items()]
+    return [
+        {"id": "system-goals-coupon", "kind": "system", "status": "promising", "name": "Goals coupon",
+         "bet": XO[0], "bet_name": "Result & goals X & over 2.5 (draw with 4+ goals: 2-2, 3-3 ...)",
+         "bet_name_tr": "MS ve 2,5 Alt/Üst: X ve Üst",
+         "summary": "Goals coupon for your 10-game system (3-4-5), every weekend (Fri-Mon): every Portugal game as "
+                    "'draw & over 2.5' (MS X ve 2,5 Üst), then the lowest 'draw & over 2.5' odds from the leagues "
+                    "where it paid best, up to 10 games. Same result under 'X & over 3.5': take the higher price.",
+         "window": "weekend", "legs": 10, "sizes": [3, 4, 5],
+         "groups": [{"name": "Portugal", "leagues": ["POR-1"], "bets": XO, "value_for_chances": 1.15},
+                    {"name": "best leagues for this bet", "leagues": [x for x in top if x != "POR-1"], "bets": XO,
+                     "value_for_chances": 0.90}],
+         "note": "Portugal returned 1.57 per unit on this bet over all seasons (1.28 / 1.65 / 2.44); chances shown "
+                 "in the scan assume only 1.15 (Portugal) and 0.90 (others). As a 3-4-5 system it is a lottery: "
+                 "3+ hits in ~4-8% of weekends; singles were profitable in every season.",
+         "evidence": evidence("Portugal first, then 8 best 'draw & over 2.5' leagues, lowest odds",
+                              "draw & over 2.5"),
+         "evidence_portugal_only": evidence("Portugal only (all its games in the window, 3-10)", "draw & over 2.5")},
+        {"id": "system-6plus-lowest", "kind": "system", "status": "info", "name": "Your 6+ coupon (for comparison)",
+         "bet": "GOAL_RANGE||6+", "bet_name": "Total goals 6+", "bet_name_tr": "Toplam Gol Aralığı: 6+",
+         "summary": "Your 6+ coupon, for comparison: the 10 lowest 6+ odds of the weekend (all 26 leagues), 6+ on "
+                    "each, system 3-4-5. Loses ~80% over time: 6+ returns only ~0.70 per unit.",
+         "window": "weekend", "legs": 10, "sizes": [3, 4, 5],
+         "groups": [{"name": "all leagues", "leagues": "all", "bets": ["GOAL_RANGE||6+"], "value_ladder": ladder6}],
+         "evidence": evidence("10 lowest 6+ odds", "6+ goals")},
+    ]
+
+
 def to_md(book):
     L = ["# Strategy book", "",
          "Every strategy found so far, with its exact criteria and its record by season. Built by "
          "`build_strategy_book.py`; checked every day by `daily_scan.py`. Data: our own Nesine/Mackolik collection.",
          "", "Status: **proven** = held in 2024/25, 2025/26 and the 2026/27 exam. **promising** = held every season, "
-         "not yet proven beyond chance. **watch** = only seen in 2026/27.", "",
+         "not yet proven beyond chance. **watch** = only seen in 2026/27. **info** = shown for comparison only.", "",
          "None of these beats Nesine's prices in general (the Portugal draw bet is the only one that made money in "
          "every season). They raise the hit rate; the odds usually fall with it.", ""]
     titles = {"odds_band": "Odds bands (bet a high-odds market only when its odds are low for it)",
               "pack": "Packs (the most likely scores / results together)", "league": "League tendencies",
               "league_rule": "League + odds rules (money scans, v4)",
               "tipster": "Tipster rules that raised the hit rate (owner's list, 16 Oct 2026)",
-              "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)"}
+              "odds_rule": "Readable odds rules (decision trees)", "watch": "Watch list (not proven)",
+              "system": "Your 10-game system (3-4-5): whole coupons, one per weekend"}
     for kind, title in titles.items():
         items = [s for s in book["strategies"] if s["kind"] == kind and s["status"] != "retired"]
         if not items:
             continue
         L += [f"## {title} ({len(items)})", ""]
         for s in items:
+            if kind == "system":
+                ev = "; ".join(f"{p}: {v['coupons']} coupons, {v['hit_pct']}% of games won, 3+ hits in "
+                               f"{v['coupons_3plus_hits_pct']}% of coupons, system 3-4-5 "
+                               f"{v['system_345_return_per_100']:+} per 100, singles {v['return_per_100']:+}"
+                               for p, v in s["evidence"].items())
+                L.append(f"- **{s['summary']}** [{s['status']}, since {s.get('first_added', '?')}] — {ev}")
+                continue
             ev = "; ".join(f"{p}: {v.get('hit_pct')}%" + (f" (normal {v['normal_pct']}%)" if v.get("normal_pct") else "")
                            + (f", return {v['return_per_100']:+}" if "return_per_100" in v else "")
                            for p, v in s["evidence"].items())
@@ -434,7 +527,7 @@ def build():
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
-             + tipster_items(trn) + watch_items(trn))
+             + tipster_items(trn) + watch_items(trn) + system_items())
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",

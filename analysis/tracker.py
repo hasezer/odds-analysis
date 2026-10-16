@@ -9,6 +9,7 @@ python analysis/tracker.py  ->  analysis/output/tracker.md and analysis/output/t
 from __future__ import annotations
 
 import datetime as dt
+from math import comb
 from pathlib import Path
 import sys
 
@@ -67,7 +68,7 @@ def run():
     start = pd.Timestamp(min(s.get("first_added", "2026-10-14") for s in book), tz="UTC") + pd.Timedelta(days=1)
     m, o = finished_since(start)
     if not len(m):
-        return pd.DataFrame(), pd.DataFrame(), start
+        return pd.DataFrame(), pd.DataFrame(), start, pd.DataFrame()
     odds, fair = ds.live_tables(o)
     idx, ok = hi_data.cells(m)
     names = list(odds.columns)
@@ -77,6 +78,8 @@ def run():
         keys.setdefault(mk, []).append(sk)
     rows = []
     for s in book:
+        if s["kind"] == "system":                      # whole coupons: replayed per weekend in system_coupons()
+            continue
         since = pd.Timestamp(s.get("first_added", "2026-10-14"), tz="UTC") + pd.Timedelta(days=1)
         until = pd.Timestamp(s["retired_on"], tz="UTC") if s.get("retired_on") else None
         if s["kind"] == "pack":
@@ -119,28 +122,86 @@ def run():
                          "return": hit * price - 1 if pd.notna(price) else np.nan,
                          "expected_hit_pct": list(s["evidence"].values())[-1].get("hit_pct")})
     picks = pd.DataFrame(rows)
+    sysr = system_coupons(book, m, odds, idx, ok, keys)
     if not len(picks):
-        return picks, pd.DataFrame(), start
+        return picks, pd.DataFrame(), start, sysr
     summ = picks.groupby(["strategy", "kind", "status", "summary"]).agg(
         picks=("hit", "size"), hits=("hit", "sum"), expected_hit_pct=("expected_hit_pct", "first"),
         priced=("return", "count"), returns=("return", "sum")).reset_index()
     summ["hit_pct"] = summ["hits"] / summ["picks"] * 100
     summ["return_per_100"] = summ["returns"] / summ["priced"].replace(0, np.nan) * 100
-    return picks, summ, start
+    return picks, summ, start, sysr
+
+
+def system_coupons(book, m, odds, idx, ok, keys):
+    """Replay each 'system' strategy (a whole coupon per weekend, e.g. the owner's 10-game 3-4-5 system) on every
+    weekend that started after it was added, at closing odds: hits, stake and payout per system size."""
+    rows = []
+    if not len(m):
+        return pd.DataFrame()
+    w = [ds.window_of(t) for t in m["kickoff_utc"]]
+    mm = m.assign(win=[x[0] for x in w], wkind=[x[1] for x in w], row=np.arange(len(m)))
+    for s in [x for x in book if x["kind"] == "system"]:
+        since = (pd.Timestamp(s.get("first_added", "2026-10-14")) + pd.Timedelta(days=1)).date()
+        until = pd.Timestamp(s["retired_on"]).date() if s.get("retired_on") else None
+        bets = sorted({b for g in s["groups"] for b in g["bets"]})
+        ys = {b: outcome(b, idx, ok, keys) for b in bets}
+        for win, g in mm[mm["wkind"] == s["window"]].groupby("win"):
+            if win < since or (until is not None and win >= until):
+                continue
+            g = g[g["match_id"].isin(odds.index)]
+            cands = odds.reindex(g["match_id"])
+            cands["league"] = g.set_index("match_id")["league_id"]
+            cands["kickoff"] = g.set_index("match_id")["kickoff_utc"]
+            legs = ds.build_coupon(s, cands)
+            if len(legs) < 3:
+                continue
+            r = g.set_index("match_id")["row"]
+            hit = np.array([ys[b][r[mid]] for mid, b in zip(legs["match_id"], legs["bet"])], dtype=float)
+            if np.isnan(hit).any():
+                continue
+            o = legs["odds"].to_numpy(float)
+            e = ds.esym(o[hit == 1], max(s["sizes"]))
+            n = len(o)
+            stake = sum(comb(n, k) for k in s["sizes"])
+            rows.append({"strategy": s["id"], "name": s.get("name", s["id"]), "status": s["status"],
+                         "summary": s["summary"], "weekend": str(win),
+                         "games": n, "hits": int(hit.sum()), "avg_odds": o.mean(),
+                         "expected_hits": float(legs["chance"].sum()),
+                         "system_stake": stake, "system_return": float(sum(e[k] for k in s["sizes"])),
+                         "singles_stake": n, "singles_return": float((o * hit).sum())})
+    return pd.DataFrame(rows)
 
 
 def ret_txt(v):
     return f"return {v:+.1f} per 100" if pd.notna(v) else "no odds for this bet"
 
 
-def write(picks, summ, start):
+def system_lines(sysr):
+    L = ["", "## Your 10-game system: one coupon per weekend since it was added", ""]
+    if sysr is None or not len(sysr):
+        return L + ["No complete weekend since the system coupons were added yet."]
+    for sid, g in sysr.groupby("strategy", sort=False):
+        sr = g["system_return"].sum() / g["system_stake"].sum() * 100 - 100
+        si = g["singles_return"].sum() / g["singles_stake"].sum() * 100 - 100
+        L.append(f"- **{g['name'].iloc[0]}** [{g['status'].iloc[0]}] — {len(g)} weekends, "
+                 f"{int(g['hits'].sum())} of {int(g['games'].sum())} games won (expected {g['expected_hits'].sum():.1f}),"
+                 f" 3+ hits in {int((g['hits'] >= 3).sum())} weekends; system 3-4-5 {sr:+.1f} per 100, singles "
+                 f"{si:+.1f} per 100")
+        for r in g.itertuples():
+            L.append(f"  - {r.weekend}: {r.hits} of {r.games} won (odds ≈ {r.avg_odds:.1f}); system paid "
+                     f"{r.system_return / r.system_stake:.2f}x the stake")
+    return L
+
+
+def write(picks, summ, start, sysr=None):
     out = HERE / "output" / "tracker.md"
     out.parent.mkdir(exist_ok=True)
     L = [f"# Strategy tracker — {dt.date.today():%d %b %Y}", "",
          f"Every strategy replayed, as stored, on matches played after it was added (from {start:%d %b %Y}), "
          "at the closing odds the project collected.", ""]
     if not len(picks):
-        out.write_text("\n".join(L + ["No finished matches since the strategies were added yet."]))
+        out.write_text("\n".join(L + ["No finished matches since the strategies were added yet."] + system_lines(sysr)))
         return out
     t = picks.copy()
     tot = lambda g: (f"{len(g)} picks, {g['hit'].sum()} won ({g['hit'].mean() * 100:.1f}%), "
@@ -160,14 +221,17 @@ def write(picks, summ, start):
     for r in summ[summ["status"] == "proven"].sort_values("picks", ascending=False).head(25).itertuples():
         L.append(f"- {r.summary} — {r.picks} picks, {r.hit_pct:.1f}% won (expected {r.expected_hit_pct}%), "
                  f"{ret_txt(r.return_per_100)}")
+    L += system_lines(sysr)
     L += ["", "Small samples swing a lot: judge a strategy after 100+ picks, a long-odds one after several hundred."]
     out.write_text("\n".join(L))
     with pd.ExcelWriter(out.with_suffix(".xlsx")) as xw:
         summ.round(2).to_excel(xw, sheet_name="By strategy", index=False)
         picks.round({"closing_odds": 2, "return": 3}).to_excel(xw, sheet_name="Every pick", index=False)
+        if sysr is not None and len(sysr):
+            sysr.round(3).to_excel(xw, sheet_name="System coupons", index=False)
     return out
 
 
 if __name__ == "__main__":
-    p, s, st = run()
-    print(write(p, s, st), len(p))
+    p, s, st, sy = run()
+    print(write(p, s, st, sy), len(p), "picks,", len(sy), "system coupons")

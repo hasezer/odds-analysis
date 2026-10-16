@@ -11,6 +11,7 @@ from sklearn.isotonic import IsotonicRegression
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import load  # noqa: E402
+import rule_tester as rt  # noqa: E402
 import six_plus as sp  # noqa: E402
 from htft_data import CACHE  # noqa: E402
 
@@ -35,7 +36,7 @@ def build(refresh=False):
     S["y6"] = D["y"].astype(int)
     S["o6"] = D["odds6"]
     S["p6"] = D["p6"]
-    S["lam"] = X[["model: lam_h1", "model: lam_a1", "model: lam_h2", "model: lam_a2"]].sum(1)
+    S["lam"] = X[["model: lam_h1", "model: lam_a1", "model: lam_h2", "model: lam_a2"]].sum(axis=1)
     # calibrated 6+ chance: Nesine's p6 overstates 6+; map it to the actual rate (isotonic, all seasons; only used to
     # measure correlation and expected hits, never to pick)
     iso = IsotonicRegression(out_of_bounds="clip").fit(S["p6"], S["y6"])
@@ -49,6 +50,16 @@ def build(refresh=False):
     S["odds_other"], S["odds_ht_other"] = e("odds: Score OTHER"), e("odds: 1st-half score OTHER")
     S["odds_01"], S["odds_45r"] = e("odds: Total goals 0-1"), e("odds: Total goals 4-5")
     S["fav"] = np.exp(np.minimum(X["odds: Result home"], X["odds: Result away"]))
+    # more legs from the full odds table: (odds column(s) -> best price of equivalent bets, outcome from the score)
+    W = rt.wide().reindex(S.index)
+    extra = {"xo": ["1X2_AND_OU|2.5|X&OVER", "1X2_AND_OU|3.5|X&OVER"],     # draw with 4+ goals (2-2, 3-3, ...)
+             "bb": ["HT_2H_BTTS||YES/YES"],                                # both teams score in both halves
+             "ht11": ["HT_CORRECT_SCORE||1-1"], "r45": ["GOAL_RANGE||4-5"], "btts": ["BTTS||YES"],
+             "htx15": ["HT_1X2_AND_HT_OU|1.5|X&OVER"]}                      # half-time draw with 2+ goals
+    for k, cols in extra.items():
+        cols = [c for c in cols if c in W]
+        S[f"odds_{k}"] = W[cols].max(axis=1) if cols else np.nan
+        S[f"y_{k}"] = rt.outcome(W, cols[0]) if cols else np.nan
     S.to_parquet(OUT)
     return S
 
