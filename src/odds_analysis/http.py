@@ -26,7 +26,10 @@ DEFAULT_HEADERS = {
     "x-requested-with": "XMLHttpRequest",
     "accept-language": "tr-TR,tr;q=0.9,en;q=0.8",
 }
-RETRY_STATUSES = {429, 500, 502, 503, 504}
+RETRY_STATUSES = {500, 502, 503, 504}
+# HTTP 429 (too many requests) means Mackolik asks us to slow down: never retried. The client stops sending requests
+# for the rest of the job (rate_limited) and the job stops; we do not try to get around it.
+RATE_LIMITED = 429
 # Mackolik returns bursts of 500/502: 3 retries after 5, 15 and 45 seconds. A request that still fails is logged
 # by the job and retried in the next run (see retry.py).
 BACKOFF_SECONDS = (5, 15, 45)
@@ -59,6 +62,7 @@ class MackolikClient:
     calls: int = field(default=0, init=False)  # logical requests (get() calls)
     failed: int = field(default=0, init=False)  # logical requests that still failed after all retries
     soft_failed: int = field(default=0, init=False)  # failed in quick mode (the caller retries them later)
+    rate_limited: bool = field(default=False, init=False)  # Mackolik answered HTTP 429: no more requests this job
     _last_request: float = field(default=0.0, init=False)
     _client: httpx.Client = field(init=False)
     _lock: threading.Lock = field(init=False, default_factory=threading.Lock)
@@ -108,6 +112,8 @@ class MackolikClient:
         attempts = 0
         quick = getattr(self._local, "quick", False)
         delays = (() if quick else self.retry_delays) if backoff is None else backoff
+        if self.rate_limited:  # sent nothing: Mackolik asked us to slow down earlier in this job
+            return FetchResult(url, None, "", 0.0, 0, "not sent: Mackolik answered HTTP 429 earlier in this job")
         with self._lock:
             self.calls += 1
         for attempt in range(len(delays) + 1):
@@ -118,6 +124,12 @@ class MackolikClient:
             try:
                 resp = self._client.get(url, headers=headers, follow_redirects=follow_redirects)
                 status, text, last_error = resp.status_code, resp.text, None
+                if status == RATE_LIMITED:
+                    with self._lock:
+                        self.rate_limited = True
+                    log.error("HTTP 429 (too many requests) from %s: no more requests in this job", url)
+                    last_error = f"HTTP {status}"
+                    break
                 if status not in RETRY_STATUSES:
                     break
                 last_error = f"HTTP {status}"

@@ -98,12 +98,18 @@ SCENARIO = textwrap.dedent('''
     out["only_other_stats"] = dict(st)
     out["past_deadline"] = backfill.process_date(C(), D1, {}, FailedItems("t", "x"), defaultdict(int), datetime.now(UTC),
                                                  {}, deadline=0)
+    limited = C()
+    limited.rate_limited = True  # Mackolik answered HTTP 429 earlier in the job
+    out["rate_limited"] = backfill.process_date(limited, D1, {}, FailedItems("t", "x"), defaultdict(int),
+                                                datetime.now(UTC), {})
     out["seen_delays"] = seen_delays
     out["state"] = json.loads(backfill.STATE.read_text())["next_date"]
     out["matches"] = sorted(store.read("matches")["match_id"])
     out["settled"] = int((store.read("settlements")["status"] == "settled").sum())
     out["progress"] = pd.read_csv(backfill.PROGRESS).to_dict("records")
     out["readme"] = backfill.README.read_text()
+    cfg["paused"] = True
+    out["paused_run"] = backfill.run(C())
     print(json.dumps(out, default=str))
 ''')
 
@@ -121,6 +127,8 @@ def test_backfill_scenario(tmp_path):
     assert out["matches"] == ["a", "b"]  # the match without Nesine odds is stored too
     assert out["settled"] == 3
     assert out["only_other"] == ["set()", True] and out["only_other_stats"].get("final", 0) == 0 and "no_odds" not in out["only_other_stats"]
+    assert out["rate_limited"][1] is False  # rate limited: no match is fetched, the date is redone later
+    assert out["paused_run"]["paused"] == "paused in config/backfill.yaml" and not out["paused_run"]["dates"]
     assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
     assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]
