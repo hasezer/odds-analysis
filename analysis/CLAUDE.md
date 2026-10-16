@@ -52,9 +52,11 @@
 - `SIX_SYSTEM_REPORT.md` (the owner's 10-game 3-4-5 system: Goals coupon)
 - `HTFT2_REPORT.md` (HT/FT from the favourite's side: map, half-time live table, prices)
 - `HTFT3_REPORT.md` (how to spot 1/X, 2/X, X/1, X/2, 1/2, 2/1: hit-rate techniques)
+- `BB_REPORT.md` (both teams score in both halves: every sign, fair race, rules, live half-time table)
 
 ## Known data traps
-- **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`).
+- **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`); there YES/YES sits at 1.10–2.02, real prices start at 4.66. The price exists only from 2025/26.
+- **HT_BTTS / 2H_BTTS:** the NO side is missing for ~45% of matches; use the YES odds, not the 'fair' chance.
 - **Referee:** empty.
 - **Odds movement:** exists for only ~11 settled matches.
 - **Nesine caps:** HT/FT about 35, correct score 130, half-time correct score 66.
