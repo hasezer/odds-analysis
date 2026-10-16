@@ -5450,3 +5450,5 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-16T05:54:39Z,backfill,match,k02qgpgfs58qt55mmvkdd4pg,k02qgpgfs58qt55mmvkdd4pg,1,statistics page failed (saved without statistics)
 2026-10-16T05:54:39Z,backfill,match,k9n1txm3io5m3zx5n0cydzbo,k9n1txm3io5m3zx5n0cydzbo,1,statistics page failed (saved without statistics)
 2026-10-16T05:54:39Z,backfill,match,kdbhi687hjhj2rtkjzf4uhw4,kdbhi687hjhj2rtkjzf4uhw4,1,statistics page failed (saved without statistics)
+2026-10-16T09:31:53Z,results,match,88bs4rd02qsdusooerlp8m044,88bs4rd02qsdusooerlp8m044,1,RuntimeError('statistics page failed')
+2026-10-16T09:31:53Z,results,match,2ho0zd6v8k0oab9fk7ke5gdn8,2ho0zd6v8k0oab9fk7ke5gdn8,1,RuntimeError('statistics page failed')

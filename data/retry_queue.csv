@@ -216,6 +216,5 @@ backfill,match,kvis3oclj4s1o3jqybqg4104,kvis3oclj4s1o3jqybqg4104,2023-08-12,,202
 backfill,match,kz4moqicyxfstqaf5xm1kpas,kz4moqicyxfstqaf5xm1kpas,2023-08-12,,2026-10-15T09:50:16Z,2026-10-16T05:54:39Z,3,statistics page failed (saved without statistics)
 backfill,match,l6dhp13ux9akwlvxu74roahg,l6dhp13ux9akwlvxu74roahg,2023-08-13,,2026-10-15T09:50:16Z,2026-10-16T05:54:39Z,3,statistics page failed (saved without statistics)
 backfill,match,ssn3hry8xbh76u5hx6ss3ro,ssn3hry8xbh76u5hx6ss3ro,2023-08-18,,2026-10-14T06:11:55Z,2026-10-16T05:54:39Z,4,statistics page failed (saved without statistics)
-results,match,2183k4fcf0xqfc67qfret4e8k,2183k4fcf0xqfc67qfret4e8k,2026-10-15,2026-10-14T22:00:00+00:00,2026-10-15T09:38:42Z,2026-10-15T09:38:42Z,1,RuntimeError('popup HTTP 502')
-results,match,bj127bpsoeqwkd2kbriyv3ok4,bj127bpsoeqwkd2kbriyv3ok4,2026-10-15,2026-10-14T23:30:00+00:00,2026-10-15T09:38:42Z,2026-10-15T09:38:42Z,1,RuntimeError('popup HTTP 502')
-results,match,bnaz9wwri583j024mn7j5muqc,bnaz9wwri583j024mn7j5muqc,2026-10-15,2026-10-15T00:30:00+00:00,2026-10-15T09:38:42Z,2026-10-15T09:38:42Z,1,RuntimeError('popup HTTP 502')
+results,match,2ho0zd6v8k0oab9fk7ke5gdn8,2ho0zd6v8k0oab9fk7ke5gdn8,2026-10-16,2026-10-15T23:00:00+00:00,2026-10-16T09:31:53Z,2026-10-16T09:31:53Z,1,RuntimeError('statistics page failed')
+results,match,88bs4rd02qsdusooerlp8m044,88bs4rd02qsdusooerlp8m044,2026-10-15,2026-10-15T15:15:00+00:00,2026-10-16T09:31:53Z,2026-10-16T09:31:53Z,1,RuntimeError('statistics page failed')
