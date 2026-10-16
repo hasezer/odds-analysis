@@ -58,5 +58,7 @@
 - **Referee:** empty.
 - **Odds movement:** exists for only ~11 settled matches.
 - **Nesine caps:** HT/FT about 35, correct score 130, half-time correct score 66.
+- **Correct scores:** listed for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and the odds got longer after 2024/25 (smaller margin). Use normalised chances, not fixed odds cut-offs.
+- **Comparing techniques:** compare on the same number of games (e.g. each picks its top 10% in each season). A fixed cut-off from 2024/25 picks different-sized groups later, which flatters the stricter one.
 - **"Fair" chance:** spreading the cut evenly is biased for short odds. Use the break-even hit rate at the odds paid.
 - **`analysis/cache/` is gitignored:** rebuild it with the scripts. The strategy book does not depend on it being present.
