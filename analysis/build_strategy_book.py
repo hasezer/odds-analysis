@@ -91,6 +91,10 @@ LESSONS = [
     "6+ value by league does not persist (season-to-season correlation 0.04-0.30); 'draw & over 2.5' value by "
     "league does (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without "
     "Portugal 0.92 / 1.05; shuffled leagues p <= 0.06) - Portugal is the only league clearly above 1.",
+    "Both teams score in both halves (1. Yari / 2. Yari KG Evet/Evet; data only since Nov 2025, 7,190 games): 6.2% "
+    "won, 0.89 back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return "
+    "0.91-1.04. The tipster way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. "
+    "One season only: not confirmed. Outside tipsters' picks are graded in tipster_log.csv / tipster_log.py.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
