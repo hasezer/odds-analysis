@@ -1,3 +1,9 @@
 cache/
 __pycache__/
 output/dashboard.html
+output/daily_scan.md
+output/daily_scan.xlsx
+output/tracker.md
+output/tracker.xlsx
+output/slips_*.md
+output/slips_*.xlsx
