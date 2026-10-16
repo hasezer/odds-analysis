@@ -66,6 +66,11 @@ lessons:
 - 'Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both score in
   the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, against 0.63-0.76 for
   HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).'
+- 'HT/FT 1/X, 2/X, X/1, X/2, 1/2, 2/1 (HTFT3_REPORT, hit rate only): the result''s own HT/FT odds are the best sign; ~390
+  single signs, ~28,000 two-condition rules per result (luck-controlled), boosted trees, logistic regression, two-part and
+  score-path scores, team comeback / blown-lead habits (last 10, last 20, previous season), league history and calendar add
+  little or nothing. Achievable: X/1 and X/2 ~1.6-1.9x normal (to 20-25%), 1/2 ~1.8x (to ~5%), 2/1 ~1.3-2x; 1/X and 2/X (leader
+  pegged back to a draw) stay at ~5-7% whatever the signs (own odds ~1.1x, rules fail in 2026/27).'
 - 'No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus
   (mostly August) is a one-off.'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
@@ -6200,5 +6205,118 @@ strategies:
       matches: 70
       hit_pct: 4.3
       return_per_100: 10.0
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-X/1-odds-5
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/1
+  bet_name: HT/FT X/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/1'
+  criteria:
+  - bet: HT_FT||X/1
+    op: <=
+    odds: 3.66
+  summary: HT/FT X/1 (level at half-time, home wins) when its odds are <= 3.66 (lowest 5% of 2024/25)
+  evidence:
+    2024/25:
+      matches: 408
+      hit_pct: 20.1
+      normal_pct: 14.7
+    2025/26:
+      matches: 74
+      hit_pct: 27.0
+      normal_pct: 14.5
+    2026/27:
+      matches: 30
+      hit_pct: 40.0
+      normal_pct: 14.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-X/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+    op: '>='
+    odds: 13.35
+  - bet: TEAM_WIN_EITHER_HALF_AWAY||NO
+    op: <=
+    chance_pct: 31.21
+  summary: 'HT/FT X/2 when odds: Home wins both halves yes ≥ 13.35  AND  chance: Away wins a half no ≤ 31.2%'
+  evidence:
+    2024/25:
+      matches: 173
+      hit_pct: 24.3
+      normal_pct: 10.8
+    2025/26:
+      matches: 230
+      hit_pct: 22.6
+      normal_pct: 11.1
+    2026/27:
+      matches: 63
+      hit_pct: 19.0
+      normal_pct: 10.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-1/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||1/2
+  bet_name: HT/FT 1/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&OVER
+    op: <=
+    odds: 5.66
+  - bet: HT_FT||1/2
+    op: <=
+    odds: 22.0
+  summary: 'HT/FT 1/2 when odds: Result & goals 2 & over 4.5 ≤ 5.66  AND  HT/FT 1/2 odds ≤ 22.00'
+  evidence:
+    2024/25:
+      matches: 314
+      hit_pct: 7.3
+      normal_pct: 2.2
+    2025/26:
+      matches: 350
+      hit_pct: 5.1
+      normal_pct: 2.3
+    2026/27:
+      matches: 145
+      hit_pct: 3.4
+      normal_pct: 2.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-2/1-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/1
+  bet_name: HT/FT 2/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/1'
+  criteria:
+  - bet: CORRECT_SCORE||2-1
+    op: '>='
+    chance_pct: 9.32
+  - bet: TEAM_WIN_EITHER_HALF_HOME||YES
+    op: '>='
+    chance_pct: 56.24
+  summary: 'HT/FT 2/1 when chance: score 2-1 ≥ 9.3%  AND  chance: Home wins a half yes ≥ 56.2%'
+  evidence:
+    2024/25:
+      matches: 451
+      hit_pct: 6.4
+      normal_pct: 2.9
+    2025/26:
+      matches: 172
+      hit_pct: 7.0
+      normal_pct: 2.6
+    2026/27:
+      matches: 138
+      hit_pct: 3.6
+      normal_pct: 2.4
   first_added: '2026-10-16'
   last_confirmed: '2026-10-16'

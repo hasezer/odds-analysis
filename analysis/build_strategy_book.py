@@ -106,6 +106,12 @@ LESSONS = [
     "Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both "
     "score in the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, "
     "against 0.63-0.76 for HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).",
+    "HT/FT 1/X, 2/X, X/1, X/2, 1/2, 2/1 (HTFT3_REPORT, hit rate only): the result's own HT/FT odds are the best "
+    "sign; ~390 single signs, ~28,000 two-condition rules per result (luck-controlled), boosted trees, logistic "
+    "regression, two-part and score-path scores, team comeback / blown-lead habits (last 10, last 20, previous "
+    "season), league history and calendar add little or nothing. Achievable: X/1 and X/2 ~1.6-1.9x normal (to "
+    "20-25%), 1/2 ~1.8x (to ~5%), 2/1 ~1.3-2x; 1/X and 2/X (leader pegged back to a draw) stay at ~5-7% whatever "
+    "the signs (own odds ~1.1x, rules fail in 2026/27).",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -509,6 +515,56 @@ def htft2_items(trn):
     return items
 
 
+def htft3_items(trn):
+    """HT/FT study 3: hit-rate rules for the six changing results that held in all three seasons (>= 1.3x normal)."""
+    f, fr = CACHE / "htft3.parquet", CACHE / "htft3_rules.parquet"
+    if not f.exists() or not fr.exists():
+        return []
+    import json
+    d = pd.read_parquet(f)
+    R = pd.read_parquet(fr)
+    ylab = {"1/X": "y_1X", "2/X": "y_2X", "X/1": "y_X1", "X/2": "y_X2", "1/2": "y_12", "2/1": "y_21"}
+
+    def ev(mask, y):
+        out = {}
+        for p, nm in PER.items():
+            m = d["per"] == p
+            out[nm] = {"matches": int((mask & m).sum()),
+                       "hit_pct": round(float(d.loc[mask & m, y].mean() * 100), 1) if (mask & m).sum() else None,
+                       "normal_pct": round(float(d.loc[m, y].mean() * 100), 1)}
+        return out
+    items = []
+    A = d["per"] == "A"
+    for share in (0.05, 0.10):                      # X/1 has no odds band in the book yet
+        thr = round(float(d.loc[A, "o_X/1"].quantile(share)), 2)
+        st = ev(d["o_X/1"] <= thr, "y_X1")
+        if holds(st):
+            items.append({"id": f"htft3-X/1-odds-{int(share * 100)}", "kind": "odds_rule", "status": "proven",
+                          "bet": "HT_FT||X/1", "bet_name": nice("HT_FT||X/1"),
+                          "bet_name_tr": trn.get("HT_FT||X/1", "HT_FT||X/1"),
+                          "criteria": [{"bet": "HT_FT||X/1", "op": "<=", "odds": thr}],
+                          "summary": f"HT/FT X/1 (level at half-time, home wins) when its odds are <= {thr:.2f} "
+                                     f"(lowest {int(share * 100)}% of 2024/25)", "evidence": st})
+    for lab, y in ylab.items():                    # the 2-condition rule ranked best on 2024/25, if it held
+        r = R[(R["result"] == lab) & (R["pool"] == "scan-ready") & R["confirmed"] & (R["conditions"] == 2)]
+        r = r[r["criteria"].notna()]
+        if not len(r):
+            continue
+        rb = r.iloc[0]
+        crit = json.loads(rb["criteria"])
+        st = {}
+        for p, nm in PER.items():
+            st[nm] = {"matches": int(rb[f"matches {nm}"]), "hit_pct": round(float(rb[f"hit % {nm}"]), 1),
+                      "normal_pct": round(float(rb[f"normal % {nm}"]), 1)}
+        if not holds(st):
+            continue
+        key = f"HT_FT||{lab}"
+        items.append({"id": f"htft3-{lab}-rule", "kind": "odds_rule", "status": "proven", "bet": key,
+                      "bet_name": nice(key), "bet_name_tr": trn.get(key, key), "criteria": crit,
+                      "summary": f"HT/FT {lab} when {rb['rule']}", "evidence": st})
+    return items
+
+
 def to_md(book):
     L = ["# Strategy book", "",
          "Every strategy found so far, with its exact criteria and its record by season. Built by "
@@ -594,7 +650,7 @@ def build():
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
-             + tipster_items(trn) + watch_items(trn) + system_items() + htft2_items(trn))
+             + tipster_items(trn) + watch_items(trn) + system_items() + htft2_items(trn) + htft3_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
