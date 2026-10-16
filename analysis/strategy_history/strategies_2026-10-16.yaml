@@ -52,6 +52,41 @@ lessons:
 - '6+ value by league does not persist (season-to-season correlation 0.04-0.30); ''draw & over 2.5'' value by league does
   (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without Portugal 0.92 / 1.05; shuffled
   leagues p <= 0.06) - Portugal is the only league clearly above 1.'
+- 'Both teams score in both halves (1. Yari / 2. Yari KG Evet/Evet; data only since Nov 2025, 7,190 games): 6.2% won, 0.89
+  back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return 0.91-1.04. The tipster
+  way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. One season only: not confirmed.
+  Outside tipsters'' picks are graded in tipster_log.csv / tipster_log.py.'
+- 'HT/FT deep dive 2 (HTFT2_REPORT, favourite''s side): every HT/FT result loses at every favourite strength (0.41-0.89 back
+  per unit; least bad: favourite ahead at HT & wins with a 70%+ favourite, 0.84). After each half-time state Nesine''s HT/FT
+  gives the UNDERDOG 1-10 points too much, so the underdog''s results lose most. 180 result x favourite x goals cells + 86
+  own-odds deciles + 45 result x favourite cells: 1 cell at break-even in 2024/25 and 2025/26 (luck twin 1.1 on average) -
+  kept as a watch lead. Nesine''s most likely HT/FT result happens as often as it says (63% vs 55% when it says 50%+). The
+  2nd-half share of goals is priced right (55.5% vs 56.0%) and no league keeps scoring late (season-to-season correlation
+  -0.42 / 0.48 / -0.28). First-half goals barely change the chance of 2nd-half goals; the pre-match goal odds do.'
+- 'Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both score in
+  the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, against 0.63-0.76 for
+  HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).'
+- 'HT/FT 1/X, 2/X, X/1, X/2, 1/2, 2/1 (HTFT3_REPORT, hit rate only): the result''s own HT/FT odds are the sign. In a fair
+  race (each technique picks 1 game in 10 per season, 2025/26 + 2026/27) the own odds give X/1 1.4x, X/2 1.8x, 1/2 1.6x, 2/1
+  1.3x, 1/X 1.0x, 2/X 1.2x normal; an HT/FT price rebuilt from Nesine''s other markets, the best of ~390 other signs and logistic
+  regression rank games the same way; boosted trees, team comeback / blown-lead habits, league history and calendar do worse.
+  The best 2-condition rules (~28,000 per result, luck-controlled) hit no more often than the same number of lowest-odds games.
+  1/X and 2/X (leader pegged back to a draw) can''t be picked (~5-7%). Compare techniques on the same number of games: groups
+  of different sizes made the other markets look useful for 1/2 and 2/1.'
+- 'Correct scores: Nesine listed them for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and its correct-score
+  odds got longer after 2024/25 (sum of 1/odds 1.60 -> 1.50). Fixed odds cut-offs on scores stop firing (2-1 odds <= 6.75:
+  441 games in 2024/25, 1 in each later season); use the normalised chance.'
+- 'Both teams score in both halves (BB_REPORT, hit rate only): the sign is how many goals BOTH teams are expected to score
+  (it needs 4+ goals; 2-2 and 3-2 most often). Fair race (each technique picks its top 5% of games per season, 2025/26 + 2026/27):
+  a model from Nesine''s goal markets 1.9x normal (11.7%; top 2%: 12.9%), Nesine''s own both-halves price the same, BTTS-yes
+  chance and logistic regression the same; boosted trees, team habits (scoring in both halves), a statistics-only team model,
+  league history (its extra beyond the model does not carry over: corr 0.04) and calendar do worse. The best rules (e.g. BTTS
+  yes <= 1.36 & 1st-half under 1.5 >= 1.49: 12.3/10.7/10.9%) hit the same. The halves are almost independent: after 1st-half
+  BTTS, 2nd-half BTTS 28% (21-33% by pre-match 2nd-half goal expectation). The cheapest both-halves odds (<= 8.34) lose 16-28
+  per 100.'
+- 'HT_BTTS / 2H_BTTS: the NO side is missing for ~45% of matches, so their ''fair'' chance exists only for a biased subset;
+  use the YES odds. Label-swapped HT_2H_BTTS prices show YES/YES at 1.10-2.02 (real ones 4.66+): a YES/YES odds floor of 4
+  screens them out.'
 - 'No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus
   (mostly August) is a one-off.'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
@@ -6088,5 +6123,271 @@ strategies:
       coupons_4plus_hits_pct: 13.3
       return_per_100: -29.6
       system_345_return_per_100: -66.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: watch-htft-fav-ahead-draw-home
+  kind: watch
+  status: watch
+  bet: HT_FT||1/X
+  bet_name: HT/FT 1/X (home favourite ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/X'
+  criteria:
+  - bet: 1X2||1
+    op: '>'
+    chance_pct: 60
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 70
+  - bet: OU|2.5|OVER
+    op: '>'
+    chance_pct: 65
+  summary: HT/FT 1/X when the home team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time,
+    match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck
+  evidence:
+    2024/25:
+      matches: 110
+      hit_pct: 7.3
+      normal_pct: 5.7
+      return_per_100: 19.5
+    2025/26:
+      matches: 115
+      hit_pct: 6.1
+      normal_pct: 5.3
+      return_per_100: -3.5
+    2026/27:
+      matches: 56
+      hit_pct: 10.7
+      normal_pct: 5.5
+      return_per_100: 64.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: watch-htft-fav-ahead-draw-away
+  kind: watch
+  status: watch
+  bet: HT_FT||2/X
+  bet_name: HT/FT 2/X (away favourite ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/X'
+  criteria:
+  - bet: 1X2||2
+    op: '>'
+    chance_pct: 60
+  - bet: 1X2||2
+    op: <=
+    chance_pct: 70
+  - bet: OU|2.5|OVER
+    op: '>'
+    chance_pct: 65
+  summary: HT/FT 2/X when the away team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time,
+    match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck
+  evidence:
+    2024/25:
+      matches: 24
+      hit_pct: 12.5
+      normal_pct: 5.7
+      return_per_100: 120.8
+    2025/26:
+      matches: 35
+      hit_pct: 11.4
+      normal_pct: 5.3
+      return_per_100: 75.4
+    2026/27:
+      matches: 25
+      hit_pct: 4.0
+      normal_pct: 5.5
+      return_per_100: -41.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: watch-POR-1-HT_FT||1/X
+  kind: league_rule
+  status: watch
+  league: POR-1
+  league_name: Portugal Primeira Liga
+  bet: HT_FT||1/X
+  bet_name: HT/FT 1/X (home ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/X'
+  criteria: []
+  summary: 'Portugal: HT/FT 1/X (home ahead at half-time, ends level) - follows from the Portugal 2-2 effect (+15 / -3 / +10
+    per 100); not proven, the away version 2/X loses'
+  evidence:
+    2024/25:
+      matches: 292
+      hit_pct: 6.8
+      return_per_100: 14.7
+    2025/26:
+      matches: 267
+      hit_pct: 6.4
+      return_per_100: -2.9
+    2026/27:
+      matches: 70
+      hit_pct: 4.3
+      return_per_100: 10.0
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-X/1-odds-5
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/1
+  bet_name: HT/FT X/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/1'
+  criteria:
+  - bet: HT_FT||X/1
+    op: <=
+    odds: 3.66
+  summary: HT/FT X/1 (level at half-time, home wins) when its odds are <= 3.66 (lowest 5% of 2024/25)
+  evidence:
+    2024/25:
+      matches: 408
+      hit_pct: 20.1
+      normal_pct: 14.7
+    2025/26:
+      matches: 74
+      hit_pct: 27.0
+      normal_pct: 14.5
+    2026/27:
+      matches: 30
+      hit_pct: 40.0
+      normal_pct: 14.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-X/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+    op: '>='
+    odds: 13.35
+  - bet: TEAM_WIN_EITHER_HALF_AWAY||NO
+    op: <=
+    chance_pct: 31.21
+  summary: 'HT/FT X/2 when odds: Home wins both halves yes ≥ 13.35  AND  chance: Away wins a half no ≤ 31.2%'
+  evidence:
+    2024/25:
+      matches: 173
+      hit_pct: 24.3
+      normal_pct: 10.8
+    2025/26:
+      matches: 230
+      hit_pct: 22.6
+      normal_pct: 11.1
+    2026/27:
+      matches: 63
+      hit_pct: 19.0
+      normal_pct: 10.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-1/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||1/2
+  bet_name: HT/FT 1/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&OVER
+    op: <=
+    odds: 5.66
+  - bet: HT_FT||1/2
+    op: <=
+    odds: 22.0
+  summary: 'HT/FT 1/2 when odds: Result & goals 2 & over 4.5 ≤ 5.66  AND  HT/FT 1/2 odds ≤ 22.00'
+  evidence:
+    2024/25:
+      matches: 314
+      hit_pct: 7.3
+      normal_pct: 2.2
+    2025/26:
+      matches: 350
+      hit_pct: 5.1
+      normal_pct: 2.3
+    2026/27:
+      matches: 145
+      hit_pct: 3.4
+      normal_pct: 2.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: htft3-2/1-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/1
+  bet_name: HT/FT 2/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/1'
+  criteria:
+  - bet: CORRECT_SCORE||2-1
+    op: '>='
+    chance_pct: 9.32
+  - bet: TEAM_WIN_EITHER_HALF_HOME||YES
+    op: '>='
+    chance_pct: 56.24
+  summary: 'HT/FT 2/1 when chance: score 2-1 ≥ 9.3%  AND  chance: Home wins a half yes ≥ 56.2%'
+  evidence:
+    2024/25:
+      matches: 451
+      hit_pct: 6.4
+      normal_pct: 2.9
+    2025/26:
+      matches: 172
+      hit_pct: 7.0
+      normal_pct: 2.6
+    2026/27:
+      matches: 138
+      hit_pct: 3.6
+      normal_pct: 2.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: bb-odds-5
+  kind: odds_band
+  status: promising
+  bet: HT_2H_BTTS||YES/YES
+  bet_name: Both score 1st/2nd half yes/yes
+  bet_name_tr: '1. Yarı / 2. Yarı Karşılıklı Gol: Evet/Evet'
+  criteria:
+  - bet: HT_2H_BTTS||YES/YES
+    op: '>'
+    odds: 4.0
+  - bet: HT_2H_BTTS||YES/YES
+    op: <=
+    odds: 8.34
+  summary: Both score 1st/2nd half yes/yes when its odds are <= 8.34 (cheapest 5% of 2025/26; the price exists only from 2025/26)
+  evidence:
+    2025/26:
+      matches: 232
+      hit_pct: 10.3
+      normal_pct: 5.7
+    2026/27:
+      matches: 210
+      hit_pct: 11.9
+      normal_pct: 7.2
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-16'
+- id: bb-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_2H_BTTS||YES/YES
+  bet_name: Both score 1st/2nd half yes/yes
+  bet_name_tr: '1. Yarı / 2. Yarı Karşılıklı Gol: Evet/Evet'
+  criteria:
+  - bet: BTTS||YES
+    op: <=
+    odds: 1.36
+  - bet: HT_OU|1.5|UNDER
+    op: '>='
+    odds: 1.49
+  summary: 'Both score 1st/2nd half yes/yes when odds: Both teams score yes ≤ 1.36  AND  odds: 1st-half goals under 1.5 ≥
+    1.49'
+  evidence:
+    2024/25:
+      matches: 367
+      hit_pct: 12.3
+      normal_pct: 5.5
+    2025/26:
+      matches: 447
+      hit_pct: 10.7
+      normal_pct: 5.7
+    2026/27:
+      matches: 330
+      hit_pct: 10.9
+      normal_pct: 7.2
   first_added: '2026-10-16'
   last_confirmed: '2026-10-16'

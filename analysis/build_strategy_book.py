@@ -91,6 +91,43 @@ LESSONS = [
     "6+ value by league does not persist (season-to-season correlation 0.04-0.30); 'draw & over 2.5' value by "
     "league does (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without "
     "Portugal 0.92 / 1.05; shuffled leagues p <= 0.06) - Portugal is the only league clearly above 1.",
+    "Both teams score in both halves (1. Yari / 2. Yari KG Evet/Evet; data only since Nov 2025, 7,190 games): 6.2% "
+    "won, 0.89 back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return "
+    "0.91-1.04. The tipster way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. "
+    "One season only: not confirmed. Outside tipsters' picks are graded in tipster_log.csv / tipster_log.py.",
+    "HT/FT deep dive 2 (HTFT2_REPORT, favourite's side): every HT/FT result loses at every favourite strength "
+    "(0.41-0.89 back per unit; least bad: favourite ahead at HT & wins with a 70%+ favourite, 0.84). After each "
+    "half-time state Nesine's HT/FT gives the UNDERDOG 1-10 points too much, so the underdog's results lose most. "
+    "180 result x favourite x goals cells + 86 own-odds deciles + 45 result x favourite cells: 1 cell at break-even "
+    "in 2024/25 and 2025/26 (luck twin 1.1 on average) - kept as a watch lead. Nesine's most likely HT/FT result "
+    "happens as often as it says (63% vs 55% when it says 50%+). The 2nd-half share of goals is priced right (55.5% "
+    "vs 56.0%) and no league keeps scoring late (season-to-season correlation -0.42 / 0.48 / -0.28). First-half "
+    "goals barely change the chance of 2nd-half goals; the pre-match goal odds do.",
+    "Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both "
+    "score in the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, "
+    "against 0.63-0.76 for HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).",
+    "HT/FT 1/X, 2/X, X/1, X/2, 1/2, 2/1 (HTFT3_REPORT, hit rate only): the result's own HT/FT odds are the sign. "
+    "In a fair race (each technique picks 1 game in 10 per season, 2025/26 + 2026/27) the own odds give X/1 1.4x, "
+    "X/2 1.8x, 1/2 1.6x, 2/1 1.3x, 1/X 1.0x, 2/X 1.2x normal; an HT/FT price rebuilt from Nesine's other markets, "
+    "the best of ~390 other signs and logistic regression rank games the same way; boosted trees, team comeback / "
+    "blown-lead habits, league history and calendar do worse. The best 2-condition rules (~28,000 per result, "
+    "luck-controlled) hit no more often than the same number of lowest-odds games. 1/X and 2/X (leader pegged back "
+    "to a draw) can't be picked (~5-7%). Compare techniques on the same number of games: groups of different sizes "
+    "made the other markets look useful for 1/2 and 2/1.",
+    "Correct scores: Nesine listed them for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and its "
+    "correct-score odds got longer after 2024/25 (sum of 1/odds 1.60 -> 1.50). Fixed odds cut-offs on scores stop "
+    "firing (2-1 odds <= 6.75: 441 games in 2024/25, 1 in each later season); use the normalised chance.",
+    "Both teams score in both halves (BB_REPORT, hit rate only): the sign is how many goals BOTH teams are expected "
+    "to score (it needs 4+ goals; 2-2 and 3-2 most often). Fair race (each technique picks its top 5% of games per "
+    "season, 2025/26 + 2026/27): a model from Nesine's goal markets 1.9x normal (11.7%; top 2%: 12.9%), Nesine's own "
+    "both-halves price the same, BTTS-yes chance and logistic regression the same; boosted trees, team habits "
+    "(scoring in both halves), a statistics-only team model, league history (its extra beyond the model does not "
+    "carry over: corr 0.04) and calendar do worse. The best rules (e.g. BTTS yes <= 1.36 & 1st-half under 1.5 >= "
+    "1.49: 12.3/10.7/10.9%) hit the same. The halves are almost independent: after 1st-half BTTS, 2nd-half BTTS "
+    "28% (21-33% by pre-match 2nd-half goal expectation). The cheapest both-halves odds (<= 8.34) lose 16-28 per 100.",
+    "HT_BTTS / 2H_BTTS: the NO side is missing for ~45% of matches, so their 'fair' chance exists only for a biased "
+    "subset; use the YES odds. Label-swapped HT_2H_BTTS prices show YES/YES at 1.10-2.02 (real ones 4.66+): a "
+    "YES/YES odds floor of 4 screens them out.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -442,6 +479,148 @@ def system_items():
     ]
 
 
+def htft2_items(trn):
+    """HT/FT deep dive 2 watch leads (HTFT2_REPORT): not proven, tracked live."""
+    f = CACHE / "htft2.parquet"
+    if not f.exists():
+        return []
+    d = pd.read_parquet(f)
+    lgn = leagues()
+
+    def ev(mask, label_of):
+        out = {}
+        for p, nm in PER.items():
+            x = d[d["per"] == p]
+            m = mask(x)
+            y = (x["htft_f"] == label_of).astype(float)
+            o = x[f"o_{label_of}"]
+            out[nm] = {"matches": int(m.sum()), "hit_pct": round(float(y[m].mean() * 100), 1),
+                       "normal_pct": round(float(y.mean() * 100), 1),
+                       "return_per_100": round(float(((y * o)[m].mean() - 1) * 100), 1)}
+        return out
+    items = []
+    for side, k, lab in (("home", "1X2||1", "HT_FT||1/X"), ("away", "1X2||2", "HT_FT||2/X")):
+        fav_home = side == "home"
+        items.append({
+            "id": f"watch-htft-fav-ahead-draw-{side}", "kind": "watch", "status": "watch", "bet": lab,
+            "bet_name": f"HT/FT {lab.split('|')[-1]} ({side} favourite ahead at half-time, ends level)",
+            "bet_name_tr": trn.get(lab, lab),
+            "criteria": [{"bet": k, "op": ">", "chance_pct": 60}, {"bet": k, "op": "<=", "chance_pct": 70},
+                         {"bet": "OU|2.5|OVER", "op": ">", "chance_pct": 65}],
+            "summary": f"HT/FT {lab.split('|')[-1]} when the {side} team is a 60-70% favourite and over 2.5 goals is "
+                       f"65%+ likely (favourite ahead at half-time, match ends level) - one lone cell above "
+                       f"break-even in every season; neighbouring cells do not confirm it, so likely luck",
+            "evidence": ev(lambda x: (x["fav_home"] == fav_home) & (x["fav_p"] > .6) & (x["fav_p"] <= .7) &
+                           (x["over25_p"] > .65), "F/X")})
+    hd = pd.read_parquet(CACHE / "htft_wide.parquet")
+    hd = hd[hd["league_id"] == "POR-1"]
+    import htft2_data as h2
+    st = {}
+    for p, nm in PER.items():
+        x = hd[hd["season"].map(h2.PER) == p]
+        y = (x["htft"] == "1/X").astype(float)
+        st[nm] = {"matches": len(x), "hit_pct": round(float(y.mean() * 100), 1),
+                  "return_per_100": round(float(((y * x["o_1/X"]).mean() - 1) * 100), 1)}
+    items.append({"id": "watch-POR-1-HT_FT||1/X", "kind": "league_rule", "status": "watch", "league": "POR-1",
+                  "league_name": lgn.get("POR-1", {}).get("en", "POR-1"), "bet": "HT_FT||1/X",
+                  "bet_name": "HT/FT 1/X (home ahead at half-time, ends level)",
+                  "bet_name_tr": trn.get("HT_FT||1/X", "HT_FT||1/X"), "criteria": [],
+                  "summary": "Portugal: HT/FT 1/X (home ahead at half-time, ends level) - follows from the Portugal "
+                             "2-2 effect (+15 / -3 / +10 per 100); not proven, the away version 2/X loses",
+                  "evidence": st})
+    return items
+
+
+def htft3_items(trn):
+    """HT/FT study 3: hit-rate rules for the six changing results that held in all three seasons (>= 1.3x normal)."""
+    f, fr = CACHE / "htft3.parquet", CACHE / "htft3_rules.parquet"
+    if not f.exists() or not fr.exists():
+        return []
+    import json
+    d = pd.read_parquet(f)
+    R = pd.read_parquet(fr)
+    ylab = {"1/X": "y_1X", "2/X": "y_2X", "X/1": "y_X1", "X/2": "y_X2", "1/2": "y_12", "2/1": "y_21"}
+
+    def ev(mask, y):
+        out = {}
+        for p, nm in PER.items():
+            m = d["per"] == p
+            out[nm] = {"matches": int((mask & m).sum()),
+                       "hit_pct": round(float(d.loc[mask & m, y].mean() * 100), 1) if (mask & m).sum() else None,
+                       "normal_pct": round(float(d.loc[m, y].mean() * 100), 1)}
+        return out
+    items = []
+    A = d["per"] == "A"
+    for share in (0.05, 0.10):                      # X/1 has no odds band in the book yet
+        thr = round(float(d.loc[A, "o_X/1"].quantile(share)), 2)
+        st = ev(d["o_X/1"] <= thr, "y_X1")
+        if holds(st):
+            items.append({"id": f"htft3-X/1-odds-{int(share * 100)}", "kind": "odds_rule", "status": "proven",
+                          "bet": "HT_FT||X/1", "bet_name": nice("HT_FT||X/1"),
+                          "bet_name_tr": trn.get("HT_FT||X/1", "HT_FT||X/1"),
+                          "criteria": [{"bet": "HT_FT||X/1", "op": "<=", "odds": thr}],
+                          "summary": f"HT/FT X/1 (level at half-time, home wins) when its odds are <= {thr:.2f} "
+                                     f"(lowest {int(share * 100)}% of 2024/25)", "evidence": st})
+    for lab, y in ylab.items():                    # the 2-condition rule ranked best on 2024/25, if it held
+        r = R[(R["result"] == lab) & (R["pool"] == "scan-ready") & R["confirmed"] & (R["conditions"] == 2)]
+        r = r[r["criteria"].notna()]
+        if not len(r):
+            continue
+        rb = r.iloc[0]
+        crit = json.loads(rb["criteria"])
+        st = {}
+        for p, nm in PER.items():
+            st[nm] = {"matches": int(rb[f"matches {nm}"]), "hit_pct": round(float(rb[f"hit % {nm}"]), 1),
+                      "normal_pct": round(float(rb[f"normal % {nm}"]), 1)}
+        if not holds(st):
+            continue
+        key = f"HT_FT||{lab}"
+        items.append({"id": f"htft3-{lab}-rule", "kind": "odds_rule", "status": "proven", "bet": key,
+                      "bet_name": nice(key), "bet_name_tr": trn.get(key, key), "criteria": crit,
+                      "summary": f"HT/FT {lab} when {rb['rule']}", "evidence": st})
+    return items
+
+
+def bb_items(trn):
+    """Both teams score in both halves (BB_REPORT): Nesine's own odds band (that price starts in 2025/26, so two
+    seasons) and the best rule found on 2024/25 that held in 2025/26 and 2026/27."""
+    f, fr = CACHE / "bb.parquet", CACHE / "bb_rules.parquet"
+    if not f.exists() or not fr.exists():
+        return []
+    import json
+    d = pd.read_parquet(f)
+    R = pd.read_parquet(fr)
+    key = "HT_2H_BTTS||YES/YES"
+    name, name_tr = nice(key), trn.get(key, key)
+    items = []
+    thr = round(float(d.loc[d["per"] == "B", "o_bb"].quantile(0.05)), 2)
+    m = (d["o_bb"] > 4.0) & (d["o_bb"] <= thr)        # real prices start at 4.66; swapped ones sit at 1.10-2.02
+    st = {}
+    for p, nm in PER.items():
+        if p == "A":
+            continue
+        mm = d["per"] == p
+        st[nm] = {"matches": int((m & mm).sum()), "hit_pct": round(float(d.loc[m & mm, "y_bb"].mean() * 100), 1),
+                  "normal_pct": round(float(d.loc[mm, "y_bb"].mean() * 100), 1)}
+    if holds(st):
+        items.append({"id": "bb-odds-5", "kind": "odds_band", "status": "promising", "bet": key, "bet_name": name,
+                      "bet_name_tr": name_tr,
+                      "criteria": [{"bet": key, "op": ">", "odds": 4.0}, {"bet": key, "op": "<=", "odds": thr}],
+                      "summary": f"{name} when its odds are <= {thr:.2f} (cheapest 5% of 2025/26; the price exists "
+                                 "only from 2025/26)", "evidence": st})
+    r = R[(R["found on"] == "2024/25") & (R["pool"] == "scan-ready") & R["confirmed"] & (R["conditions"] == 2)]
+    r = r[r["criteria"].notna()]
+    if len(r):
+        rb = r.iloc[0]
+        st = {nm: {"matches": int(rb[f"matches {nm}"]), "hit_pct": round(float(rb[f"hit % {nm}"]), 1),
+                   "normal_pct": round(float(rb[f"normal % {nm}"]), 1)} for nm in PER.values()}
+        if holds(st):
+            items.append({"id": "bb-rule", "kind": "odds_rule", "status": "proven", "bet": key, "bet_name": name,
+                          "bet_name_tr": name_tr, "criteria": json.loads(rb["criteria"]),
+                          "summary": f"{name} when {rb['rule']}", "evidence": st})
+    return items
+
+
 def to_md(book):
     L = ["# Strategy book", "",
          "Every strategy found so far, with its exact criteria and its record by season. Built by "
@@ -527,7 +706,8 @@ def build():
     trn = dict(zip(d["names"], tr_labels(list(d["names"]))))
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
-             + tipster_items(trn) + watch_items(trn) + system_items())
+             + tipster_items(trn) + watch_items(trn) + system_items() + htft2_items(trn) + htft3_items(trn)
+             + bb_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
