@@ -186,6 +186,7 @@ def test_finished_match_kept_without_statistics(monkeypatch):
 
     m = {"match_id": "u1", "status": "finished", "season": "2024/25", "league_id": "TUR-1", "iddaa_event_code": "1",
          "ft_home": 1, "ft_away": 0, "ht_home": 0, "ht_away": 0, "_substate": "fullTime"}
+    monkeypatch.setattr(daily, "fetch_statistics", lambda: True)
     monkeypatch.setattr(www, "stats_page", lambda c, u: None)
     monkeypatch.setattr(ingest, "fetch_outcomes", lambda c, m, d, np: (
         [{"market_name": "Maç Sonucu", "market_type_id": 1, "selection": "1", "odds": 2.0, "mbs": 1, "highlight": True}],
@@ -193,4 +194,23 @@ def test_finished_match_kept_without_statistics(monkeypatch):
     with pytest.raises(RuntimeError, match="statistics page failed"):
         daily.collect_finished(None, dict(m), {}, datetime(2026, 10, 10, tzinfo=UTC), set())
     rows = daily.collect_finished(None, dict(m), {}, datetime(2026, 10, 10, tzinfo=UTC), set(), allow_missing_stats=True)
+    assert rows["stats"] == [] and len(rows["odds"]) == 1 and rows["settlements"][0]["hit"] is True
+
+
+def test_statistics_switched_off_sends_no_request(monkeypatch):
+    """statistics.fetch: false - the statistics page is never requested; odds and non-corner markets still settle."""
+    from odds_analysis import daily, ingest, www
+
+    m = {"match_id": "u2", "status": "finished", "season": "2024/25", "league_id": "TUR-1", "iddaa_event_code": "1",
+         "ft_home": 1, "ft_away": 0, "ht_home": 0, "ht_away": 0, "_substate": "fullTime"}
+    monkeypatch.setattr(daily, "fetch_statistics", lambda: False)
+
+    def no_stats(c, u):
+        raise AssertionError("statistics page requested")
+
+    monkeypatch.setattr(www, "stats_page", no_stats)
+    monkeypatch.setattr(ingest, "fetch_outcomes", lambda c, m, d, np: (
+        [{"market_name": "Maç Sonucu", "market_type_id": 1, "selection": "1", "odds": 2.0, "mbs": 1, "highlight": True}],
+        "popup", {}))
+    rows = daily.collect_finished(None, dict(m), {}, datetime(2026, 10, 10, tzinfo=UTC), set())
     assert rows["stats"] == [] and len(rows["odds"]) == 1 and rows["settlements"][0]["hit"] is True
