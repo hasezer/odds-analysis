@@ -155,7 +155,8 @@ def process_date(c: H.MackolikClient, d: date, index: dict, failures: FailedItem
                 elif kind == "ok":
                     collected.append(res)
                     stats["final" if m["status"] == "finished" else "void"] += 1
-                    if m["status"] == "finished" and not res.get("stats"):  # saved without corners: retried later
+                    if m["status"] == "finished" and not res.get("stats") and daily.fetch_statistics():
+                        # saved without corners: retried later
                         stats["no_stats"] += 1
                         failures.add("match", m["match_id"], "statistics page failed (saved without statistics)",
                                      match_id=m["match_id"], match_date=d.isoformat())
@@ -212,6 +213,12 @@ def run(c: H.MackolikClient) -> dict:
     # a match that failed MAX_ATTEMPTS jobs in a row (no odds anywhere on Mackolik, a statistics page that never
     # loads) is given up and logged as abandoned_match in data/failed_items.csv instead of being retried forever
     pending = failures.pending("listing") + failures.pending("match")
+    if not daily.fetch_statistics():  # matches only missing their statistics wait until the pages are fetched again
+        parked = [i for i in pending if "saved without statistics" in str(i.get("last_error"))]
+        for i in parked:
+            failures.add("match", i["key"], i.get("last_error", ""), tried=False, match_id=i.get("match_id", ""),
+                         match_date=i.get("match_date", ""))
+        pending = [i for i in pending if i not in parked]
     hopeless = [i for i in pending if int(i.get("attempts") or 0) >= MAX_ATTEMPTS]
     failures.abandon(hopeless, f"given up after {MAX_ATTEMPTS} attempts")
     stats["abandoned"] = len(hopeless)

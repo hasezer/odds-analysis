@@ -16,6 +16,13 @@ results:
   # Stop cleanly after this many minutes (job limit is 150): progress is saved and a follow-up run starts.
   max_minutes: 110
 
+# Statistics pages (www.mackolik.com, corners): Mackolik answers them with HTTP 429 (too many requests) since
+# Oct 13 2026. While fetch is false they are not requested at all: matches are saved with odds and scores, every
+# non-corner market is settled and corner markets stay unsettled. Set back to true when the pages answer again
+# (the backfill then retries the matches saved without statistics).
+statistics:
+  fetch: false
+
 # Run status: a run is "failed" if more than this share of its requests still fail after the retries
 # (5 s / 15 s / 45 s) or it saves no match although matches were due; some failed requests = "partial"
 # (failed items go to data/failed_items.csv and data/retry_queue.csv and are retried by the next run).
