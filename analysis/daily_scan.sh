@@ -19,8 +19,14 @@ echo "== rule-book cache"
 
 echo "== odds snapshot (copy of data/)"
 rm -rf "$WORK/data" && cp -r data "$WORK/data"
+SNAP_START="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 ODDS_DATA_DIR="$WORK/data" PYTHONPATH=src python -m odds_analysis snapshot --full > "$WORK/snapshot.log" 2>&1 || \
   echo "snapshot reported errors (see $WORK/snapshot.log); scanning with what was collected"
+
+echo "== keep the morning odds (branch odds-snapshots; never main)"
+rm -rf "$WORK/keep"
+python analysis/keep_snapshot.py "$WORK/data" "$WORK/keep" --since "$SNAP_START" && \
+  bash analysis/push_snapshot.sh "$WORK/keep" || echo "morning odds not kept today (the scan goes on)"
 
 echo "== scan"
 python analysis/daily_scan.py --data-dir "$WORK/data" --days "$DAYS"

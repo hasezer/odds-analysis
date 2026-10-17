@@ -37,6 +37,18 @@
 - **The owner plays a 10-game system coupon (system 3-4-5 = 582 combos).** Strategy kind `system` stores whole
   coupons (groups of leagues + bets, lowest odds first, one per weekend Fri-Mon). The daily scan prints the coming
   weekend's coupons (section "Your 10-game system") and the tracker replays them weekly (SIX_SYSTEM_REPORT).
+- **Monthly review:** the scheduled task "Monthly strategy-book review" (1st of each month, 09:49 Turkey time) runs
+  `python analysis/monthly_review.py`:
+  - it compares every strategy's live record (tracker) with its book evidence;
+  - a strategy with 50+ picks and under a 0.1% chance of doing that badly by luck is added to `live_review.yaml`;
+  - `python analysis/build_strategy_book.py --live-only` then retires it (date and reason; no caches needed), on a
+    branch and through a PR;
+  - full rebuilds keep honouring `live_review.yaml`.
+- **Own play:**
+  - `own_play.py` simulates a year of each plan (coupon, both-halves BTTS, score packs, ...): money, losing runs,
+    bankroll -> `output/own_play.xlsx` / `.png`;
+  - `my_bets.py` checks the owner's own bets in `my_bets.csv` against Nesine's closing odds (CLV). Fill the CSV from
+    the owner's screenshots.
 
 ## Reports, in order
 - `REPORT.md` (first look)
@@ -54,14 +66,24 @@
 - `HTFT3_REPORT.md` (how to spot 1/X, 2/X, X/1, X/2, 1/2, 2/1: hit-rate techniques)
 - `BB_REPORT.md` (both teams score in both halves: every sign, fair race, rules, live half-time table)
 - `cs_study.py` (correct scores, full time and half time; no report by the owner's request: rules, bands and lessons live in the strategy book)
+- `perf_study.py` (shots, shots on target, possession and 'luck' vs Nesine's price: nothing beyond the price; lesson in the book)
+- `corners_study.py` (corners second pass after `v5_corners.py`: fair race and calibration; nothing stored, lesson in the book)
+- `live_minutes.py` (live tables by minute from match events: a PREVIEW, events cover only ~300 usable matches so far;
+  re-run when events cover 2,000+ matches)
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`); there YES/YES sits at 1.10–2.02, real prices start at 4.66. The price exists only from 2025/26.
 - **HT_BTTS / 2H_BTTS:** the NO side is missing for ~45% of matches; use the YES odds, not the 'fair' chance.
 - **Referee:** empty.
-- **Odds movement:** exists for only ~11 settled matches.
+- **Odds movement:** the project's 2-hourly snapshot workflow is paused (schedule commented out; last run 2026-10-06), so our own snapshots cover only ~11 settled matches. From 2026-10-17 the daily scan keeps its morning snapshot on the data-only branch `odds-snapshots` (`keep_snapshot.py` + `push_snapshot.sh`, never main); `movement.py` compares those morning prices with Nesine's closing prices.
 - **Nesine caps:** HT/FT about 35, correct score 130, half-time correct score 66.
 - **Correct scores:** listed for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and the odds got longer after 2024/25 (smaller margin). Use normalised chances, not fixed odds cut-offs.
 - **Comparing techniques:** compare on the same number of games (e.g. each picks its top 10% in each season). A fixed cut-off from 2024/25 picks different-sized groups later, which flatters the stricter one.
 - **"Fair" chance:** spreading the cut evenly is biased for short odds. Use the break-even hit rate at the odds paid.
 - **`analysis/cache/` is gitignored:** rebuild it with the scripts. The strategy book does not depend on it being present.
+- **System coupons on past seasons:** the stored coupon's league list (`system-goals-coupon`) was chosen on all
+  seasons. Replaying it on 2025/26 with the tracker finds three 4-hit weekends the honest backtest does not. For
+  backtests use `six_sys_study.py`'s coupons (leagues from earlier seasons only), as `own_play.py` does.
+- **The Goals coupon as a system is a lottery:** -91% in 2024/25, -71% in 2025/26, then one weekend (7 Aug 2026,
+  4 of 10 at odds ~18) paid 512x the stake. The book's `return_per_100` for it is the singles return; the system
+  return is `system_345_return_per_100`.

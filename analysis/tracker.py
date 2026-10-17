@@ -69,6 +69,20 @@ def run():
     m, o = finished_since(start)
     if not len(m):
         return pd.DataFrame(), pd.DataFrame(), start, pd.DataFrame()
+    picks, sysr = replay(book, m, o)
+    if not len(picks):
+        return picks, pd.DataFrame(), start, sysr
+    summ = picks.groupby(["strategy", "kind", "status", "summary"]).agg(
+        picks=("hit", "size"), hits=("hit", "sum"), expected_hit_pct=("expected_hit_pct", "first"),
+        priced=("return", "count"), returns=("return", "sum")).reset_index()
+    summ["hit_pct"] = summ["hits"] / summ["picks"] * 100
+    summ["return_per_100"] = summ["returns"] / summ["priced"].replace(0, np.nan) * 100
+    return picks, summ, start, sysr
+
+
+def replay(book, m, o):
+    """Every strategy of `book` on the finished matches `m` (closing odds `o`), each from the day after its
+    `first_added` until its `retired_on`: one row per pick, plus the weekly system coupons (own_play.py reuses it)."""
     odds, fair = ds.live_tables(o)
     idx, ok = hi_data.cells(m)
     names = list(odds.columns)
@@ -121,16 +135,7 @@ def run():
                          "closing_odds": price, "hit": int(hit),
                          "return": hit * price - 1 if pd.notna(price) else np.nan,
                          "expected_hit_pct": list(s["evidence"].values())[-1].get("hit_pct")})
-    picks = pd.DataFrame(rows)
-    sysr = system_coupons(book, m, odds, idx, ok, keys)
-    if not len(picks):
-        return picks, pd.DataFrame(), start, sysr
-    summ = picks.groupby(["strategy", "kind", "status", "summary"]).agg(
-        picks=("hit", "size"), hits=("hit", "sum"), expected_hit_pct=("expected_hit_pct", "first"),
-        priced=("return", "count"), returns=("return", "sum")).reset_index()
-    summ["hit_pct"] = summ["hits"] / summ["picks"] * 100
-    summ["return_per_100"] = summ["returns"] / summ["priced"].replace(0, np.nan) * 100
-    return picks, summ, start, sysr
+    return pd.DataFrame(rows), system_coupons(book, m, odds, idx, ok, keys)
 
 
 def system_coupons(book, m, odds, idx, ok, keys):
