@@ -54,6 +54,10 @@
 - `HTFT3_REPORT.md` (how to spot 1/X, 2/X, X/1, X/2, 1/2, 2/1: hit-rate techniques)
 - `BB_REPORT.md` (both teams score in both halves: every sign, fair race, rules, live half-time table)
 - `cs_study.py` (correct scores, full time and half time; no report by the owner's request: rules, bands and lessons live in the strategy book)
+- `perf_study.py` (shots, shots on target, possession and 'luck' vs Nesine's price: nothing beyond the price; lesson in the book)
+- `corners_study.py` (corners second pass after `v5_corners.py`: fair race and calibration; nothing stored, lesson in the book)
+- `live_minutes.py` (live tables by minute from match events: a PREVIEW, events cover only ~300 usable matches so far;
+  re-run when events cover 2,000+ matches)
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`); there YES/YES sits at 1.10–2.02, real prices start at 4.66. The price exists only from 2025/26.

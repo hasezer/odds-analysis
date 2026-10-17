@@ -150,6 +150,21 @@ LESSONS = [
     "197 games); 2-4 and 4-2 too few winners. The three most likely of the five together in the top 5% of games: "
     "11.8 / 8.7 / 11.0% vs 6-7% every game (stored; -31 to -39 per 100). Live: after half-time 2-2 the game ends 2-3 "
     "17%, 3-2 16%, 3-3 11%, 4-2 8%; after 2-1, 3-2 12%; after 1-2, 2-3 12%.",
+    "How teams play vs their results (perf_study.py; team match statistics, last 10 matches): shots, shots on "
+    "target, possession, corners and 'luck' (goals minus what the shots on target were worth at the league's rate) "
+    "add nothing beyond Nesine's price for home win, draw, away win, over/under 2.5 and BTTS: out-of-sample log-loss "
+    "gain about 0 (-1.1 to +0.9 per 1,000), the same AUC. The 5-10% of games where the stats disagree most with the "
+    "price beat shuffled stats in 2 of 28 checks, neither repeating in the other season; Nesine's cut leaves at most "
+    "9 bets a season with a 5% edge. Backing the 'unlucky' side (results far below its shots) hits exactly its fair "
+    "chance (home 35-38% vs 34-37%, away 19-23% vs 24-26%): -13 to -31 per 100.",
+    "Corners, second pass (corners_study.py; first pass v5_corners.py): Nesine's corner cut is 21-22% on every line "
+    "(8.5-12.5) and corners are mostly noise (Nesine's expected corners correlate 0.16 with the real total, team "
+    "habits 0.14, goal expectation 0.13). Nesine's line already blends team corner habits (corr 0.69), the league "
+    "average (0.71) and goal expectation (0.48). Fair race (top 10% of games, 2025/26 + 2026/27): Nesine's own corner "
+    "chance picks best or ties (over 8.5 67%, over 9.5 59%, under 10.5 66%); team habits, same-venue habits, "
+    "favourite strength and a fitted 'price + all signs' model add nothing beyond shuffled-sign luck. Low goal "
+    "expectation picks under 9.5 / 10.5 corners about as well (61% / 69%) and loses least (-7 to -12 per 100). All 99 "
+    "price bands with 300+ bets lose 9-30 per 100; no corner strategy is stored.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
