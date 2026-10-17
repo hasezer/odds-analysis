@@ -128,6 +128,21 @@ LESSONS = [
     "HT_BTTS / 2H_BTTS: the NO side is missing for ~45% of matches, so their 'fair' chance exists only for a biased "
     "subset; use the YES odds. Label-swapped HT_2H_BTTS prices show YES/YES at 1.10-2.02 (real ones 4.66+): a "
     "YES/YES odds floor of 4 screens them out.",
+    "Correct scores (cs_study.py; 35 full- and half-time scores, 0-5/0-6/1-5/6-0 too rare): Nesine's own score "
+    "chance and a goal-markets model rank games the same for every score. Fair race (top 5% of games, 2025/26 + "
+    "2026/27): 0-0 2.2x, 1-0 1.9x, 0-1 1.9x, 2-0 2.0x, 3-0 3.6x, 0-3 2.9x, 4-0 3.6x normal, but 1-1 1.5x, 2-1 1.7x, "
+    "1-2 1.6x, 2-2 1.3x, 3-2 1.1x; half time 0-0 1.6x, 1-0 1.5x, 0-1 1.7x, 2-0 2.1x, 0-2 2.9x, 1-1 1.1x. One-sided "
+    "scores can be picked, level and middle scores hardly. The best 2-condition rules beat luck for most scores but "
+    "matched or beat the plain price on the same games only for 0-0, 0-2, 1-3, 3-1 and HT 0-1, 1-0, 1-2, 2-2, other.",
+    "Correct scores, no help beyond the price: team score habits (draw, 0-0, 1-1, low-scoring and half-time-draw rates, "
+    "last 20 and previous season), league x score tendencies (20 of 1,014 pairs beat normal and the price every "
+    "season; shuffled leagues give ~10, 95th pct 17), calendar.",
+    "Correct-score prices: 2-1, 1-2, 2-2 (full time) and 1-1 (half time) happen 10-20% more than Nesine's evenly "
+    "spread chance and lose least (-25 to -28 per 100; half-time 1-1 -12); scores with a 5-6 goal side happen 2-5x "
+    "less than priced (-60 to -92 per 100). Every score loses at closing odds.",
+    "Live, half time -> full time: the half-time score is the final score ~20% of the time (0-0 24%): 27-29% when few "
+    "2nd-half goals were expected before kick-off (bottom third), 15-18% when many. Half-time 2-0 ends 3-0 (19%) more "
+    "often than 2-0 (17%); half-time 1-1 ends 1-1 21%, 2-1 19%, 1-2 15%.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -621,13 +636,18 @@ def bb_items(trn):
     return items
 
 
+def enough_hits(st, n=5):
+    return all(v["matches"] * v["hit_pct"] / 100 >= n - 0.01 for v in st.values())
+
+
 def cs_items(trn):
     """Correct scores, full time and half time (cs_study.py). For every score:
-    1. Nesine's own chance band: its top 5% by chance, cut-off from 2024/25 (chance, not odds: score odds got longer
-       after 2024/25), kept if it held in all three seasons;
+    1. Nesine's own chance band: its top 5% by chance (or top 10% if the 5% band misses), cut-off from 2024/25
+       (chance, not odds: score odds got longer after 2024/25), kept if it held in all three seasons;
     2. the best scan-ready rule found on 2024/25 and confirmed on 2025/26, kept only if the search for that score beat
        luck (more confirmed rules than any shuffled run), the rule held in 2026/27 too, and it hit at least as often
-       as the same number of games taken by Nesine's own chance (2025/26 + 2026/27, games where scores are listed)."""
+       as the same number of games taken by Nesine's own chance (2025/26 + 2026/27, games where scores are listed).
+    Both also need at least 5 winners in every season (rare scores otherwise 'hold' on one or two lucky hits)."""
     ft, fr, fl = CACHE / "cs_targets.parquet", CACHE / "cs_rules.parquet", CACHE / "cs_luck.parquet"
     if not (ft.exists() and fr.exists() and fl.exists()):
         return []
@@ -642,19 +662,22 @@ def cs_items(trn):
         key = f"{mk}||{sc}"
         name, name_tr = nice(key), trn.get(key, key)
         y, own = T[f"y_{half}_{sc}"], T[f"own_{half}_{sc}"]
-        cut = float(own[(T["per"] == "A") & own.notna()].quantile(0.95))
-        m = own >= cut
-        st = {}
-        for p, nm in PER.items():
-            mm = T["per"] == p
-            st[nm] = {"matches": int((m & mm).sum()), "hit_pct": round(float(y[m & mm].mean() * 100), 1),
-                      "normal_pct": round(float(y[mm].mean() * 100), 2)}
-        if holds(st):
-            items.append({"id": f"cs-{half}-{sc}-chance-5", "kind": "odds_band", "status": "proven", "bet": key,
-                          "bet_name": name, "bet_name_tr": name_tr,
-                          "criteria": [{"bet": key, "op": ">=", "chance_pct": round(cut * 100, 2)}],
-                          "summary": f"{name} when Nesine's chance for it is >= {cut * 100:.1f}% (its top 5% of "
-                                     "2024/25; chance, not odds)", "evidence": st})
+        for share in (0.05, 0.10):
+            cut = float(own[(T["per"] == "A") & own.notna()].quantile(1 - share))
+            m = own >= cut
+            st = {}
+            for p, nm in PER.items():
+                mm = T["per"] == p
+                st[nm] = {"matches": int((m & mm).sum()), "hit_pct": round(float(y[m & mm].mean() * 100), 1),
+                          "normal_pct": round(float(y[mm].mean() * 100), 2)}
+            if holds(st) and enough_hits(st):
+                pct = int(share * 100)
+                items.append({"id": f"cs-{half}-{sc}-chance-{pct}", "kind": "odds_band", "status": "proven",
+                              "bet": key, "bet_name": name, "bet_name_tr": name_tr,
+                              "criteria": [{"bet": key, "op": ">=", "chance_pct": round(cut * 100, 2)}],
+                              "summary": f"{name} when Nesine's chance for it is >= {cut * 100:.1f}% (its top {pct}% "
+                                         "of 2024/25; chance, not odds)", "evidence": st})
+                break
         g = R[(R["score"] == score) & (R["pool"] == "scan-ready")]
         luck = L[(L["score"] == score) & (L["pool"] == "scan-ready")]["confirmed"]
         r = g[g["confirmed"] & g["criteria"].notna()]
@@ -665,7 +688,7 @@ def cs_items(trn):
                    "normal_pct": round(float(rb[f"normal % {nm}"]), 2)} for nm in PER.values()}
         rule_hits = rb["rule hits there 2025/26"] + rb["rule hits there 2026/27"]
         own_hits = rb["own-price hits, same games 2025/26"] + rb["own-price hits, same games 2026/27"]
-        if holds(st) and rule_hits >= own_hits:
+        if holds(st) and enough_hits(st) and rule_hits >= own_hits:
             items.append({"id": f"cs-{half}-{sc}-rule", "kind": "odds_rule", "status": "proven", "bet": key,
                           "bet_name": name, "bet_name_tr": name_tr, "criteria": json.loads(rb["criteria"]),
                           "summary": f"{name} when {rb['rule']}", "evidence": st})
