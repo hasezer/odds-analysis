@@ -18,6 +18,9 @@ Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagu
 Nothing is ever lost: a strategy from the previous book that no longer passes is KEPT with status "retired" (date
 and reason); every strategy keeps its "first_added" date; each build that changes the book saves a dated copy in
 strategy_history/ and adds a line to strategy_history/CHANGELOG.md. LESSONS records what did NOT work.
+Live retirements: strategies that monthly_review.py lists in live_review.yaml (live record far below the book's
+evidence) are retired the same way, in every rebuild. `python analysis/build_strategy_book.py --live-only` applies
+that list to the current book without a rebuild (no caches needed; only statuses change).
 """
 import datetime as dt
 from pathlib import Path
@@ -37,6 +40,7 @@ from rules_targets import tr_labels  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HIST = HERE / "strategy_history"
+LIVE = HERE / "live_review.yaml"          # written by monthly_review.py
 LESSONS = [
     "No strategy beats Nesine's prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule "
     "stacking and 'price + corrections' all lost money on unseen seasons (reports: ML_REPORT, MINER_REPORT, "
@@ -165,6 +169,13 @@ LESSONS = [
     "favourite strength and a fitted 'price + all signs' model add nothing beyond shuffled-sign luck. Low goal "
     "expectation picks under 9.5 / 10.5 corners about as well (61% / 69%) and loses least (-7 to -12 per 100). All 99 "
     "price bands with 300+ bets lose 9-30 per 100; no corner strategy is stored.",
+    "Own play (own_play.py; every pick since July 2025 at closing odds, 1 stake each, 5,000 simulated years): the "
+    "hit-rate strategies lose steadily when bet flat: both teams score in both halves -25 per 100 (38 picks a month, "
+    "a typical year -110 stakes, a 1-in-20 losing run of 61, bankroll ~200 stakes), the high-scoring score pack -38, "
+    "correct-score bands and rules -27, every single-bet strategy together -23. Portugal draw & over 2.5 singles "
+    "+81 per 100 (23 a month, ahead in 99% of simulated years, losing runs up to ~50, bankroll ~60 stakes; found on "
+    "these same seasons, so the tracker must confirm it). The Goals coupon as a 3-4-5 system is a lottery: one weekend "
+    "in 104 since Aug 2024 (7 Aug 2026, 512x the stake) decides it; without it -80%; 37% chance to end a year ahead.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -832,16 +843,35 @@ def plain(x):
     return x
 
 
+def live_retirements():
+    """Strategies the monthly review (monthly_review.py) found far below their book evidence on live matches."""
+    if not LIVE.exists():
+        return {}
+    return {x["id"]: x for x in (yaml.safe_load(LIVE.read_text()) or {}).get("retire", [])}
+
+
+def retire_live(x, old, fails, today):
+    """Retire x if the monthly review listed it, keeping the first retirement's date and reason."""
+    if x["id"] not in fails:
+        return x
+    if old and old.get("status") == "retired":
+        return {**x, "status": "retired", "retired_on": old["retired_on"], "retired_reason": old["retired_reason"]}
+    return {**x, "status": "retired", "retired_on": today, "retired_reason": fails[x["id"]]["reason"]}
+
+
 def merge_with_previous(items, today):
-    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not."""
+    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not or
+    that the monthly review listed in live_review.yaml."""
     f = HERE / "strategies.yaml"
     prev = yaml.safe_load(f.read_text())["strategies"] if f.exists() else []
     prev_by_id = {p["id"]: p for p in prev}
     new_ids = {x["id"] for x in items}
+    fails = live_retirements()
     for x in items:
         old = prev_by_id.get(x["id"])
         x["first_added"] = old.get("first_added", today) if old else today
         x["last_confirmed"] = today
+    items = [retire_live(x, prev_by_id.get(x["id"]), fails, today) for x in items]
     kept = []
     for p in prev:
         if p["id"] in new_ids:
@@ -851,8 +881,40 @@ def merge_with_previous(items, today):
                  "retired_reason": "no longer passed the gates when the book was rebuilt on newer data"}
         kept.append(p)
     added = sum(1 for x in items if x["id"] not in prev_by_id)
-    retired = sum(1 for p in kept if p.get("retired_on") == today)
+    retired = sum(1 for p in items + kept if p.get("retired_on") == today)
     return items + kept, added, len(items) - added, retired
+
+
+def save(book, today, line):
+    """Write strategies.yaml and STRATEGIES.md; if the book changed, a dated copy and a CHANGELOG line."""
+    items = book["strategies"]
+    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
+    (HERE / "strategies.yaml").write_text(text)
+    (HERE / "STRATEGIES.md").write_text(to_md(book))
+    HIST.mkdir(exist_ok=True)
+    snaps = sorted(HIST.glob("strategies_*.yaml"))
+    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
+    if not snaps or strip(snaps[-1].read_text()) != strip(text):
+        (HIST / f"strategies_{today}.yaml").write_text(text)
+        with open(HIST / "CHANGELOG.md", "a") as fh:
+            if fh.tell() == 0:
+                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
+                         "strategies_<date>.yaml in this folder.\n\n")
+            fh.write(f"- {today}: {line}; {sum(1 for x in items if x['status'] != 'retired')} active, "
+                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
+
+
+def live_only():
+    """Apply the monthly review's retirements (live_review.yaml) to the current book, without a rebuild (no caches
+    needed): only statuses change; evidence, lessons and everything else stay as they are."""
+    today = dt.date.today().isoformat()
+    book = yaml.safe_load((HERE / "strategies.yaml").read_text())
+    fails = live_retirements()
+    before = {x["id"]: x.get("status") for x in book["strategies"]}
+    book["strategies"] = [retire_live(x, x, fails, today) for x in book["strategies"]]
+    n = sum(1 for x in book["strategies"] if before[x["id"]] != "retired" and x["status"] == "retired")
+    save(book, today, f"monthly live review, {n} retired")
+    return book, n
 
 
 def build():
@@ -867,24 +929,14 @@ def build():
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
             "lessons": LESSONS, "strategies": items}
-    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
-    (HERE / "strategies.yaml").write_text(text)
-    (HERE / "STRATEGIES.md").write_text(to_md(book))
-    HIST.mkdir(exist_ok=True)
-    snaps = sorted(HIST.glob("strategies_*.yaml"))
-    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
-    if not snaps or strip(snaps[-1].read_text()) != strip(text):
-        (HIST / f"strategies_{today}.yaml").write_text(text)
-        with open(HIST / "CHANGELOG.md", "a") as fh:
-            if fh.tell() == 0:
-                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
-                         "strategies_<date>.yaml in this folder.\n\n")
-            fh.write(f"- {today}: {added} new, {updated} kept/updated, {retired} retired; "
-                     f"{sum(1 for x in items if x['status'] != 'retired')} active, "
-                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
+    save(book, today, f"{added} new, {updated} kept/updated, {retired} retired")
     return book
 
 
 if __name__ == "__main__":
-    b = build()
-    print(pd.Series([s["kind"] for s in b["strategies"]]).value_counts().to_string())
+    if "--live-only" in sys.argv:
+        b, n = live_only()
+        print(f"monthly live review applied: {n} retired")
+    else:
+        b = build()
+        print(pd.Series([s["kind"] for s in b["strategies"]]).value_counts().to_string())

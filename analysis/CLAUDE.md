@@ -37,6 +37,18 @@
 - **The owner plays a 10-game system coupon (system 3-4-5 = 582 combos).** Strategy kind `system` stores whole
   coupons (groups of leagues + bets, lowest odds first, one per weekend Fri-Mon). The daily scan prints the coming
   weekend's coupons (section "Your 10-game system") and the tracker replays them weekly (SIX_SYSTEM_REPORT).
+- **Monthly review:** the scheduled task "Monthly strategy-book review" (1st of each month, 09:49 Turkey time) runs
+  `python analysis/monthly_review.py`:
+  - it compares every strategy's live record (tracker) with its book evidence;
+  - a strategy with 50+ picks and under a 0.1% chance of doing that badly by luck is added to `live_review.yaml`;
+  - `python analysis/build_strategy_book.py --live-only` then retires it (date and reason; no caches needed), on a
+    branch and through a PR;
+  - full rebuilds keep honouring `live_review.yaml`.
+- **Own play:**
+  - `own_play.py` simulates a year of each plan (coupon, both-halves BTTS, score packs, ...): money, losing runs,
+    bankroll -> `output/own_play.xlsx` / `.png`;
+  - `my_bets.py` checks the owner's own bets in `my_bets.csv` against Nesine's closing odds (CLV). Fill the CSV from
+    the owner's screenshots.
 
 ## Reports, in order
 - `REPORT.md` (first look)
@@ -69,3 +81,9 @@
 - **Comparing techniques:** compare on the same number of games (e.g. each picks its top 10% in each season). A fixed cut-off from 2024/25 picks different-sized groups later, which flatters the stricter one.
 - **"Fair" chance:** spreading the cut evenly is biased for short odds. Use the break-even hit rate at the odds paid.
 - **`analysis/cache/` is gitignored:** rebuild it with the scripts. The strategy book does not depend on it being present.
+- **System coupons on past seasons:** the stored coupon's league list (`system-goals-coupon`) was chosen on all
+  seasons. Replaying it on 2025/26 with the tracker finds three 4-hit weekends the honest backtest does not. For
+  backtests use `six_sys_study.py`'s coupons (leagues from earlier seasons only), as `own_play.py` does.
+- **The Goals coupon as a system is a lottery:** -91% in 2024/25, -71% in 2025/26, then one weekend (7 Aug 2026,
+  4 of 10 at odds ~18) paid 512x the stake. The book's `return_per_100` for it is the singles return; the system
+  return is `system_345_return_per_100`.

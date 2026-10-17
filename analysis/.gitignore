@@ -8,3 +8,6 @@ output/tracker.xlsx
 output/slips_*.md
 output/slips_*.xlsx
 output/tipster_log.*
+output/monthly_review.md
+output/monthly_review.xlsx
+output/my_bets.xlsx
