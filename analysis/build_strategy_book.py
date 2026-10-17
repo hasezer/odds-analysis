@@ -621,6 +621,57 @@ def bb_items(trn):
     return items
 
 
+def cs_items(trn):
+    """Correct scores, full time and half time (cs_study.py). For every score:
+    1. Nesine's own chance band: its top 5% by chance, cut-off from 2024/25 (chance, not odds: score odds got longer
+       after 2024/25), kept if it held in all three seasons;
+    2. the best scan-ready rule found on 2024/25 and confirmed on 2025/26, kept only if the search for that score beat
+       luck (more confirmed rules than any shuffled run), the rule held in 2026/27 too, and it hit at least as often
+       as the same number of games taken by Nesine's own chance (2025/26 + 2026/27, games where scores are listed)."""
+    ft, fr, fl = CACHE / "cs_targets.parquet", CACHE / "cs_rules.parquet", CACHE / "cs_luck.parquet"
+    if not (ft.exists() and fr.exists() and fl.exists()):
+        return []
+    import json
+    T = pd.read_parquet(ft)
+    R = pd.read_parquet(fr)
+    L = pd.read_parquet(fl)
+    items = []
+    for score in R["score"].unique():
+        half, sc = score.split(" ")
+        mk = "CORRECT_SCORE" if half == "FT" else "HT_CORRECT_SCORE"
+        key = f"{mk}||{sc}"
+        name, name_tr = nice(key), trn.get(key, key)
+        y, own = T[f"y_{half}_{sc}"], T[f"own_{half}_{sc}"]
+        cut = float(own[(T["per"] == "A") & own.notna()].quantile(0.95))
+        m = own >= cut
+        st = {}
+        for p, nm in PER.items():
+            mm = T["per"] == p
+            st[nm] = {"matches": int((m & mm).sum()), "hit_pct": round(float(y[m & mm].mean() * 100), 1),
+                      "normal_pct": round(float(y[mm].mean() * 100), 2)}
+        if holds(st):
+            items.append({"id": f"cs-{half}-{sc}-chance-5", "kind": "odds_band", "status": "proven", "bet": key,
+                          "bet_name": name, "bet_name_tr": name_tr,
+                          "criteria": [{"bet": key, "op": ">=", "chance_pct": round(cut * 100, 2)}],
+                          "summary": f"{name} when Nesine's chance for it is >= {cut * 100:.1f}% (its top 5% of "
+                                     "2024/25; chance, not odds)", "evidence": st})
+        g = R[(R["score"] == score) & (R["pool"] == "scan-ready")]
+        luck = L[(L["score"] == score) & (L["pool"] == "scan-ready")]["confirmed"]
+        r = g[g["confirmed"] & g["criteria"].notna()]
+        if not len(r) or g["confirmed"].sum() <= luck.max():
+            continue
+        rb = r.iloc[0]
+        st = {nm: {"matches": int(rb[f"matches {nm}"]), "hit_pct": round(float(rb[f"hit % {nm}"]), 1),
+                   "normal_pct": round(float(rb[f"normal % {nm}"]), 2)} for nm in PER.values()}
+        rule_hits = rb["rule hits there 2025/26"] + rb["rule hits there 2026/27"]
+        own_hits = rb["own-price hits, same games 2025/26"] + rb["own-price hits, same games 2026/27"]
+        if holds(st) and rule_hits >= own_hits:
+            items.append({"id": f"cs-{half}-{sc}-rule", "kind": "odds_rule", "status": "proven", "bet": key,
+                          "bet_name": name, "bet_name_tr": name_tr, "criteria": json.loads(rb["criteria"]),
+                          "summary": f"{name} when {rb['rule']}", "evidence": st})
+    return items
+
+
 def to_md(book):
     L = ["# Strategy book", "",
          "Every strategy found so far, with its exact criteria and its record by season. Built by "
@@ -707,7 +758,7 @@ def build():
     lgn = leagues()
     items = (odds_bands(d, trn) + packs(d) + league_items(d, trn, lgn) + v4_items(trn, lgn) + tree_rules(d, trn)
              + tipster_items(trn) + watch_items(trn) + system_items() + htft2_items(trn) + htft3_items(trn)
-             + bb_items(trn))
+             + bb_items(trn) + cs_items(trn))
     items, added, updated, retired = merge_with_previous(plain(items), today)
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",

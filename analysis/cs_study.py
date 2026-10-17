@@ -223,10 +223,13 @@ def run():
     d = bb_data.build()
     d = d.join(score_habits(bb_data.scope()), on="match_id")
     d, T = targets(d)
-    L, lg_luck = league_scores(d, T)
-    L.to_parquet(CACHE / "cs_leagues.parquet")
-    pd.DataFrame({"run": range(len(lg_luck)), "held": lg_luck}).to_parquet(CACHE / "cs_leagues_luck.parquet")
-    print("league x score held:", int(L["held"].sum()), "of", len(L), "| luck runs:", lg_luck.tolist(), flush=True)
+    if not (CACHE / "cs_leagues.parquet").exists():
+        L, lg_luck = league_scores(d, T)
+        L.to_parquet(CACHE / "cs_leagues.parquet")
+        pd.DataFrame({"run": range(len(lg_luck)), "held": lg_luck}).to_parquet(CACHE / "cs_leagues_luck.parquet")
+        print("league x score held:", int(L["held"].sum()), "of", len(L), "| luck runs:", lg_luck.tolist(), flush=True)
+    parts = CACHE / "cs_parts"
+    parts.mkdir(exist_ok=True)
     cols = [c for c in features(d) if not c.startswith(("y_", "own_", "mod_"))]
     d[[c for c in d.columns if c.startswith(("y_", "own_", "mod_"))] + ["match_id", "per"]].to_parquet(
         CACHE / "cs_targets.parquet")
@@ -236,6 +239,15 @@ def run():
         y = d[yc].to_numpy(float)
         own, mod = d[oc].to_numpy(float), d[mc].to_numpy(float)
         normal = {k: y[per == k].mean() * 100 for k in "ABC"}
+        part = parts / f"{tag.replace(' ', '_')}.pkl"
+        if part.exists():
+            s_, r_, l_, q_ = pd.read_pickle(part)
+            sig_all.append(s_), rules_all.extend(r_), luck_all.extend(l_), race_all.extend(q_)
+            continue
+        if normal["A"] < 0.5:                       # 0-5, 0-6, 1-5, 6-0: too rare to find anything
+            print(tag, "too rare, skipped", flush=True)
+            continue
+        n_r, n_l, n_q = len(rules_all), len(luck_all), len(race_all)
         S = scan(d, yc, oc, cols)
         S.insert(0, "score", tag)
         sig_all.append(S)
@@ -270,6 +282,7 @@ def run():
                 lr, nl = br.run_one(d, y, sig, "A", sr, shuffle_seed=3000 + s)
                 c = (lr["hit % 2025/26"] >= 1.3 * nl["B"]) & (lr["matches 2025/26"] >= br.NMIN / 2)
                 luck_all.append({"score": tag, "pool": pool, "run": s, "confirmed": int(c.sum())})
+        pd.to_pickle((S, rules_all[n_r:], luck_all[n_l:], race_all[n_q:]), part)
         print(tag, "normal", {k: round(v, 2) for k, v in normal.items()}, "confirmed",
               int(rules_all[-2]["confirmed"].sum()), int(rules_all[-1]["confirmed"].sum()), "luck",
               [x["confirmed"] for x in luck_all[-2 * N_LUCK:]], flush=True)
