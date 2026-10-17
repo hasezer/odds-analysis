@@ -113,7 +113,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **1st-half score 2-1 when Nesine's chance for it is >= 5.5% (its top 5% of 2024/25; chance, not odds)** [proven, since 2026-10-17] — 2024/25: 6.5% (normal 3.64%); 2025/26: 6.5% (normal 3.6%); 2026/27: 7.1% (normal 3.78%)
 - **1st-half score OTHER when Nesine's chance for it is >= 11.2% (its top 5% of 2024/25; chance, not odds)** [proven, since 2026-10-17] — 2024/25: 13.8% (normal 5.03%); 2025/26: 7.6% (normal 4.9%); 2026/27: 11.1% (normal 6.09%)
 
-## Packs (the most likely scores / results together) (8)
+## Packs (the most likely scores / results together) (9)
 
 - **Correct score: back the 3 most likely together, only when they add up to ≥ 31.0% (top 10% most predictable matches)** [proven, since 2026-10-14] — 2024/25: 36.0%; 2025/26: 33.5%; 2026/27: 36.6%
 - **Correct score: back the 3 most likely together, only when they add up to ≥ 29.7% (top 30% most predictable matches)** [proven, since 2026-10-14] — 2024/25: 34.8%; 2025/26: 31.3%; 2026/27: 35.2%
@@ -123,6 +123,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **1st-half score: back the 3 most likely together, only when they add up to ≥ 24.3% (top 30% most predictable matches)** [proven, since 2026-10-14] — 2024/25: 27.6%; 2025/26: 28.7%; 2026/27: 28.4%
 - **HT/FT: back the 2 most likely together, only when they add up to ≥ 45.4% (top 10% most predictable matches)** [proven, since 2026-10-14] — 2024/25: 54.9%; 2025/26: 54.3%; 2026/27: 53.5%
 - **HT/FT: back the 2 most likely together, only when they add up to ≥ 38.2% (top 30% most predictable matches)** [proven, since 2026-10-14] — 2024/25: 46.0%; 2025/26: 46.3%; 2026/27: 45.8%
+- **High-scoring correct scores (3-2, 2-3, 3-3, 2-4, 4-2): back the 3 most likely of the five together, only when they add up to >= 9.1% (top 5% of games)** [proven, since 2026-10-17] — 2024/25: 11.9%, return -31.0; 2025/26: 8.7%, return -39.5; 2026/27: 11.0%, return -30.9
 
 ## League tendencies (11)
 
@@ -159,7 +160,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **Tipster rule 16a: Away team's odds exactly 1.65 / 1.67 / 1.75 -> away wins the 1st half (record: home and away together)** [proven, since 2026-10-16] — 2024/25: 39.8% (normal 25.1%), return -11.4; 2025/26: 37.6% (normal 25.1%), return -14.9; 2026/27: 37.0% (normal 25.5%), return -18.5
 - **Tipster rule 19: Draw & under 2.5 odds 2.86-2.99 -> HT/FT X/X** [proven, since 2026-10-16] — 2024/25: 24.2% (normal 15.9%), return -14.0; 2025/26: 23.1% (normal 15.7%), return -16.0; 2026/27: 27.5% (normal 14.7%), return -4.1
 
-## Readable odds rules (decision trees) (86)
+## Readable odds rules (decision trees) (88)
 
 - **1st-half result & both score 1 & yes when 1st-half result & both score 1 & yes odds ≤ 13.47  AND  Result & goals 1 & over 4.5 odds ≤ 3.87** [proven, since 2026-10-14] — 2024/25: 12.3% (normal 4.8%); 2025/26: 10.0% (normal 4.6%); 2026/27: 12.9% (normal 5.4%)
 - **1st-half result & both score 1 & yes when 1st-half result & both score 1 & yes odds ≤ 13.47  AND  Goals under 1.5 odds > 4.60** [proven, since 2026-10-14] — 2024/25: 10.0% (normal 4.8%); 2025/26: 8.8% (normal 4.6%); 2026/27: 10.2% (normal 5.4%)
@@ -247,6 +248,8 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - **1st-half score 1-2 when odds: 1st-half both score yes ≤ 3.20  AND  chance: 1st-half result & goals 2 & over 1.5 ≥ 12.6%** [proven, since 2026-10-17] — 2024/25: 7.8% (normal 3.13%); 2025/26: 5.2% (normal 2.78%); 2026/27: 7.5% (normal 3.11%)
 - **1st-half score 2-2 when chance: Double chance 12 ≥ 72.1%  AND  odds: Both teams score yes ≤ 1.42** [proven, since 2026-10-17] — 2024/25: 3.3% (normal 0.81%); 2025/26: 1.5% (normal 1.12%); 2026/27: 1.9% (normal 1.06%)
 - **1st-half score OTHER when odds: 2nd-half result draw ≥ 2.82  AND  odds: Result & both score X & no ≥ 21.24** [proven, since 2026-10-17] — 2024/25: 16.4% (normal 5.03%); 2025/26: 11.7% (normal 4.9%); 2026/27: 11.4% (normal 6.09%)
+- **Score 3-2 when chance: Result & goals 1 & over 4.5 ≥ 10.2%  AND  odds: 1st-half both score yes ≤ 3.03** [proven, since 2026-10-17] — 2024/25: 7.2% (normal 2.8%); 2025/26: 3.4% (normal 2.59%); 2026/27: 5.3% (normal 3.27%)
+- **Score 2-3 when odds: 1st-half goals over 1.5 ≤ 2.04  AND  chance: Result home ≤ 35.3%** [proven, since 2026-10-17] — 2024/25: 7.6% (normal 2.19%); 2025/26: 3.7% (normal 2.14%); 2026/27: 3.4% (normal 2.5%)
 
 ## Watch list (not proven) (3)
 
@@ -288,6 +291,7 @@ None of these beats Nesine's prices in general (the Portugal draw bet is the onl
 - Correct scores, no help beyond the price: team score habits (draw, 0-0, 1-1, low-scoring and half-time-draw rates, last 20 and previous season), league x score tendencies (20 of 1,014 pairs beat normal and the price every season; shuffled leagues give ~10, 95th pct 17), calendar.
 - Correct-score prices: 2-1, 1-2, 2-2 (full time) and 1-1 (half time) happen 10-20% more than Nesine's evenly spread chance and lose least (-25 to -28 per 100; half-time 1-1 -12); scores with a 5-6 goal side happen 2-5x less than priced (-60 to -92 per 100). Every score loses at closing odds.
 - Live, half time -> full time: the half-time score is the final score ~20% of the time (0-0 24%): 27-29% when few 2nd-half goals were expected before kick-off (bottom third), 15-18% when many. Half-time 2-0 ends 3-0 (19%) more often than 2-0 (17%); half-time 1-1 ends 1-1 21%, 2-1 19%, 1-2 15%.
+- High-scoring correct scores 3-2, 2-3, 3-3, 2-4, 4-2 (cs_high.py, focused second pass): Nesine's own score chance, the goals model and the markets that describe them (result & over 4.5, both teams 2+, 4-5 / 6+ goals) pick the same games. 3-3, 2-4, 4-2 reach 2.5-4x normal on their top 5% (from 1-1.5% to ~4%), 3-2 and 2-3 only 1.1-1.7x. Rules: 3-2 and 2-3 stored (1.3-1.7x in later seasons); 3-3 rules collapsed in 2026/27 (0 winners in 197 games); 2-4 and 4-2 too few winners. The three most likely of the five together in the top 5% of games: 11.8 / 8.7 / 11.0% vs 6-7% every game (stored; -31 to -39 per 100). Live: after half-time 2-2 the game ends 2-3 17%, 3-2 16%, 3-3 11%, 4-2 8%; after 2-1, 3-2 12%; after 1-2, 2-3 12%.
 - No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus (mostly August) is a one-off.
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
 - 'Fair price' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate needed to break even at the odds paid, not by the 'fair' chance.

@@ -102,6 +102,12 @@ lessons:
 - 'Live, half time -> full time: the half-time score is the final score ~20% of the time (0-0 24%): 27-29% when few 2nd-half
   goals were expected before kick-off (bottom third), 15-18% when many. Half-time 2-0 ends 3-0 (19%) more often than 2-0 (17%);
   half-time 1-1 ends 1-1 21%, 2-1 19%, 1-2 15%.'
+- 'High-scoring correct scores 3-2, 2-3, 3-3, 2-4, 4-2 (cs_high.py, focused second pass): Nesine''s own score chance, the
+  goals model and the markets that describe them (result & over 4.5, both teams 2+, 4-5 / 6+ goals) pick the same games. 3-3,
+  2-4, 4-2 reach 2.5-4x normal on their top 5% (from 1-1.5% to ~4%), 3-2 and 2-3 only 1.1-1.7x. Rules: 3-2 and 2-3 stored
+  (1.3-1.7x in later seasons); 3-3 rules collapsed in 2026/27 (0 winners in 197 games); 2-4 and 4-2 too few winners. The three
+  most likely of the five together in the top 5% of games: 11.8 / 8.7 / 11.0% vs 6-7% every game (stored; -31 to -39 per 100).
+  Live: after half-time 2-2 the game ends 2-3 17%, 3-2 16%, 3-3 11%, 4-2 8%; after 2-1, 3-2 12%; after 1-2, 2-3 12%.'
 - 'No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus
   (mostly August) is a one-off.'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
@@ -7186,5 +7192,101 @@ strategies:
       matches: 246
       hit_pct: 11.4
       normal_pct: 6.09
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-17'
+- id: pack-CORRECT_SCORE-high-3-5
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.0914
+  selections:
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||2-4
+  - CORRECT_SCORE||4-2
+  summary: 'High-scoring correct scores (3-2, 2-3, 3-3, 2-4, 4-2): back the 3 most likely of the five together, only when
+    they add up to >= 9.1% (top 5% of games)'
+  evidence:
+    2024/25:
+      matches: 394
+      hit_pct: 11.9
+      normal_pct: null
+      every_match_pct: 6.0
+      avg_odds: 6.36
+      return_per_100: -31.0
+    2025/26:
+      matches: 172
+      hit_pct: 8.7
+      normal_pct: null
+      every_match_pct: 6.1
+      avg_odds: 6.33
+      return_per_100: -39.5
+    2026/27:
+      matches: 281
+      hit_pct: 11.0
+      normal_pct: null
+      every_match_pct: 7.1
+      avg_odds: 6.38
+      return_per_100: -30.9
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-17'
+- id: cs-high-FT-3-2-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||3-2
+  bet_name: Score 3-2
+  bet_name_tr: 'Maç Skoru: 3-2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|1&OVER
+    op: '>='
+    chance_pct: 10.22
+  - bet: HT_BTTS||YES
+    op: <=
+    odds: 3.03
+  summary: 'Score 3-2 when chance: Result & goals 1 & over 4.5 ≥ 10.2%  AND  odds: 1st-half both score yes ≤ 3.03'
+  evidence:
+    2024/25:
+      matches: 305
+      hit_pct: 7.2
+      normal_pct: 2.8
+    2025/26:
+      matches: 354
+      hit_pct: 3.4
+      normal_pct: 2.59
+    2026/27:
+      matches: 189
+      hit_pct: 5.3
+      normal_pct: 3.27
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-17'
+- id: cs-high-FT-2-3-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||2-3
+  bet_name: Score 2-3
+  bet_name_tr: 'Maç Skoru: 2-3'
+  criteria:
+  - bet: HT_OU|1.5|OVER
+    op: <=
+    odds: 2.04
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 35.33
+  summary: 'Score 2-3 when odds: 1st-half goals over 1.5 ≤ 2.04  AND  chance: Result home ≤ 35.3%'
+  evidence:
+    2024/25:
+      matches: 432
+      hit_pct: 7.6
+      normal_pct: 2.19
+    2025/26:
+      matches: 540
+      hit_pct: 3.7
+      normal_pct: 2.14
+    2026/27:
+      matches: 207
+      hit_pct: 3.4
+      normal_pct: 2.5
   first_added: '2026-10-17'
   last_confirmed: '2026-10-17'
