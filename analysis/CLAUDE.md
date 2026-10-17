@@ -59,7 +59,7 @@
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`); there YES/YES sits at 1.10–2.02, real prices start at 4.66. The price exists only from 2025/26.
 - **HT_BTTS / 2H_BTTS:** the NO side is missing for ~45% of matches; use the YES odds, not the 'fair' chance.
 - **Referee:** empty.
-- **Odds movement:** exists for only ~11 settled matches.
+- **Odds movement:** the project's 2-hourly snapshot workflow is paused (schedule commented out; last run 2026-10-06), so our own snapshots cover only ~11 settled matches. From 2026-10-17 the daily scan keeps its morning snapshot on the data-only branch `odds-snapshots` (`keep_snapshot.py` + `push_snapshot.sh`, never main); `movement.py` compares those morning prices with Nesine's closing prices.
 - **Nesine caps:** HT/FT about 35, correct score 130, half-time correct score 66.
 - **Correct scores:** listed for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and the odds got longer after 2024/25 (smaller margin). Use normalised chances, not fixed odds cut-offs.
 - **Comparing techniques:** compare on the same number of games (e.g. each picks its top 10% in each season). A fixed cut-off from 2024/25 picks different-sized groups later, which flatters the stricter one.
