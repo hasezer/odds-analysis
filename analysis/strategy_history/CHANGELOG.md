@@ -20,3 +20,5 @@ One line per rebuild that changed the book. Full copies: strategies_<date>.yaml 
 - 2026-10-16: 0 new, 198 kept/updated, 0 retired; 198 active, 0 retired in total
 - 2026-10-16: 0 new, 198 kept/updated, 0 retired; 198 active, 0 retired in total
 - 2026-10-16: 2 new, 198 kept/updated, 0 retired; 200 active, 0 retired in total
+- 2026-10-17: 29 new, 200 kept/updated, 0 retired; 229 active, 0 retired in total
+- 2026-10-17: 3 new, 229 kept/updated, 0 retired; 232 active, 0 retired in total
