@@ -40225,3 +40225,369 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-18T05:59:19+00:00,backfill,coverage_events,SUI-1 2023/24,ok,0.0,0 of 216 finished matches
 2026-10-18T05:59:19+00:00,backfill,coverage_stats,SUI-1 2023/24,ok,0.935,202 of 216 finished matches
 2026-10-18T05:59:19+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ARG-1 2026 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ARG-1 2026 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ARG-1 2026 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ARG-1 2026 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ARG-1 2026 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ARG-1 2026 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ARG-1 2026 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ARG-1 2026 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ARG-1 2026 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ARG-1 2026,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ARG-1 2026,ok,0,0 of 12950 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ARG-1 2026,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ARG-1 2026,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ARG-1 2026,ok,0.991,437 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ARG-1 2026,ok,0.045,20 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ARG-1 2026,ok,0.984,434 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,BRA-1 2026 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,BRA-1 2026 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,BRA-1 2026 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,BRA-1 2026 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,BRA-1 2026 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,BRA-1 2026 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,BRA-1 2026 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,BRA-1 2026 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,BRA-1 2026 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,BRA-1 2026,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,BRA-1 2026,ok,0,0 of 9703 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,BRA-1 2026,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,BRA-1 2026,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,BRA-1 2026,ok,0.977,297 of 304 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,BRA-1 2026,ok,0.033,10 of 304 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,BRA-1 2026,ok,0.984,299 of 304 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NOR-1 2026 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NOR-1 2026 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NOR-1 2026 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NOR-1 2026 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NOR-1 2026 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,NOR-1 2026 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NOR-1 2026 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NOR-1 2026 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NOR-1 2026 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,NOR-1 2026,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,NOR-1 2026,ok,0,0 of 5937 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,NOR-1 2026,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,NOR-1 2026,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,NOR-1 2026,ok,0.994,177 of 178 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,NOR-1 2026,ok,0.045,8 of 178 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,NOR-1 2026,ok,0.983,175 of 178 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,USA-1 2026 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,USA-1 2026 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,USA-1 2026 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,USA-1 2026 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,USA-1 2026 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,USA-1 2026 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,USA-1 2026 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,USA-1 2026 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,USA-1 2026 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,USA-1 2026,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,USA-1 2026,ok,0,0 of 12686 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,USA-1 2026,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,USA-1 2026,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,USA-1 2026,ok,0.957,422 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,USA-1 2026,ok,0.07,31 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,USA-1 2026,ok,0.968,427 of 441 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,AUT-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,AUT-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,AUT-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,AUT-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,AUT-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,AUT-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,AUT-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,AUT-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,AUT-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,AUT-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,AUT-1 2026/27,ok,0,0 of 1670 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,AUT-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,AUT-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,AUT-1 2026/27,ok,0.98,50 of 51 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,AUT-1 2026/27,ok,0.118,6 of 51 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,AUT-1 2026/27,ok,0.941,48 of 51 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,DEN-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,DEN-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,DEN-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,DEN-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,DEN-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,DEN-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,DEN-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,DEN-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,DEN-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,DEN-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,DEN-1 2026/27,ok,0,0 of 2090 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,DEN-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,DEN-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,DEN-1 2026/27,ok,0.984,60 of 61 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,DEN-1 2026/27,ok,0.098,6 of 61 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,DEN-1 2026/27,ok,0.984,60 of 61 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ENG-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ENG-1 2026/27,ok,0,0 of 2349 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ENG-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ENG-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ENG-1 2026/27,ok,0.954,62 of 65 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ENG-1 2026/27,ok,0.154,10 of 65 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ENG-1 2026/27,ok,0.923,60 of 65 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ENG-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ENG-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ENG-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ENG-2 2026/27,ok,0,0 of 4556 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ENG-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ENG-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ENG-2 2026/27,ok,0.931,122 of 131 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ENG-2 2026/27,ok,0.092,12 of 131 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ENG-2 2026/27,ok,0.908,119 of 131 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ESP-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ESP-1 2026/27,ok,0,0 of 2713 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ESP-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ESP-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ESP-1 2026/27,ok,0.94,78 of 83 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ESP-1 2026/27,ok,0.108,9 of 83 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ESP-1 2026/27,ok,0.94,78 of 83 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ESP-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ESP-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ESP-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ESP-2 2026/27,ok,0,0 of 3251 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ESP-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ESP-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ESP-2 2026/27,ok,0.961,99 of 103 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ESP-2 2026/27,ok,0.214,22 of 103 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ESP-2 2026/27,ok,0.951,98 of 103 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,FRA-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,FRA-1 2026/27,ok,0,0 of 1928 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,FRA-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,FRA-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,FRA-1 2026/27,ok,0.93,53 of 57 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,FRA-1 2026/27,ok,0.123,7 of 57 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,FRA-1 2026/27,ok,0.93,53 of 57 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,FRA-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,FRA-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,FRA-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,FRA-2 2026/27,ok,0,0 of 2493 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,FRA-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,FRA-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,FRA-2 2026/27,ok,0.95,76 of 80 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,FRA-2 2026/27,ok,0.112,9 of 80 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,FRA-2 2026/27,ok,0.9,72 of 80 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,GER-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,GER-1 2026/27,ok,0,0 of 1833 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,GER-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,GER-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,GER-1 2026/27,ok,0.962,50 of 52 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,GER-1 2026/27,ok,0.154,8 of 52 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,GER-1 2026/27,ok,0.865,45 of 52 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,GER-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,GER-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,GER-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,GER-2 2026/27,ok,0,0 of 2432 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,GER-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,GER-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,GER-2 2026/27,ok,0.971,67 of 69 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,GER-2 2026/27,ok,0.13,9 of 69 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,GER-2 2026/27,ok,0.942,65 of 69 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ITA-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ITA-1 2026/27,ok,0,0 of 2249 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ITA-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ITA-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ITA-1 2026/27,ok,0.984,63 of 64 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ITA-1 2026/27,ok,0.156,10 of 64 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ITA-1 2026/27,ok,0.938,60 of 64 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,ITA-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,ITA-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,ITA-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,ITA-2 2026/27,ok,0,0 of 2280 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,ITA-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,ITA-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,ITA-2 2026/27,ok,0.955,64 of 67 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,ITA-2 2026/27,ok,0.149,10 of 67 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,ITA-2 2026/27,ok,0.896,60 of 67 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,JPN-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,JPN-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,JPN-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,JPN-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,JPN-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,JPN-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,JPN-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,JPN-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,JPN-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,JPN-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,JPN-1 2026/27,ok,0,0 of 3405 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,JPN-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,JPN-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,JPN-1 2026/27,ok,0.97,96 of 99 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,JPN-1 2026/27,ok,0.081,8 of 99 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,JPN-1 2026/27,ok,0.899,89 of 99 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,KSA-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,KSA-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,KSA-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,KSA-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,KSA-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,KSA-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,KSA-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,KSA-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,KSA-1 2026/27,ok,0,0 of 2101 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,KSA-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,KSA-1 2026/27,ok,0.974,75 of 77 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,KSA-1 2026/27,ok,0.0,0 of 77 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,KSA-1 2026/27,ok,0.974,75 of 77 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,MEX-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,MEX-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,MEX-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,MEX-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,MEX-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,MEX-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,MEX-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,MEX-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,MEX-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,MEX-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,MEX-1 2026/27,ok,0,0 of 2593 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,MEX-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,MEX-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,MEX-1 2026/27,ok,0.961,98 of 102 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,MEX-1 2026/27,ok,0.176,18 of 102 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,MEX-1 2026/27,ok,0.922,94 of 102 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,NED-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,NED-1 2026/27,ok,0,0 of 2720 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,NED-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,NED-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,NED-1 2026/27,ok,0.987,74 of 75 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,NED-1 2026/27,ok,0.12,9 of 75 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,NED-1 2026/27,ok,0.947,71 of 75 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-2 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-2 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-2 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-2 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,NED-2 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-2 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-2 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-2 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,NED-2 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,NED-2 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,NED-2 2026/27,warn,7,7 of 3119 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.2%)
+2026-10-18T09:21:37+00:00,results,scores_present,NED-2 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,NED-2 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,NED-2 2026/27,ok,0.952,99 of 104 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,NED-2 2026/27,ok,0.154,16 of 104 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,NED-2 2026/27,ok,0.952,99 of 104 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,SCO-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,SCO-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,SCO-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,SCO-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,SCO-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,SCO-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,SCO-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,SCO-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,SCO-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,SCO-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,SCO-1 2026/27,ok,0,0 of 1613 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,SCO-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,SCO-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,SCO-1 2026/27,ok,0.962,51 of 53 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,SCO-1 2026/27,ok,0.113,6 of 53 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,SCO-1 2026/27,ok,0.906,48 of 53 finished matches
+2026-10-18T09:21:37+00:00,results,duplicate_keys,TUR-1 2026/27 matches,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,TUR-1 2026/27 odds,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,TUR-1 2026/27 settlements,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,TUR-1 2026/27 events,ok,0,
+2026-10-18T09:21:37+00:00,results,duplicate_keys,TUR-1 2026/27 stats,ok,0,
+2026-10-18T09:21:37+00:00,results,orphan_rows,TUR-1 2026/27 odds,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,TUR-1 2026/27 settlements,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,TUR-1 2026/27 events,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,orphan_rows,TUR-1 2026/27 stats,ok,0,rows whose match or market does not exist
+2026-10-18T09:21:37+00:00,results,odds_range,TUR-1 2026/27,ok,0,odds outside 1.01-1000
+2026-10-18T09:21:37+00:00,results,market_sum,TUR-1 2026/27,ok,0,0 of 2364 complete markets outside 100-130 % (2-3 selections) / 100-170 % (0.0%)
+2026-10-18T09:21:37+00:00,results,scores_present,TUR-1 2026/27,ok,0,finished matches without HT or FT score: 
+2026-10-18T09:21:37+00:00,results,events_match_score,TUR-1 2026/27,ok,0,event goals != FT score: 
+2026-10-18T09:21:37+00:00,results,coverage_odds,TUR-1 2026/27,ok,0.956,65 of 68 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_events,TUR-1 2026/27,ok,0.132,9 of 68 finished matches
+2026-10-18T09:21:37+00:00,results,coverage_stats,TUR-1 2026/27,ok,0.926,63 of 68 finished matches
+2026-10-18T09:21:37+00:00,results,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
