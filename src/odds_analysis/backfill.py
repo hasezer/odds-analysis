@@ -263,8 +263,14 @@ def run(c: H.MackolikClient) -> dict:
                 break
             stats["dates"].append(d.isoformat())
         except Exception as exc:  # noqa: BLE001 - the date is retried by the next job
-            failures.add("listing", d.isoformat(), repr(exc), match_date=d.isoformat())
+            if is_retry:  # a failed cursor date needs no queue entry: the cursor stays on it
+                failures.add("listing", d.isoformat(), repr(exc), match_date=d.isoformat())
             stats["error_detail"].append(f"date {d}: {exc!r}")
+            # A date listing that fails after all retries means Mackolik is not answering: stop here instead of
+            # running through every remaining date (on Oct 18 2026 one job skipped 1,460 dates that way). The
+            # cursor stays on this date, so the next job starts again from it.
+            stats["paused"] = f"date listing {d} failed: stopped"
+            break
         if not is_retry:
             cursor = d - timedelta(days=1)
             state["next_date"] = cursor.isoformat()

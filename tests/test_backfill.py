@@ -110,6 +110,13 @@ SCENARIO = textwrap.dedent('''
     out["readme"] = backfill.README.read_text()
     cfg["paused"] = True
     out["paused_run"] = backfill.run(C())
+    cfg["paused"] = False
+    st = json.loads(backfill.STATE.read_text()); st["next_date"] = "2026-09-27"; backfill.STATE.write_text(json.dumps(st))
+    def broken(c, d):
+        raise RuntimeError("listing down")
+    www.listing = broken  # Mackolik does not answer the date listing: stop at once, keep the cursor
+    out["listing_down"] = backfill.run(C())
+    out["listing_down_state"] = json.loads(backfill.STATE.read_text())["next_date"]
     print(json.dumps(out, default=str))
 ''')
 
@@ -129,6 +136,8 @@ def test_backfill_scenario(tmp_path):
     assert out["only_other"] == ["set()", True] and out["only_other_stats"].get("final", 0) == 0 and "no_odds" not in out["only_other_stats"]
     assert out["rate_limited"][1] is False  # rate limited: no match is fetched, the date is redone later
     assert out["paused_run"]["paused"] == "paused in config/backfill.yaml" and not out["paused_run"]["dates"]
+    assert out["listing_down"]["paused"].startswith("date listing 2026-09-27 failed") and not out["listing_down"]["dates"]
+    assert out["listing_down_state"] == "2026-09-27"
     assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
     assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]
