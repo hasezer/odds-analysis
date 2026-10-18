@@ -39,9 +39,9 @@ See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_R
 ## Backfill progress
 
 <!-- backfill-progress:start -->
-_Updated 2026-10-18 06:03 UTC by the Backfill workflow (newest dates first)._
+_Updated 2026-10-18 10:03 UTC by the Backfill workflow (newest dates first)._
 
-**28,692 of 64,113 matches (44.8 %)** · next date to process: 2023-07-31
+**64,113 of 64,113 matches (100.0 %)** · next date to process: 2019-07-31
 
 | Season | Matches | Done | % |
 |---|---|---|---|
@@ -51,18 +51,18 @@ _Updated 2026-10-18 06:03 UTC by the Backfill workflow (newest dates first)._
 | 2025 | 2,050 | 2,050 | 100 % |
 | 2024/25 | 6,960 | 6,960 | 100 % |
 | 2024 | 2,103 | 2,103 | 100 % |
-| 2023/24 | 7,061 | 6,988 | 99 % |
-| 2023 | 2,029 | 828 | 41 % |
-| 2022/23 | 6,976 | 0 | 0 % |
-| 2022 | 1,996 | 0 | 0 % |
-| 2021/22 | 7,016 | 0 | 0 % |
-| 2021 | 1,973 | 0 | 0 % |
-| 2020/21 | 7,050 | 0 | 0 % |
-| 2020 | 1,744 | 0 | 0 % |
-| 2019/20 | 6,471 | 0 | 0 % |
-| 2019 | 921 | 0 | 0 % |
+| 2023/24 | 7,061 | 7,061 | 100 % |
+| 2023 | 2,029 | 2,029 | 100 % |
+| 2022/23 | 6,976 | 6,976 | 100 % |
+| 2022 | 1,996 | 1,996 | 100 % |
+| 2021/22 | 7,016 | 7,016 | 100 % |
+| 2021 | 1,973 | 1,973 | 100 % |
+| 2020/21 | 7,050 | 7,050 | 100 % |
+| 2020 | 1,744 | 1,744 | 100 % |
+| 2019/20 | 6,471 | 6,471 | 100 % |
+| 2019 | 921 | 921 | 100 % |
 
 Per league and season: [`data/backfill_progress.csv`](data/backfill_progress.csv).
 
-Actions minutes this month: **9,627 used of 2,000**; the repository is public, so there is no minutes limit (the reserve applies again when it is private). Daily jobs used 22.0 min/day over the last 7 days (≈ 660/month).
+Actions minutes this month: **9,644 used of 2,000**; the repository is public, so there is no minutes limit (the reserve applies again when it is private). Daily jobs used 23.3 min/day over the last 7 days (≈ 699/month).
 <!-- backfill-progress:end -->

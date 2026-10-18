@@ -40591,3 +40591,4 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-18T09:21:37+00:00,results,coverage_events,TUR-1 2026/27,ok,0.132,9 of 68 finished matches
 2026-10-18T09:21:37+00:00,results,coverage_stats,TUR-1 2026/27,ok,0.926,63 of 68 finished matches
 2026-10-18T09:21:37+00:00,results,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-18T09:31:05+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
