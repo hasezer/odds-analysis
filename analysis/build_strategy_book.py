@@ -176,6 +176,13 @@ LESSONS = [
     "+81 per 100 (23 a month, ahead in 99% of simulated years, losing runs up to ~50, bankroll ~60 stakes; found on "
     "these same seasons, so the tracker must confirm it). The Goals coupon as a 3-4-5 system is a lottery: one weekend "
     "in 104 since Aug 2024 (7 Aug 2026, 512x the stake) decides it; without it -80%; 37% chance to end a year ahead.",
+    "6+ goal 'waves' (six_waves.py; 19,810 games, 141 weeks; luck control: every game redrawn 2,000 times from its "
+    "own 6+ price): the weekly NUMBER of 6+ games follows the number of matches played (correlation 0.86; "
+    "international-break weeks 25-60 matches, busy weeks 250+), while the SHARE stays at what Nesine's prices expect "
+    "(6.3%). Week-to-week swings are within luck (p 0.11); no cycle of 1-10 weeks beyond luck (strongest: 5-6 weeks, "
+    "p 0.06-0.08; as a signal, 5 weeks after a hot week gave 0.94 / 1.11 / 1.08x expected); no waves inside a league; "
+    "after international breaks 0.97 / 1.51 / 0.94x; weeks 3-4 of the month 1.07 / 1.15 / 0.97x. 6+ bets lose 32 per "
+    "100 at closing odds.",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",

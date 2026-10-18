@@ -1,4 +1,4 @@
-built_on: '2026-10-17'
+built_on: '2026-10-18'
 built_from: seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)
 lessons:
 - 'No strategy beats Nesine''s prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule stacking and
@@ -129,6 +129,12 @@ lessons:
   losing runs up to ~50, bankroll ~60 stakes; found on these same seasons, so the tracker must confirm it). The Goals coupon
   as a 3-4-5 system is a lottery: one weekend in 104 since Aug 2024 (7 Aug 2026, 512x the stake) decides it; without it -80%;
   37% chance to end a year ahead.'
+- '6+ goal ''waves'' (six_waves.py; 19,810 games, 141 weeks; luck control: every game redrawn 2,000 times from its own 6+
+  price): the weekly NUMBER of 6+ games follows the number of matches played (correlation 0.86; international-break weeks
+  25-60 matches, busy weeks 250+), while the SHARE stays at what Nesine''s prices expect (6.3%). Week-to-week swings are within
+  luck (p 0.11); no cycle of 1-10 weeks beyond luck (strongest: 5-6 weeks, p 0.06-0.08; as a signal, 5 weeks after a hot week
+  gave 0.94 / 1.11 / 1.08x expected); no waves inside a league; after international breaks 0.97 / 1.51 / 0.94x; weeks 3-4
+  of the month 1.07 / 1.15 / 0.97x. 6+ bets lose 32 per 100 at closing odds.'
 - 'No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus
   (mostly August) is a one-off.'
 - Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
@@ -167,7 +173,7 @@ strategies:
       normal_pct: 14.7
       avg_odds: 2.12
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_BTTS||2&NO-10
   kind: odds_band
   status: proven
@@ -196,7 +202,7 @@ strategies:
       normal_pct: 14.7
       avg_odds: 2.37
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_BTTS||2&YES-5
   kind: odds_band
   status: proven
@@ -225,7 +231,7 @@ strategies:
       normal_pct: 15.2
       avg_odds: 2.36
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_BTTS||2&YES-10
   kind: odds_band
   status: proven
@@ -254,7 +260,7 @@ strategies:
       normal_pct: 15.2
       avg_odds: 2.61
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_BTTS||X&NO-5
   kind: odds_band
   status: proven
@@ -283,7 +289,7 @@ strategies:
       normal_pct: 6.5
       avg_odds: 4.77
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_BTTS||X&NO-10
   kind: odds_band
   status: proven
@@ -312,7 +318,7 @@ strategies:
       normal_pct: 6.5
       avg_odds: 5.21
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|1.5|1&UNDER-5
   kind: odds_band
   status: proven
@@ -341,7 +347,7 @@ strategies:
       normal_pct: 8.9
       avg_odds: 4.71
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|1.5|1&UNDER-10
   kind: odds_band
   status: proven
@@ -370,7 +376,7 @@ strategies:
       normal_pct: 8.9
       avg_odds: 5.02
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|1.5|2&UNDER-5
   kind: odds_band
   status: proven
@@ -399,7 +405,7 @@ strategies:
       normal_pct: 7.1
       avg_odds: 5.44
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|1.5|2&UNDER-10
   kind: odds_band
   status: proven
@@ -428,7 +434,7 @@ strategies:
       normal_pct: 7.1
       avg_odds: 5.91
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|1&UNDER-5
   kind: odds_band
   status: proven
@@ -457,7 +463,7 @@ strategies:
       normal_pct: 15.2
       avg_odds: 2.73
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|1&UNDER-10
   kind: odds_band
   status: proven
@@ -486,7 +492,7 @@ strategies:
       normal_pct: 15.2
       avg_odds: 2.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|2&OVER-5
   kind: odds_band
   status: proven
@@ -515,7 +521,7 @@ strategies:
       normal_pct: 18.9
       avg_odds: 1.73
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|2&OVER-10
   kind: odds_band
   status: proven
@@ -544,7 +550,7 @@ strategies:
       normal_pct: 18.9
       avg_odds: 2.02
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|2&UNDER-5
   kind: odds_band
   status: proven
@@ -573,7 +579,7 @@ strategies:
       normal_pct: 11.0
       avg_odds: 3.31
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|2&UNDER-10
   kind: odds_band
   status: proven
@@ -602,7 +608,7 @@ strategies:
       normal_pct: 11.0
       avg_odds: 3.54
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|X&OVER-5
   kind: odds_band
   status: proven
@@ -631,7 +637,7 @@ strategies:
       normal_pct: 7.6
       avg_odds: 7.34
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|X&OVER-10
   kind: odds_band
   status: proven
@@ -660,7 +666,7 @@ strategies:
       normal_pct: 7.6
       avg_odds: 7.82
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|X&UNDER-5
   kind: odds_band
   status: proven
@@ -689,7 +695,7 @@ strategies:
       normal_pct: 18.2
       avg_odds: 2.68
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|2.5|X&UNDER-10
   kind: odds_band
   status: proven
@@ -718,7 +724,7 @@ strategies:
       normal_pct: 18.2
       avg_odds: 2.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|3.5|1&OVER-5
   kind: odds_band
   status: proven
@@ -747,7 +753,7 @@ strategies:
       normal_pct: 15.6
       avg_odds: 1.94
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|3.5|1&OVER-10
   kind: odds_band
   status: proven
@@ -776,7 +782,7 @@ strategies:
       normal_pct: 15.6
       avg_odds: 2.29
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|3.5|2&OVER-5
   kind: odds_band
   status: proven
@@ -805,7 +811,7 @@ strategies:
       normal_pct: 9.6
       avg_odds: 2.68
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|3.5|2&OVER-10
   kind: odds_band
   status: proven
@@ -834,7 +840,7 @@ strategies:
       normal_pct: 9.6
       avg_odds: 3.31
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|4.5|1&OVER-5
   kind: odds_band
   status: proven
@@ -863,7 +869,7 @@ strategies:
       normal_pct: 9.5
       avg_odds: 3.01
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|4.5|1&OVER-10
   kind: odds_band
   status: proven
@@ -892,7 +898,7 @@ strategies:
       normal_pct: 9.5
       avg_odds: 3.64
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|4.5|2&OVER-5
   kind: odds_band
   status: proven
@@ -921,7 +927,7 @@ strategies:
       normal_pct: 5.9
       avg_odds: 4.28
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-1X2_AND_OU|4.5|2&OVER-10
   kind: odds_band
   status: proven
@@ -950,7 +956,7 @@ strategies:
       normal_pct: 5.9
       avg_odds: 5.37
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-BOTH_HALVES_OVER|1.5|YES-5
   kind: odds_band
   status: proven
@@ -979,7 +985,7 @@ strategies:
       normal_pct: 19.1
       avg_odds: 2.55
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-BOTH_HALVES_OVER|1.5|YES-10
   kind: odds_band
   status: proven
@@ -1008,7 +1014,7 @@ strategies:
       normal_pct: 19.1
       avg_odds: 2.73
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||0-2-5
   kind: odds_band
   status: proven
@@ -1037,7 +1043,7 @@ strategies:
       normal_pct: 3.9
       avg_odds: 6.02
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||0-2-10
   kind: odds_band
   status: proven
@@ -1066,7 +1072,7 @@ strategies:
       normal_pct: 3.9
       avg_odds: 6.77
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||0-3-5
   kind: odds_band
   status: proven
@@ -1095,7 +1101,7 @@ strategies:
       normal_pct: 2.2
       avg_odds: 8.88
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||0-3-10
   kind: odds_band
   status: proven
@@ -1124,7 +1130,7 @@ strategies:
       normal_pct: 2.2
       avg_odds: 10.92
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||1-3-5
   kind: odds_band
   status: proven
@@ -1153,7 +1159,7 @@ strategies:
       normal_pct: 2.6
       avg_odds: 9.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||1-3-10
   kind: odds_band
   status: proven
@@ -1182,7 +1188,7 @@ strategies:
       normal_pct: 2.6
       avg_odds: 10.47
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||2-0-5
   kind: odds_band
   status: proven
@@ -1211,7 +1217,7 @@ strategies:
       normal_pct: 6.4
       avg_odds: 4.88
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||2-0-10
   kind: odds_band
   status: proven
@@ -1240,7 +1246,7 @@ strategies:
       normal_pct: 6.4
       avg_odds: 5.25
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||3-0-5
   kind: odds_band
   status: proven
@@ -1269,7 +1275,7 @@ strategies:
       normal_pct: 3.8
       avg_odds: 6.38
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||3-0-10
   kind: odds_band
   status: proven
@@ -1298,7 +1304,7 @@ strategies:
       normal_pct: 3.8
       avg_odds: 7.44
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||3-3-10
   kind: odds_band
   status: proven
@@ -1327,7 +1333,7 @@ strategies:
       normal_pct: 1.4
       avg_odds: 28.73
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-0-5
   kind: odds_band
   status: proven
@@ -1356,7 +1362,7 @@ strategies:
       normal_pct: 1.5
       avg_odds: 9.84
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-0-10
   kind: odds_band
   status: proven
@@ -1385,7 +1391,7 @@ strategies:
       normal_pct: 1.5
       avg_odds: 12.39
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-1-5
   kind: odds_band
   status: proven
@@ -1414,7 +1420,7 @@ strategies:
       normal_pct: 1.5
       avg_odds: 12.08
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-1-10
   kind: odds_band
   status: proven
@@ -1443,7 +1449,7 @@ strategies:
       normal_pct: 1.5
       avg_odds: 14.03
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-2-5
   kind: odds_band
   status: proven
@@ -1472,7 +1478,7 @@ strategies:
       normal_pct: 1.1
       avg_odds: 24.23
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-CORRECT_SCORE||4-2-10
   kind: odds_band
   status: proven
@@ -1501,7 +1507,7 @@ strategies:
       normal_pct: 1.1
       avg_odds: 27.27
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-GOAL_RANGE||6+-5
   kind: odds_band
   status: proven
@@ -1530,7 +1536,7 @@ strategies:
       normal_pct: 7.6
       avg_odds: 4.44
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-GOAL_RANGE||6+-10
   kind: odds_band
   status: proven
@@ -1559,7 +1565,7 @@ strategies:
       normal_pct: 7.6
       avg_odds: 5.05
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_BTTS||1&YES-5
   kind: odds_band
   status: proven
@@ -1588,7 +1594,7 @@ strategies:
       normal_pct: 5.4
       avg_odds: 7.31
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_BTTS||1&YES-10
   kind: odds_band
   status: proven
@@ -1617,7 +1623,7 @@ strategies:
       normal_pct: 5.4
       avg_odds: 8.05
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_BTTS||2&YES-5
   kind: odds_band
   status: proven
@@ -1646,7 +1652,7 @@ strategies:
       normal_pct: 3.8
       avg_odds: 8.83
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_BTTS||2&YES-10
   kind: odds_band
   status: proven
@@ -1675,7 +1681,7 @@ strategies:
       normal_pct: 3.8
       avg_odds: 9.93
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_OU|1.5|1&OVER-5
   kind: odds_band
   status: proven
@@ -1704,7 +1710,7 @@ strategies:
       normal_pct: 15.0
       avg_odds: 2.32
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_OU|1.5|1&OVER-10
   kind: odds_band
   status: proven
@@ -1733,7 +1739,7 @@ strategies:
       normal_pct: 15.0
       avg_odds: 2.67
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_OU|1.5|2&OVER-5
   kind: odds_band
   status: proven
@@ -1762,7 +1768,7 @@ strategies:
       normal_pct: 9.4
       avg_odds: 3.05
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_1X2_AND_HT_OU|1.5|2&OVER-10
   kind: odds_band
   status: proven
@@ -1791,7 +1797,7 @@ strategies:
       normal_pct: 9.4
       avg_odds: 3.69
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_BTTS||YES-5
   kind: odds_band
   status: proven
@@ -1820,7 +1826,7 @@ strategies:
       normal_pct: 22.1
       avg_odds: 2.77
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_CORRECT_SCORE||0-2-5
   kind: odds_band
   status: proven
@@ -1849,7 +1855,7 @@ strategies:
       normal_pct: 4.4
       avg_odds: 6.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_CORRECT_SCORE||0-2-10
   kind: odds_band
   status: proven
@@ -1878,7 +1884,7 @@ strategies:
       normal_pct: 4.4
       avg_odds: 7.83
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_CORRECT_SCORE||2-0-5
   kind: odds_band
   status: proven
@@ -1907,7 +1913,7 @@ strategies:
       normal_pct: 7.0
       avg_odds: 5.11
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_CORRECT_SCORE||2-0-10
   kind: odds_band
   status: proven
@@ -1936,7 +1942,7 @@ strategies:
       normal_pct: 7.0
       avg_odds: 5.74
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_CORRECT_SCORE||2-1-5
   kind: odds_band
   status: proven
@@ -1965,7 +1971,7 @@ strategies:
       normal_pct: 3.9
       avg_odds: 12.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||1/2-5
   kind: odds_band
   status: proven
@@ -1994,7 +2000,7 @@ strategies:
       normal_pct: 2.4
       avg_odds: 19.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||2/1-5
   kind: odds_band
   status: proven
@@ -2023,7 +2029,7 @@ strategies:
       normal_pct: 2.4
       avg_odds: 18.58
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||2/2-5
   kind: odds_band
   status: proven
@@ -2052,7 +2058,7 @@ strategies:
       normal_pct: 17.0
       avg_odds: 1.82
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||2/2-10
   kind: odds_band
   status: proven
@@ -2081,7 +2087,7 @@ strategies:
       normal_pct: 17.0
       avg_odds: 2.14
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||X/2-5
   kind: odds_band
   status: proven
@@ -2110,7 +2116,7 @@ strategies:
       normal_pct: 10.6
       avg_odds: 4.02
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||X/2-10
   kind: odds_band
   status: proven
@@ -2139,7 +2145,7 @@ strategies:
       normal_pct: 10.6
       avg_odds: 4.27
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||X/X-5
   kind: odds_band
   status: proven
@@ -2168,7 +2174,7 @@ strategies:
       normal_pct: 14.9
       avg_odds: 3.21
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-HT_FT||X/X-10
   kind: odds_band
   status: proven
@@ -2197,7 +2203,7 @@ strategies:
       normal_pct: 14.9
       avg_odds: 3.36
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-OU_AND_BTTS|2.5|OVER&NO-5
   kind: odds_band
   status: proven
@@ -2226,7 +2232,7 @@ strategies:
       normal_pct: 10.2
       avg_odds: 3.15
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-OU_AND_BTTS|2.5|OVER&NO-10
   kind: odds_band
   status: proven
@@ -2255,7 +2261,7 @@ strategies:
       normal_pct: 10.2
       avg_odds: 3.71
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-OU|4.5|OVER-5
   kind: odds_band
   status: proven
@@ -2284,7 +2290,7 @@ strategies:
       normal_pct: 17.1
       avg_odds: 2.47
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-OU|4.5|OVER-10
   kind: odds_band
   status: proven
@@ -2313,7 +2319,7 @@ strategies:
       normal_pct: 17.1
       avg_odds: 2.68
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_OU_AWAY|2.5|OVER-5
   kind: odds_band
   status: proven
@@ -2342,7 +2348,7 @@ strategies:
       normal_pct: 14.3
       avg_odds: 2.11
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_OU_AWAY|2.5|OVER-10
   kind: odds_band
   status: proven
@@ -2371,7 +2377,7 @@ strategies:
       normal_pct: 14.3
       avg_odds: 2.51
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_OU_HOME|2.5|OVER-5
   kind: odds_band
   status: proven
@@ -2400,7 +2406,7 @@ strategies:
       normal_pct: 21.7
       avg_odds: 1.61
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_OU_HOME|2.5|OVER-10
   kind: odds_band
   status: proven
@@ -2429,7 +2435,7 @@ strategies:
       normal_pct: 21.7
       avg_odds: 1.84
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_WIN_BOTH_HALVES_AWAY||YES-5
   kind: odds_band
   status: proven
@@ -2458,7 +2464,7 @@ strategies:
       normal_pct: 7.3
       avg_odds: 3.14
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_WIN_BOTH_HALVES_AWAY||YES-10
   kind: odds_band
   status: proven
@@ -2487,7 +2493,7 @@ strategies:
       normal_pct: 7.3
       avg_odds: 3.78
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_WIN_BOTH_HALVES_HOME||YES-5
   kind: odds_band
   status: proven
@@ -2516,7 +2522,7 @@ strategies:
       normal_pct: 12.8
       avg_odds: 2.23
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: band-TEAM_WIN_BOTH_HALVES_HOME||YES-10
   kind: odds_band
   status: proven
@@ -2545,7 +2551,7 @@ strategies:
       normal_pct: 12.8
       avg_odds: 2.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-CORRECT_SCORE-3-10
   kind: pack
   status: proven
@@ -2590,7 +2596,7 @@ strategies:
       avg_odds: 2.06
       every_match_pct: 30.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-CORRECT_SCORE-3-30
   kind: pack
   status: proven
@@ -2635,7 +2641,7 @@ strategies:
       avg_odds: 2.14
       every_match_pct: 30.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-CORRECT_SCORE-2-10
   kind: pack
   status: proven
@@ -2680,7 +2686,7 @@ strategies:
       avg_odds: 2.81
       every_match_pct: 21.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-CORRECT_SCORE-2-30
   kind: pack
   status: proven
@@ -2725,7 +2731,7 @@ strategies:
       avg_odds: 2.95
       every_match_pct: 21.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-HT_CORRECT_SCORE-3-10
   kind: pack
   status: proven
@@ -2759,7 +2765,7 @@ strategies:
       avg_odds: 2.76
       every_match_pct: 24.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-HT_CORRECT_SCORE-3-30
   kind: pack
   status: proven
@@ -2793,7 +2799,7 @@ strategies:
       avg_odds: 2.99
       every_match_pct: 24.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-HT_FT-2-10
   kind: pack
   status: proven
@@ -2830,7 +2836,7 @@ strategies:
       avg_odds: 1.43
       every_match_pct: 36.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-HT_FT-2-30
   kind: pack
   status: proven
@@ -2867,7 +2873,7 @@ strategies:
       avg_odds: 1.72
       every_match_pct: 36.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-ARG-1-1X2_AND_OU|2.5|X&UNDER
   kind: league
   status: promising
@@ -2897,7 +2903,7 @@ strategies:
       odds_say_pct: 25.6
       return_per_100: -19.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-GER-1-BOTH_HALVES_OVER|1.5|YES
   kind: league
   status: promising
@@ -2927,7 +2933,7 @@ strategies:
       odds_say_pct: 26.7
       return_per_100: 5.5
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-GER-1-TEAM_OU_AWAY|2.5|OVER
   kind: league
   status: promising
@@ -2957,7 +2963,7 @@ strategies:
       odds_say_pct: 22.6
       return_per_100: 5.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-USA-1-TEAM_OU_AWAY|2.5|OVER
   kind: league
   status: promising
@@ -2987,7 +2993,7 @@ strategies:
       odds_say_pct: 16.8
       return_per_100: -20.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-GER-1-1X2_AND_OU|3.5|2&OVER
   kind: league
   status: promising
@@ -3017,7 +3023,7 @@ strategies:
       odds_say_pct: 16.2
       return_per_100: 63.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-USA-1-HT_1X2_AND_HT_BTTS||2&YES
   kind: league
   status: promising
@@ -3047,7 +3053,7 @@ strategies:
       odds_say_pct: 4.8
       return_per_100: -10.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-SUI-1-BOTH_HALVES_OVER|1.5|YES
   kind: league
   status: promising
@@ -3077,7 +3083,7 @@ strategies:
       odds_say_pct: 25.8
       return_per_100: -3.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-USA-1-HT_1X2_AND_HT_BTTS||1&YES
   kind: league
   status: promising
@@ -3107,7 +3113,7 @@ strategies:
       odds_say_pct: 6.8
       return_per_100: -16.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-ITA-2-1X2_AND_OU|2.5|X&UNDER
   kind: league
   status: promising
@@ -3137,7 +3143,7 @@ strategies:
       odds_say_pct: 19.9
       return_per_100: -19.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: league-FRA-1-HT_1X2_AND_HT_BTTS||2&YES
   kind: league
   status: promising
@@ -3167,7 +3173,7 @@ strategies:
       odds_say_pct: 4.5
       return_per_100: -2.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: money-POR-1-1X2_AND_OU|2.5|X&OVER
   kind: league
   status: promising
@@ -3192,7 +3198,7 @@ strategies:
       hit_pct: 12.9
       return_per_100: 144.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: v4-POR-1-1X2_AND_OU|2.5|X&OVER-odds > 13.95
   kind: league_rule
   status: promising
@@ -3220,7 +3226,7 @@ strategies:
       hit_pct: 12.2
       return_per_100: 173.1
   first_added: '2026-10-15'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: v4-ESP-1-OU_AND_BTTS|2.5|UNDER&YES-odds 5.61–6.48
   kind: league_rule
   status: watch
@@ -3252,7 +3258,7 @@ strategies:
       hit_pct: 22.2
       return_per_100: 27.9
   first_added: '2026-10-15'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_BTTS||1&YES-0
   kind: odds_rule
   status: proven
@@ -3284,7 +3290,7 @@ strategies:
       odds_say_pct: 10.5
       odds_filter_same_size_pct: 15.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_BTTS||1&YES-1
   kind: odds_rule
   status: proven
@@ -3316,7 +3322,7 @@ strategies:
       odds_say_pct: 8.6
       odds_filter_same_size_pct: 10.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-0
   kind: odds_rule
   status: proven
@@ -3351,7 +3357,7 @@ strategies:
       odds_say_pct: 30.3
       odds_filter_same_size_pct: 35.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-1
   kind: odds_rule
   status: proven
@@ -3386,7 +3392,7 @@ strategies:
       odds_say_pct: 30.3
       odds_filter_same_size_pct: 36.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-2
   kind: odds_rule
   status: proven
@@ -3421,7 +3427,7 @@ strategies:
       odds_say_pct: 30.8
       odds_filter_same_size_pct: 35.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_1X2_AND_HT_OU|1.5|2&UNDER-0
   kind: odds_rule
   status: proven
@@ -3452,7 +3458,7 @@ strategies:
       odds_say_pct: 24.3
       odds_filter_same_size_pct: 23.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||0-2-0
   kind: odds_rule
   status: proven
@@ -3483,7 +3489,7 @@ strategies:
       odds_say_pct: 7.7
       odds_filter_same_size_pct: 7.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||2-0-0
   kind: odds_rule
   status: proven
@@ -3518,7 +3524,7 @@ strategies:
       odds_say_pct: 15.1
       odds_filter_same_size_pct: 14.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||2-0-1
   kind: odds_rule
   status: proven
@@ -3549,7 +3555,7 @@ strategies:
       odds_say_pct: 13.3
       odds_filter_same_size_pct: 13.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||2-0-2
   kind: odds_rule
   status: proven
@@ -3584,7 +3590,7 @@ strategies:
       odds_say_pct: 11.8
       odds_filter_same_size_pct: 15.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||2-1-0
   kind: odds_rule
   status: proven
@@ -3615,7 +3621,7 @@ strategies:
       odds_say_pct: 4.9
       odds_filter_same_size_pct: 5.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_CORRECT_SCORE||2-1-1
   kind: odds_rule
   status: proven
@@ -3650,7 +3656,7 @@ strategies:
       odds_say_pct: 5.7
       odds_filter_same_size_pct: 7.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-2nd half has 3+ goals-0
   kind: odds_rule
   status: proven
@@ -3681,7 +3687,7 @@ strategies:
       odds_say_pct: 31.0
       odds_filter_same_size_pct: 32.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-2nd half has 3+ goals-1
   kind: odds_rule
   status: proven
@@ -3712,7 +3718,7 @@ strategies:
       odds_say_pct: 31.0
       odds_filter_same_size_pct: 32.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-2nd half has 3+ goals-2
   kind: odds_rule
   status: proven
@@ -3747,7 +3753,7 @@ strategies:
       odds_say_pct: 30.6
       odds_filter_same_size_pct: 34.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-5+ goals and both score-0
   kind: odds_rule
   status: proven
@@ -3778,7 +3784,7 @@ strategies:
       odds_say_pct: 23.9
       odds_filter_same_size_pct: 24.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-5+ goals and both score-1
   kind: odds_rule
   status: proven
@@ -3809,7 +3815,7 @@ strategies:
       odds_say_pct: 21.7
       odds_filter_same_size_pct: 22.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-5+ goals and both score-2
   kind: odds_rule
   status: proven
@@ -3840,7 +3846,7 @@ strategies:
       odds_say_pct: 22.7
       odds_filter_same_size_pct: 24.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_OU_AWAY|2.5|OVER-0
   kind: odds_rule
   status: proven
@@ -3875,7 +3881,7 @@ strategies:
       odds_say_pct: 39.0
       odds_filter_same_size_pct: 42.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_OU_AWAY|2.5|OVER-1
   kind: odds_rule
   status: proven
@@ -3910,7 +3916,7 @@ strategies:
       odds_say_pct: 37.9
       odds_filter_same_size_pct: 40.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_OU_AWAY|2.5|OVER-2
   kind: odds_rule
   status: proven
@@ -3945,7 +3951,7 @@ strategies:
       odds_say_pct: 35.1
       odds_filter_same_size_pct: 37.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-0
   kind: odds_rule
   status: proven
@@ -3980,7 +3986,7 @@ strategies:
       odds_say_pct: 32.8
       odds_filter_same_size_pct: 40.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-1
   kind: odds_rule
   status: proven
@@ -4015,7 +4021,7 @@ strategies:
       odds_say_pct: 32.8
       odds_filter_same_size_pct: 40.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-2
   kind: odds_rule
   status: proven
@@ -4050,7 +4056,7 @@ strategies:
       odds_say_pct: 32.8
       odds_filter_same_size_pct: 40.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-BOTH_HALVES_OVER|1.5|YES-0
   kind: odds_rule
   status: proven
@@ -4085,7 +4091,7 @@ strategies:
       odds_say_pct: 27.6
       odds_filter_same_size_pct: 31.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-BOTH_HALVES_OVER|1.5|YES-1
   kind: odds_rule
   status: proven
@@ -4120,7 +4126,7 @@ strategies:
       odds_say_pct: 27.5
       odds_filter_same_size_pct: 32.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-BOTH_HALVES_OVER|1.5|YES-2
   kind: odds_rule
   status: proven
@@ -4151,7 +4157,7 @@ strategies:
       odds_say_pct: 27.7
       odds_filter_same_size_pct: 31.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU_AND_BTTS|2.5|OVER&NO-0
   kind: odds_rule
   status: proven
@@ -4183,7 +4189,7 @@ strategies:
       odds_say_pct: 25.4
       odds_filter_same_size_pct: 29.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU_AND_BTTS|2.5|OVER&NO-1
   kind: odds_rule
   status: proven
@@ -4218,7 +4224,7 @@ strategies:
       odds_say_pct: 24.0
       odds_filter_same_size_pct: 27.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU_AND_BTTS|2.5|OVER&NO-2
   kind: odds_rule
   status: proven
@@ -4250,7 +4256,7 @@ strategies:
       odds_say_pct: 21.5
       odds_filter_same_size_pct: 26.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU|4.5|OVER-0
   kind: odds_rule
   status: proven
@@ -4285,7 +4291,7 @@ strategies:
       odds_say_pct: 28.9
       odds_filter_same_size_pct: 38.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU|4.5|OVER-1
   kind: odds_rule
   status: proven
@@ -4316,7 +4322,7 @@ strategies:
       odds_say_pct: 29.3
       odds_filter_same_size_pct: 32.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-OU|4.5|OVER-2
   kind: odds_rule
   status: proven
@@ -4347,7 +4353,7 @@ strategies:
       odds_say_pct: 28.1
       odds_filter_same_size_pct: 30.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_FT||2/2-0
   kind: odds_rule
   status: proven
@@ -4378,7 +4384,7 @@ strategies:
       odds_say_pct: 37.2
       odds_filter_same_size_pct: 37.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_FT||2/2-1
   kind: odds_rule
   status: proven
@@ -4409,7 +4415,7 @@ strategies:
       odds_say_pct: 37.2
       odds_filter_same_size_pct: 37.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_FT||2/2-2
   kind: odds_rule
   status: proven
@@ -4440,7 +4446,7 @@ strategies:
       odds_say_pct: 37.2
       odds_filter_same_size_pct: 37.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-HT_FT||X/2-0
   kind: odds_rule
   status: proven
@@ -4475,7 +4481,7 @@ strategies:
       odds_say_pct: 16.5
       odds_filter_same_size_pct: 18.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-0
   kind: odds_rule
   status: proven
@@ -4510,7 +4516,7 @@ strategies:
       odds_say_pct: 44.3
       odds_filter_same_size_pct: 46.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-1
   kind: odds_rule
   status: proven
@@ -4545,7 +4551,7 @@ strategies:
       odds_say_pct: 44.3
       odds_filter_same_size_pct: 46.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-2
   kind: odds_rule
   status: proven
@@ -4576,7 +4582,7 @@ strategies:
       odds_say_pct: 33.4
       odds_filter_same_size_pct: 33.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_BTTS||2&NO-0
   kind: odds_rule
   status: proven
@@ -4610,7 +4616,7 @@ strategies:
       odds_say_pct: 33.0
       odds_filter_same_size_pct: 37.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_BTTS||2&NO-1
   kind: odds_rule
   status: proven
@@ -4641,7 +4647,7 @@ strategies:
       odds_say_pct: 28.1
       odds_filter_same_size_pct: 27.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_BTTS||2&NO-2
   kind: odds_rule
   status: proven
@@ -4672,7 +4678,7 @@ strategies:
       odds_say_pct: 26.8
       odds_filter_same_size_pct: 26.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_BTTS||2&YES-0
   kind: odds_rule
   status: proven
@@ -4703,7 +4709,7 @@ strategies:
       odds_say_pct: 25.2
       odds_filter_same_size_pct: 21.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|1&OVER-0
   kind: odds_rule
   status: proven
@@ -4738,7 +4744,7 @@ strategies:
       odds_say_pct: 23.6
       odds_filter_same_size_pct: 26.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|1&OVER-1
   kind: odds_rule
   status: proven
@@ -4773,7 +4779,7 @@ strategies:
       odds_say_pct: 20.6
       odds_filter_same_size_pct: 21.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|1&OVER-2
   kind: odds_rule
   status: proven
@@ -4805,7 +4811,7 @@ strategies:
       odds_say_pct: 19.0
       odds_filter_same_size_pct: 20.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&OVER-0
   kind: odds_rule
   status: proven
@@ -4836,7 +4842,7 @@ strategies:
       odds_say_pct: 44.8
       odds_filter_same_size_pct: 43.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&OVER-1
   kind: odds_rule
   status: proven
@@ -4867,7 +4873,7 @@ strategies:
       odds_say_pct: 44.8
       odds_filter_same_size_pct: 43.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&OVER-2
   kind: odds_rule
   status: proven
@@ -4898,7 +4904,7 @@ strategies:
       odds_say_pct: 43.5
       odds_filter_same_size_pct: 42.5
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|2&OVER-0
   kind: odds_rule
   status: proven
@@ -4933,7 +4939,7 @@ strategies:
       odds_say_pct: 20.4
       odds_filter_same_size_pct: 26.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|2&OVER-1
   kind: odds_rule
   status: proven
@@ -4964,7 +4970,7 @@ strategies:
       odds_say_pct: 17.1
       odds_filter_same_size_pct: 18.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|4.5|2&OVER-2
   kind: odds_rule
   status: proven
@@ -4999,7 +5005,7 @@ strategies:
       odds_say_pct: 14.6
       odds_filter_same_size_pct: 22.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|1.5|2&UNDER-0
   kind: odds_rule
   status: proven
@@ -5030,7 +5036,7 @@ strategies:
       odds_say_pct: 13.3
       odds_filter_same_size_pct: 10.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|1.5|2&UNDER-1
   kind: odds_rule
   status: proven
@@ -5061,7 +5067,7 @@ strategies:
       odds_say_pct: 11.4
       odds_filter_same_size_pct: 10.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&UNDER-0
   kind: odds_rule
   status: proven
@@ -5092,7 +5098,7 @@ strategies:
       odds_say_pct: 22.6
       odds_filter_same_size_pct: 20.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&UNDER-1
   kind: odds_rule
   status: proven
@@ -5123,7 +5129,7 @@ strategies:
       odds_say_pct: 19.3
       odds_filter_same_size_pct: 18.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-1X2_AND_OU|2.5|2&UNDER-2
   kind: odds_rule
   status: proven
@@ -5154,7 +5160,7 @@ strategies:
       odds_say_pct: 21.3
       odds_filter_same_size_pct: 17.5
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||0-2-0
   kind: odds_rule
   status: proven
@@ -5185,7 +5191,7 @@ strategies:
       odds_say_pct: 8.6
       odds_filter_same_size_pct: 9.8
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||0-2-1
   kind: odds_rule
   status: proven
@@ -5216,7 +5222,7 @@ strategies:
       odds_say_pct: 7.9
       odds_filter_same_size_pct: 8.7
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||0-3-0
   kind: odds_rule
   status: proven
@@ -5247,7 +5253,7 @@ strategies:
       odds_say_pct: 4.8
       odds_filter_same_size_pct: 5.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||0-3-1
   kind: odds_rule
   status: proven
@@ -5278,7 +5284,7 @@ strategies:
       odds_say_pct: 4.8
       odds_filter_same_size_pct: 5.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||0-3-2
   kind: odds_rule
   status: proven
@@ -5309,7 +5315,7 @@ strategies:
       odds_say_pct: 4.3
       odds_filter_same_size_pct: 4.5
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||3-0-0
   kind: odds_rule
   status: proven
@@ -5340,7 +5346,7 @@ strategies:
       odds_say_pct: 8.2
       odds_filter_same_size_pct: 10.6
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||3-1-0
   kind: odds_rule
   status: proven
@@ -5371,7 +5377,7 @@ strategies:
       odds_say_pct: 7.0
       odds_filter_same_size_pct: 7.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||4-0-0
   kind: odds_rule
   status: proven
@@ -5402,7 +5408,7 @@ strategies:
       odds_say_pct: 4.2
       odds_filter_same_size_pct: 3.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-CORRECT_SCORE||4-1-0
   kind: odds_rule
   status: proven
@@ -5433,7 +5439,7 @@ strategies:
       odds_say_pct: 3.4
       odds_filter_same_size_pct: 2.4
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-GOAL_RANGE||6+-0
   kind: odds_rule
   status: proven
@@ -5464,7 +5470,7 @@ strategies:
       odds_say_pct: 15.8
       odds_filter_same_size_pct: 20.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-GOAL_RANGE||6+-1
   kind: odds_rule
   status: proven
@@ -5495,7 +5501,7 @@ strategies:
       odds_say_pct: 15.9
       odds_filter_same_size_pct: 20.2
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-Winner by 3+ goals-0
   kind: odds_rule
   status: proven
@@ -5530,7 +5536,7 @@ strategies:
       odds_say_pct: 40.5
       odds_filter_same_size_pct: 40.9
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-Winner by 3+ goals-1
   kind: odds_rule
   status: proven
@@ -5562,7 +5568,7 @@ strategies:
       odds_say_pct: 30.5
       odds_filter_same_size_pct: 34.3
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tree-Winner by 3+ goals-2
   kind: odds_rule
   status: proven
@@ -5597,7 +5603,7 @@ strategies:
       odds_say_pct: 24.5
       odds_filter_same_size_pct: 34.0
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-3
   kind: tipster
   status: proven
@@ -5622,7 +5628,7 @@ strategies:
       normal_pct: 21.8
       return_per_100: -16.1
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-6a
   kind: tipster
   status: proven
@@ -5654,7 +5660,7 @@ strategies:
       normal_pct: 32.3
       return_per_100: -14.6
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-7
   kind: tipster
   status: proven
@@ -5683,7 +5689,7 @@ strategies:
       normal_pct: 32.3
       return_per_100: -15.8
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-9a
   kind: tipster
   status: proven
@@ -5715,7 +5721,7 @@ strategies:
       normal_pct: 32.3
       return_per_100: -17.5
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-9b
   kind: tipster
   status: proven
@@ -5747,7 +5753,7 @@ strategies:
       normal_pct: 7.3
       return_per_100: -49.7
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-11
   kind: tipster
   status: proven
@@ -5777,7 +5783,7 @@ strategies:
       normal_pct: 7.3
       return_per_100: -18.7
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-12
   kind: tipster
   status: proven
@@ -5810,7 +5816,7 @@ strategies:
       normal_pct: 18.8
       return_per_100: -19.6
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-13
   kind: tipster
   status: proven
@@ -5839,7 +5845,7 @@ strategies:
       normal_pct: 21.8
       return_per_100: -28.0
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-14
   kind: tipster
   status: proven
@@ -5868,7 +5874,7 @@ strategies:
       normal_pct: 56.8
       return_per_100: -13.5
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-16h
   kind: tipster
   status: proven
@@ -5901,7 +5907,7 @@ strategies:
       normal_pct: 25.5
       return_per_100: -18.5
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-16a
   kind: tipster
   status: proven
@@ -5934,7 +5940,7 @@ strategies:
       normal_pct: 25.5
       return_per_100: -18.5
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: tipster-19
   kind: tipster
   status: proven
@@ -5966,7 +5972,7 @@ strategies:
       normal_pct: 14.7
       return_per_100: -4.1
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: watch-ht02-away-fav
   kind: watch
   status: watch
@@ -5992,7 +5998,7 @@ strategies:
       normal_pct: 4.4
       odds_say_pct: 10.1
   first_added: '2026-10-14'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: system-goals-coupon
   kind: system
   status: promising
@@ -6096,7 +6102,7 @@ strategies:
       return_per_100: 151.4
       system_345_return_per_100: 13857.3
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: system-6plus-lowest
   kind: system
   status: info
@@ -6166,7 +6172,7 @@ strategies:
       return_per_100: -29.6
       system_345_return_per_100: -66.6
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: watch-htft-fav-ahead-draw-home
   kind: watch
   status: watch
@@ -6202,7 +6208,7 @@ strategies:
       normal_pct: 5.5
       return_per_100: 64.4
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: watch-htft-fav-ahead-draw-away
   kind: watch
   status: watch
@@ -6238,7 +6244,7 @@ strategies:
       normal_pct: 5.5
       return_per_100: -41.6
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: watch-POR-1-HT_FT||1/X
   kind: league_rule
   status: watch
@@ -6264,7 +6270,7 @@ strategies:
       hit_pct: 4.3
       return_per_100: 10.0
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: htft3-X/1-odds-5
   kind: odds_rule
   status: proven
@@ -6290,7 +6296,7 @@ strategies:
       hit_pct: 40.0
       normal_pct: 14.7
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: htft3-X/2-rule
   kind: odds_rule
   status: proven
@@ -6319,7 +6325,7 @@ strategies:
       hit_pct: 19.0
       normal_pct: 10.7
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: htft3-1/2-rule
   kind: odds_rule
   status: proven
@@ -6348,7 +6354,7 @@ strategies:
       hit_pct: 3.4
       normal_pct: 2.4
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: htft3-2/1-rule
   kind: odds_rule
   status: proven
@@ -6377,7 +6383,7 @@ strategies:
       hit_pct: 3.6
       normal_pct: 2.4
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: bb-odds-5
   kind: odds_band
   status: promising
@@ -6402,7 +6408,7 @@ strategies:
       hit_pct: 11.8
       normal_pct: 7.3
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: bb-rule
   kind: odds_rule
   status: proven
@@ -6432,7 +6438,7 @@ strategies:
       hit_pct: 10.9
       normal_pct: 7.2
   first_added: '2026-10-16'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-0-chance-5
   kind: odds_band
   status: proven
@@ -6458,7 +6464,7 @@ strategies:
       hit_pct: 15.8
       normal_pct: 6.45
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-0-rule
   kind: odds_rule
   status: proven
@@ -6487,7 +6493,7 @@ strategies:
       hit_pct: 15.9
       normal_pct: 6.45
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-1-chance-5
   kind: odds_band
   status: proven
@@ -6513,7 +6519,7 @@ strategies:
       hit_pct: 9.8
       normal_pct: 7.12
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-2-chance-5
   kind: odds_band
   status: proven
@@ -6539,7 +6545,7 @@ strategies:
       hit_pct: 14.9
       normal_pct: 3.98
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-2-rule
   kind: odds_rule
   status: proven
@@ -6568,7 +6574,7 @@ strategies:
       hit_pct: 14.5
       normal_pct: 3.98
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-0-3-chance-10
   kind: odds_band
   status: proven
@@ -6594,7 +6600,7 @@ strategies:
       hit_pct: 6.1
       normal_pct: 2.25
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-1-0-chance-5
   kind: odds_band
   status: proven
@@ -6620,7 +6626,7 @@ strategies:
       hit_pct: 16.1
       normal_pct: 8.82
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-1-3-chance-10
   kind: odds_band
   status: proven
@@ -6646,7 +6652,7 @@ strategies:
       hit_pct: 3.5
       normal_pct: 2.6
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-1-3-rule
   kind: odds_rule
   status: proven
@@ -6675,7 +6681,7 @@ strategies:
       hit_pct: 4.5
       normal_pct: 2.6
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-1-4-chance-5
   kind: odds_band
   status: proven
@@ -6701,7 +6707,7 @@ strategies:
       hit_pct: 3.6
       normal_pct: 1.03
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-2-0-chance-5
   kind: odds_band
   status: proven
@@ -6727,7 +6733,7 @@ strategies:
       hit_pct: 14.4
       normal_pct: 6.61
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-3-0-chance-5
   kind: odds_band
   status: proven
@@ -6753,7 +6759,7 @@ strategies:
       hit_pct: 16.5
       normal_pct: 3.75
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-3-1-rule
   kind: odds_rule
   status: proven
@@ -6782,7 +6788,7 @@ strategies:
       hit_pct: 11.4
       normal_pct: 4.43
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-3-3-chance-10
   kind: odds_band
   status: proven
@@ -6808,7 +6814,7 @@ strategies:
       hit_pct: 2.0
       normal_pct: 1.41
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-4-0-chance-5
   kind: odds_band
   status: proven
@@ -6834,7 +6840,7 @@ strategies:
       hit_pct: 4.8
       normal_pct: 1.44
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-4-1-chance-5
   kind: odds_band
   status: proven
@@ -6860,7 +6866,7 @@ strategies:
       hit_pct: 4.3
       normal_pct: 1.48
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-4-2-chance-5
   kind: odds_band
   status: proven
@@ -6886,7 +6892,7 @@ strategies:
       hit_pct: 2.6
       normal_pct: 1.15
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-FT-OTHER-chance-5
   kind: odds_band
   status: proven
@@ -6912,7 +6918,7 @@ strategies:
       hit_pct: 10.7
       normal_pct: 3.18
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-0-0-chance-5
   kind: odds_band
   status: proven
@@ -6938,7 +6944,7 @@ strategies:
       hit_pct: 45.4
       normal_pct: 27.87
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-0-1-chance-10
   kind: odds_band
   status: proven
@@ -6964,7 +6970,7 @@ strategies:
       hit_pct: 21.5
       normal_pct: 15.46
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-0-1-rule
   kind: odds_rule
   status: proven
@@ -6993,7 +6999,7 @@ strategies:
       hit_pct: 27.6
       normal_pct: 15.46
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-0-2-chance-5
   kind: odds_band
   status: proven
@@ -7019,7 +7025,7 @@ strategies:
       hit_pct: 12.5
       normal_pct: 4.36
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-1-0-rule
   kind: odds_rule
   status: proven
@@ -7048,7 +7054,7 @@ strategies:
       hit_pct: 35.5
       normal_pct: 19.4
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-1-2-rule
   kind: odds_rule
   status: proven
@@ -7078,7 +7084,7 @@ strategies:
       hit_pct: 7.5
       normal_pct: 3.11
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-2-0-chance-5
   kind: odds_band
   status: proven
@@ -7104,7 +7110,7 @@ strategies:
       hit_pct: 14.5
       normal_pct: 7.09
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-2-1-chance-5
   kind: odds_band
   status: proven
@@ -7130,7 +7136,7 @@ strategies:
       hit_pct: 7.1
       normal_pct: 3.78
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-2-2-rule
   kind: odds_rule
   status: proven
@@ -7159,7 +7165,7 @@ strategies:
       hit_pct: 1.9
       normal_pct: 1.06
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-OTHER-chance-5
   kind: odds_band
   status: proven
@@ -7185,7 +7191,7 @@ strategies:
       hit_pct: 11.1
       normal_pct: 6.09
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-HT-OTHER-rule
   kind: odds_rule
   status: proven
@@ -7214,7 +7220,7 @@ strategies:
       hit_pct: 11.4
       normal_pct: 6.09
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: pack-CORRECT_SCORE-high-3-5
   kind: pack
   status: proven
@@ -7252,7 +7258,7 @@ strategies:
       avg_odds: 6.38
       return_per_100: -30.9
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-high-FT-3-2-rule
   kind: odds_rule
   status: proven
@@ -7281,7 +7287,7 @@ strategies:
       hit_pct: 5.3
       normal_pct: 3.27
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'
 - id: cs-high-FT-2-3-rule
   kind: odds_rule
   status: proven
@@ -7310,4 +7316,4 @@ strategies:
       hit_pct: 3.4
       normal_pct: 2.5
   first_added: '2026-10-17'
-  last_confirmed: '2026-10-17'
+  last_confirmed: '2026-10-18'

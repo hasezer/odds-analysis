@@ -70,6 +70,8 @@
 - `corners_study.py` (corners second pass after `v5_corners.py`: fair race and calibration; nothing stored, lesson in the book)
 - `live_minutes.py` (live tables by minute from match events: a PREVIEW, events cover only ~300 usable matches so far;
   re-run when events cover 2,000+ matches)
+- `six_waves.py` (do 6+ goal games come in waves every few weeks? No: the count follows the number of matches, the
+  share follows the prices; `output/six_waves.png` / `.xlsx`; lesson in the book)
 
 ## Known data traps
 - **HT_2H_BTTS:** prices are label-swapped for 211 matches in Oct–Nov 2025 (excluded in `miner_data.py`); there YES/YES sits at 1.10–2.02, real prices start at 4.66. The price exists only from 2025/26.
