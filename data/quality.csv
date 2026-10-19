@@ -40648,3 +40648,5 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-18T11:11:53+00:00,backfill,coverage_events,POR-1 2022/23,ok,0.0,0 of 1 finished matches
 2026-10-18T11:11:53+00:00,backfill,coverage_stats,POR-1 2022/23,ok,0.0,0 of 1 finished matches
 2026-10-18T11:11:53+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-19T01:17:16+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-19T06:16:44+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
