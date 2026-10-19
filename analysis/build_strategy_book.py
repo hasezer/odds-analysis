@@ -183,6 +183,13 @@ LESSONS = [
     "p 0.06-0.08; as a signal, 5 weeks after a hot week gave 0.94 / 1.11 / 1.08x expected); no waves inside a league; "
     "after international breaks 0.97 / 1.51 / 0.94x; weeks 3-4 of the month 1.07 / 1.15 / 0.97x. 6+ bets lose 32 per "
     "100 at closing odds.",
+    "Each league's lowest HT/FT 2/1, 1/2, 1/X ('1/0'), 2/X ('2/0') odds of the week (htft_weekly_lowest.py; 2,027 "
+    "league-weeks): the week's lowest hits a bit more than an average game but below break-even: 1/2 3.5% (fair "
+    "3.2%, needs 4.3%) -20 per 100; 2/1 2.7% -44; 1/X 5.9% -25; 2/X 6.4% -18 (lowest 2 or 3 the same). League by "
+    "league, 6 of 104 league x bet pairs paid in all three seasons (1/2 in NED-1, NED-2, SCO-1, SUI-1; 2/1 NED-2; "
+    "2/X POR-1, 5-8 wins each) vs 3.4 on average and 7 at the 95th pct with outcomes redrawn from the fair chance: "
+    "luck. The week's lowest 1/2 game ends 2/2 30%, X/2 16%, 1/1 14%, X/X 14%, 1/X 5.7%, 1/2 3.5%; backing 1/2 + "
+    "1/X together hits 9.2% and returns -18 per 100 (lowest 2/1 game: ends 1/1 42%; 2/1 + 2/X -37).",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",

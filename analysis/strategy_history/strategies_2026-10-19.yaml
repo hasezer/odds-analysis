@@ -1,0 +1,7326 @@
+built_on: '2026-10-19'
+built_from: seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)
+lessons:
+- 'No strategy beats Nesine''s prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule stacking and
+  ''price + corrections'' all lost money on unseen seasons (reports: ML_REPORT, MINER_REPORT, RULES_V3_REPORT). Only exception
+  so far: Portugal draw with 3+ goals (promising).'
+- For hit rate on high-odds bets, the bet's own odds are the best filter (top 1% = 2.8x normal). Machine learning, rule counts
+  and 'odds + corrections' were all worse on unseen seasons (HIGH_ODDS_REPORT).
+- Rules raise hit rates 1.5-3x, but the odds fall with them; only ~17% of readable rules beat a plain odds filter of the same
+  size, and confirmed rules do not hit more than the odds of their own matches predict.
+- Team-level 'beats the price' effects do not persist from season to season (same count as shuffled data).
+- League tendencies that beat the normal rate and the goal model every season still LOSE 10-25% at Nesine's real odds (Argentina
+  draws, MLS away 3+, Bundesliga goals...). Only Portugal draw with 3+ goals made money every season; Ligue 1 half-time 'away
+  ahead & both scored' is near break-even (+19.6 / -2.5 / -2.7).
+- 'Rule hunt v4 (money scans, every bet type x odds band, Nesine''s cut, league, weekday, kick-off hour, month, season stage,
+  rest days, league x odds): nothing made money in all three seasons except Portugal draws with 3+ goals (strongest at odds
+  > 13.95) and a weak La Liga 1-1 slice; shuffled labels give ~0 (RULES_V4_REPORT).'
+- 'Portugal ''draw & over 2.5'' is really a Portugal 2-2 effect: 53 of its 62 wins were 2-2 (8 were 3-3), 22 teams, every
+  part of the season, every odds band >= 0.95. Portugal draws are high-scoring for its goal rate (2-2 is 75% as common as
+  1-1; Spain 28%, Argentina 18%) and Nesine prices X & under 2.5 there at 0.51-0.64.'
+- 'Rule hunt v5 (new information): corners from team corner/cross/shot stats predict exactly as well as Nesine''s line (error
+  2.68 vs 2.68) and corner bets need 61-70% to break even (lose 8-18%); teams'' first/second-half habits do not persist (correlation
+  ~0); late-season motivation from rebuilt league tables shows no steady effect; popular teams (Turkey big 4, global giants)
+  are NOT over-priced - their opponents lose 41-56%; a money scan of 915 non-odds conditions x 162 bet types (~148,000 cells)
+  kept only Portugal draw with 3+ goals (shuffled: 0) (RULES_V5_REPORT).'
+- 'Every bet type loses over time at Nesine''s closing odds: the least bad lose ~11-15 per 100 (both score in both halves,
+  1st-half 1-1, BTTS yes, 2nd-half BTTS, low totals); correct scores lose ~47 on average and capped long shots 55-93; HT/FT
+  ~26; corners ~18 (output/bet_type_returns.xlsx).'
+- 'Owner''s tipster list (16 Oct 2026, tipster_rules.py, output/tipster_rules.xlsx): 21 of 22 rules testable; many raise the
+  hit rate (e.g. 0-1 goals odds > 4.20 -> over 3.5: 42% vs 30%; HT score ''other'' < 5 & score ''other'' < 8 -> 6+ goals:
+  23% vs 6%) but every rule stays below break-even (-8 to -33 per 100); ''all three half-by-half BTTS bets every game'' loses
+  16%; the only plus (#21, HT/FT 2/1, +88) is 2 wins in 34 matches.'
+- 'Tipster rule 5 by league (tipster_rule5.py, output/rule5_by_league.xlsx/.png): a higher ''total goals 0-1'' price raises
+  6+ goals in every league (all leagues: 3.6% at <= 3.50 -> 19-23% above 7.00), but no league x odds range made money in all
+  three seasons (0 cells; shuffled leagues 0.6). Closest: Switzerland, 0-1 > 5.00: 19% vs break-even 18% (-0.4 per 100, 126
+  bets).'
+- '6+ goals deep dive (SIX_PLUS_REPORT): Nesine''s 6+ price is the best 6+ signal; 555 signals, structure ratios, a small
+  combined model and 5,168 confirmed threshold rules add nothing beyond it (1 rule beat the cheapest-6+ filter of the same
+  size). Nesine OVERSTATES 6+ almost everywhere; 6+ loses 22-42 per 100 at every odds level. If you expect a 6+ game, over
+  3.5 (-18) or 1st-half over 1.5 (-16) lose far less than 6+ (-29). 75% of 6+ games are shootouts; 3-3 is the most common
+  6+ score.'
+- 'System coupons (owner''s 10 games, system 3-4-5; SIX_SYSTEM_REPORT): a combo returns the PRODUCT of its games'' returns,
+  so the cut is multiplied. 6+ returns ~0.70 per unit in the games a 6+ player picks, so 10 lowest-6+ coupons lost 87% (daily)
+  / ~80% (weekend pool); 0 of 20,000 simulated seasons ended up. Picking from the whole weekend doubles the chance of 3+ hits
+  (8% -> 15-18% of coupons) but not the return; at those odds (~7-8) 3 hits only gives the stake back.'
+- '6+ games are NOT linked between matches (same league same day: joint 6+ lift 0.96, different leagues 0.99, placebo 7 days
+  apart 1.06; goal-residual correlation ~0); league ''hot streaks'' and same-day momentum predict nothing (correlation ~0,
+  beyond-price AUC ~0.5) -> no correlated-combo edge for system coupons.'
+- 'Which bet per game matters more than which games: in the same 10 games, ''draw & over 2.5'' returns ~0.9 per unit vs ~0.7
+  for 6+; over 3.5 / 1st-half over 1.5 / 4-5 goals ~0.82; BTTS ~0.86. Within a bet type, odds bands that look better (e.g.
+  draw & over 2.5 at 14-19) are not beyond luck (no-edge twin gives as many).'
+- '6+ value by league does not persist (season-to-season correlation 0.04-0.30); ''draw & over 2.5'' value by league does
+  (8 best leagues of earlier seasons: 1.00 / 1.19 next season vs 0.78 for the rest; without Portugal 0.92 / 1.05; shuffled
+  leagues p <= 0.06) - Portugal is the only league clearly above 1.'
+- 'Both teams score in both halves (1. Yari / 2. Yari KG Evet/Evet; data only since Nov 2025, 7,190 games): 6.2% won, 0.89
+  back per unit overall; the most likely games (odds <= 10) return only 0.59-0.74, odds 12-20 return 0.91-1.04. The tipster
+  way (3 lowest odds of the day) returned 0.77 per unit; as daily trebles 1 win in 254 days. One season only: not confirmed.
+  Outside tipsters'' picks are graded in tipster_log.csv / tipster_log.py.'
+- 'HT/FT deep dive 2 (HTFT2_REPORT, favourite''s side): every HT/FT result loses at every favourite strength (0.41-0.89 back
+  per unit; least bad: favourite ahead at HT & wins with a 70%+ favourite, 0.84). After each half-time state Nesine''s HT/FT
+  gives the UNDERDOG 1-10 points too much, so the underdog''s results lose most. 180 result x favourite x goals cells + 86
+  own-odds deciles + 45 result x favourite cells: 1 cell at break-even in 2024/25 and 2025/26 (luck twin 1.1 on average) -
+  kept as a watch lead. Nesine''s most likely HT/FT result happens as often as it says (63% vs 55% when it says 50%+). The
+  2nd-half share of goals is priced right (55.5% vs 56.0%) and no league keeps scoring late (season-to-season correlation
+  -0.42 / 0.48 / -0.28). First-half goals barely change the chance of 2nd-half goals; the pre-match goal odds do.'
+- 'Half-time ideas are cheaper outside the HT/FT market: both score in both halves 0.89, half-time 1-1 0.88, both score in
+  the 2nd half 0.87, 1st half over 0.5 0.86, 2nd-half draw / favourite wins 2nd half 0.84 per unit, against 0.63-0.76 for
+  HT/FT results. Portugal HT/FT X/X loses 18-39% (its draws are high-scoring).'
+- 'HT/FT 1/X, 2/X, X/1, X/2, 1/2, 2/1 (HTFT3_REPORT, hit rate only): the result''s own HT/FT odds are the sign. In a fair
+  race (each technique picks 1 game in 10 per season, 2025/26 + 2026/27) the own odds give X/1 1.4x, X/2 1.8x, 1/2 1.6x, 2/1
+  1.3x, 1/X 1.0x, 2/X 1.2x normal; an HT/FT price rebuilt from Nesine''s other markets, the best of ~390 other signs and logistic
+  regression rank games the same way; boosted trees, team comeback / blown-lead habits, league history and calendar do worse.
+  The best 2-condition rules (~28,000 per result, luck-controlled) hit no more often than the same number of lowest-odds games.
+  1/X and 2/X (leader pegged back to a draw) can''t be picked (~5-7%). Compare techniques on the same number of games: groups
+  of different sizes made the other markets look useful for 1/2 and 2/1.'
+- 'Correct scores: Nesine listed them for only 33% of 2025/26 matches (99% in 2024/25, 93% in 2026/27), and its correct-score
+  odds got longer after 2024/25 (sum of 1/odds 1.60 -> 1.50). Fixed odds cut-offs on scores stop firing (2-1 odds <= 6.75:
+  441 games in 2024/25, 1 in each later season); use the normalised chance.'
+- 'Both teams score in both halves (BB_REPORT, hit rate only): the sign is how many goals BOTH teams are expected to score
+  (it needs 4+ goals; 2-2 and 3-2 most often). Fair race (each technique picks its top 5% of games per season, 2025/26 + 2026/27):
+  a model from Nesine''s goal markets 1.9x normal (11.7%; top 2%: 12.9%), Nesine''s own both-halves price the same, BTTS-yes
+  chance and logistic regression the same; boosted trees, team habits (scoring in both halves), a statistics-only team model,
+  league history (its extra beyond the model does not carry over: corr 0.04) and calendar do worse. The best rules (e.g. BTTS
+  yes <= 1.36 & 1st-half under 1.5 >= 1.49: 12.3/10.7/10.9%) hit the same. The halves are almost independent: after 1st-half
+  BTTS, 2nd-half BTTS 28% (21-33% by pre-match 2nd-half goal expectation). The cheapest both-halves odds (<= 8.34) lose 16-28
+  per 100.'
+- 'HT_BTTS / 2H_BTTS: the NO side is missing for ~45% of matches, so their ''fair'' chance exists only for a biased subset;
+  use the YES odds. Label-swapped HT_2H_BTTS prices show YES/YES at 1.10-2.02 (real ones 4.66+): a YES/YES odds floor of 4
+  screens them out.'
+- 'Correct scores (cs_study.py; 35 full- and half-time scores, 0-5/0-6/1-5/6-0 too rare): Nesine''s own score chance and a
+  goal-markets model rank games the same for every score. Fair race (top 5% of games, 2025/26 + 2026/27): 0-0 2.2x, 1-0 1.9x,
+  0-1 1.9x, 2-0 2.0x, 3-0 3.6x, 0-3 2.9x, 4-0 3.6x normal, but 1-1 1.5x, 2-1 1.7x, 1-2 1.6x, 2-2 1.3x, 3-2 1.1x; half time
+  0-0 1.6x, 1-0 1.5x, 0-1 1.7x, 2-0 2.1x, 0-2 2.9x, 1-1 1.1x. One-sided scores can be picked, level and middle scores hardly.
+  The best 2-condition rules beat luck for most scores but matched or beat the plain price on the same games only for 0-0,
+  0-2, 1-3, 3-1 and HT 0-1, 1-0, 1-2, 2-2, other.'
+- 'Correct scores, no help beyond the price: team score habits (draw, 0-0, 1-1, low-scoring and half-time-draw rates, last
+  20 and previous season), league x score tendencies (20 of 1,014 pairs beat normal and the price every season; shuffled leagues
+  give ~10, 95th pct 17), calendar.'
+- 'Correct-score prices: 2-1, 1-2, 2-2 (full time) and 1-1 (half time) happen 10-20% more than Nesine''s evenly spread chance
+  and lose least (-25 to -28 per 100; half-time 1-1 -12); scores with a 5-6 goal side happen 2-5x less than priced (-60 to
+  -92 per 100). Every score loses at closing odds.'
+- 'Live, half time -> full time: the half-time score is the final score ~20% of the time (0-0 24%): 27-29% when few 2nd-half
+  goals were expected before kick-off (bottom third), 15-18% when many. Half-time 2-0 ends 3-0 (19%) more often than 2-0 (17%);
+  half-time 1-1 ends 1-1 21%, 2-1 19%, 1-2 15%.'
+- 'High-scoring correct scores 3-2, 2-3, 3-3, 2-4, 4-2 (cs_high.py, focused second pass): Nesine''s own score chance, the
+  goals model and the markets that describe them (result & over 4.5, both teams 2+, 4-5 / 6+ goals) pick the same games. 3-3,
+  2-4, 4-2 reach 2.5-4x normal on their top 5% (from 1-1.5% to ~4%), 3-2 and 2-3 only 1.1-1.7x. Rules: 3-2 and 2-3 stored
+  (1.3-1.7x in later seasons); 3-3 rules collapsed in 2026/27 (0 winners in 197 games); 2-4 and 4-2 too few winners. The three
+  most likely of the five together in the top 5% of games: 11.8 / 8.7 / 11.0% vs 6-7% every game (stored; -31 to -39 per 100).
+  Live: after half-time 2-2 the game ends 2-3 17%, 3-2 16%, 3-3 11%, 4-2 8%; after 2-1, 3-2 12%; after 1-2, 2-3 12%.'
+- 'How teams play vs their results (perf_study.py; team match statistics, last 10 matches): shots, shots on target, possession,
+  corners and ''luck'' (goals minus what the shots on target were worth at the league''s rate) add nothing beyond Nesine''s
+  price for home win, draw, away win, over/under 2.5 and BTTS: out-of-sample log-loss gain about 0 (-1.1 to +0.9 per 1,000),
+  the same AUC. The 5-10% of games where the stats disagree most with the price beat shuffled stats in 2 of 28 checks, neither
+  repeating in the other season; Nesine''s cut leaves at most 9 bets a season with a 5% edge. Backing the ''unlucky'' side
+  (results far below its shots) hits exactly its fair chance (home 35-38% vs 34-37%, away 19-23% vs 24-26%): -13 to -31 per
+  100.'
+- 'Corners, second pass (corners_study.py; first pass v5_corners.py): Nesine''s corner cut is 21-22% on every line (8.5-12.5)
+  and corners are mostly noise (Nesine''s expected corners correlate 0.16 with the real total, team habits 0.14, goal expectation
+  0.13). Nesine''s line already blends team corner habits (corr 0.69), the league average (0.71) and goal expectation (0.48).
+  Fair race (top 10% of games, 2025/26 + 2026/27): Nesine''s own corner chance picks best or ties (over 8.5 67%, over 9.5
+  59%, under 10.5 66%); team habits, same-venue habits, favourite strength and a fitted ''price + all signs'' model add nothing
+  beyond shuffled-sign luck. Low goal expectation picks under 9.5 / 10.5 corners about as well (61% / 69%) and loses least
+  (-7 to -12 per 100). All 99 price bands with 300+ bets lose 9-30 per 100; no corner strategy is stored.'
+- 'Own play (own_play.py; every pick since July 2025 at closing odds, 1 stake each, 5,000 simulated years): the hit-rate strategies
+  lose steadily when bet flat: both teams score in both halves -25 per 100 (38 picks a month, a typical year -110 stakes,
+  a 1-in-20 losing run of 61, bankroll ~200 stakes), the high-scoring score pack -38, correct-score bands and rules -27, every
+  single-bet strategy together -23. Portugal draw & over 2.5 singles +81 per 100 (23 a month, ahead in 99% of simulated years,
+  losing runs up to ~50, bankroll ~60 stakes; found on these same seasons, so the tracker must confirm it). The Goals coupon
+  as a 3-4-5 system is a lottery: one weekend in 104 since Aug 2024 (7 Aug 2026, 512x the stake) decides it; without it -80%;
+  37% chance to end a year ahead.'
+- '6+ goal ''waves'' (six_waves.py; 19,810 games, 141 weeks; luck control: every game redrawn 2,000 times from its own 6+
+  price): the weekly NUMBER of 6+ games follows the number of matches played (correlation 0.86; international-break weeks
+  25-60 matches, busy weeks 250+), while the SHARE stays at what Nesine''s prices expect (6.3%). Week-to-week swings are within
+  luck (p 0.11); no cycle of 1-10 weeks beyond luck (strongest: 5-6 weeks, p 0.06-0.08; as a signal, 5 weeks after a hot week
+  gave 0.94 / 1.11 / 1.08x expected); no waves inside a league; after international breaks 0.97 / 1.51 / 0.94x; weeks 3-4
+  of the month 1.07 / 1.15 / 0.97x. 6+ bets lose 32 per 100 at closing odds.'
+- 'Each league''s lowest HT/FT 2/1, 1/2, 1/X (''1/0''), 2/X (''2/0'') odds of the week (htft_weekly_lowest.py; 2,027 league-weeks):
+  the week''s lowest hits a bit more than an average game but below break-even: 1/2 3.5% (fair 3.2%, needs 4.3%) -20 per 100;
+  2/1 2.7% -44; 1/X 5.9% -25; 2/X 6.4% -18 (lowest 2 or 3 the same). League by league, 6 of 104 league x bet pairs paid in
+  all three seasons (1/2 in NED-1, NED-2, SCO-1, SUI-1; 2/1 NED-2; 2/X POR-1, 5-8 wins each) vs 3.4 on average and 7 at the
+  95th pct with outcomes redrawn from the fair chance: luck. The week''s lowest 1/2 game ends 2/2 30%, X/2 16%, 1/1 14%, X/X
+  14%, 1/X 5.7%, 1/2 3.5%; backing 1/2 + 1/X together hits 9.2% and returns -18 per 100 (lowest 2/1 game: ends 1/1 42%; 2/1
+  + 2/X -37).'
+- 'No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the 2026/27 surplus
+  (mostly August) is a one-off.'
+- Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.
+- '''Fair price'' with the cut spread evenly is biased for short odds (Nesine has minimum odds): judge rules by the hit rate
+  needed to break even at the odds paid, not by the ''fair'' chance.'
+- 2026/27 (so far) has more goals than the odds expect in all leagues; it is not a yearly pattern (no month repeats it in
+  2024/25 or 2025/26). Remove this drift before calling a rule 'beyond the odds'.
+- 'Data traps: HT_2H_BTTS prices are label-swapped for 211 matches in Oct-Nov 2025 (excluded); 37 TUR-1 ''macko*'' placeholder
+  fixtures (excluded); referee data is empty; odds movement exists for only ~11 settled matches.'
+strategies:
+- id: band-1X2_AND_BTTS||2&NO-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||2&NO
+  bet_name: Result & both score 2 & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Yok'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&NO
+    op: <=
+    odds: 2.380000114440918
+  summary: Result & both score 2 & no when its odds are ≤ 2.38 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 583
+      hit_pct: 36.0
+      normal_pct: 15.1
+      avg_odds: 2.05
+    2025/26:
+      matches: 305
+      hit_pct: 44.6
+      normal_pct: 15.1
+      avg_odds: 2.07
+    2026/27:
+      matches: 65
+      hit_pct: 47.7
+      normal_pct: 14.7
+      avg_odds: 2.12
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_BTTS||2&NO-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||2&NO
+  bet_name: Result & both score 2 & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Yok'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&NO
+    op: <=
+    odds: 2.7799999713897705
+  summary: Result & both score 2 & no when its odds are ≤ 2.78 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 1103
+      hit_pct: 32.7
+      normal_pct: 15.1
+      avg_odds: 2.3
+    2025/26:
+      matches: 655
+      hit_pct: 34.8
+      normal_pct: 15.1
+      avg_odds: 2.36
+    2026/27:
+      matches: 143
+      hit_pct: 38.5
+      normal_pct: 14.7
+      avg_odds: 2.37
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_BTTS||2&YES-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||2&YES
+  bet_name: Result & both score 2 & yes
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Var'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 2.6600000858306885
+  summary: Result & both score 2 & yes when its odds are ≤ 2.66 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 565
+      hit_pct: 29.2
+      normal_pct: 14.5
+      avg_odds: 2.33
+    2025/26:
+      matches: 307
+      hit_pct: 34.5
+      normal_pct: 15.3
+      avg_odds: 2.37
+    2026/27:
+      matches: 107
+      hit_pct: 33.6
+      normal_pct: 15.2
+      avg_odds: 2.36
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_BTTS||2&YES-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||2&YES
+  bet_name: Result & both score 2 & yes
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Var'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 3.0799999237060547
+  summary: Result & both score 2 & yes when its odds are ≤ 3.08 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 1067
+      hit_pct: 26.0
+      normal_pct: 14.5
+      avg_odds: 2.58
+    2025/26:
+      matches: 671
+      hit_pct: 31.6
+      normal_pct: 15.3
+      avg_odds: 2.65
+    2026/27:
+      matches: 202
+      hit_pct: 30.2
+      normal_pct: 15.2
+      avg_odds: 2.61
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_BTTS||X&NO-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||X&NO
+  bet_name: Result & both score X & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MSX & Yok'
+  criteria:
+  - bet: 1X2_AND_BTTS||X&NO
+    op: <=
+    odds: 5.230000019073486
+  summary: Result & both score X & no when its odds are ≤ 5.23 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 611
+      hit_pct: 14.2
+      normal_pct: 7.2
+      avg_odds: 4.58
+    2025/26:
+      matches: 261
+      hit_pct: 15.7
+      normal_pct: 7.1
+      avg_odds: 4.69
+    2026/27:
+      matches: 116
+      hit_pct: 19.0
+      normal_pct: 6.5
+      avg_odds: 4.77
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_BTTS||X&NO-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_BTTS||X&NO
+  bet_name: Result & both score X & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MSX & Yok'
+  criteria:
+  - bet: 1X2_AND_BTTS||X&NO
+    op: <=
+    odds: 6.050000190734863
+  summary: Result & both score X & no when its odds are ≤ 6.05 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 1135
+      hit_pct: 12.4
+      normal_pct: 7.2
+      avg_odds: 5.09
+    2025/26:
+      matches: 605
+      hit_pct: 14.5
+      normal_pct: 7.1
+      avg_odds: 5.25
+    2026/27:
+      matches: 239
+      hit_pct: 17.2
+      normal_pct: 6.5
+      avg_odds: 5.21
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|1.5|1&UNDER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|1.5|1&UNDER
+  bet_name: Result & goals 1 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 1 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: <=
+    odds: 5.159999847412109
+  summary: Result & goals 1 & under 1.5 when its odds are ≤ 5.16 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 417
+      hit_pct: 16.8
+      normal_pct: 10.3
+      avg_odds: 4.79
+    2025/26:
+      matches: 439
+      hit_pct: 17.8
+      normal_pct: 10.0
+      avg_odds: 4.71
+    2026/27:
+      matches: 140
+      hit_pct: 17.1
+      normal_pct: 8.9
+      avg_odds: 4.71
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|1.5|1&UNDER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|1.5|1&UNDER
+  bet_name: Result & goals 1 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 1 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: <=
+    odds: 5.639999866485596
+  summary: Result & goals 1 & under 1.5 when its odds are ≤ 5.64 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 895
+      hit_pct: 16.9
+      normal_pct: 10.3
+      avg_odds: 5.13
+    2025/26:
+      matches: 799
+      hit_pct: 16.6
+      normal_pct: 10.0
+      avg_odds: 5.03
+    2026/27:
+      matches: 247
+      hit_pct: 15.8
+      normal_pct: 8.9
+      avg_odds: 5.02
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|1.5|2&UNDER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|1.5|2&UNDER
+  bet_name: Result & goals 2 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|2&UNDER
+    op: <=
+    odds: 6.070000171661377
+  summary: Result & goals 2 & under 1.5 when its odds are ≤ 6.07 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 439
+      hit_pct: 14.8
+      normal_pct: 7.2
+      avg_odds: 5.56
+    2025/26:
+      matches: 414
+      hit_pct: 14.5
+      normal_pct: 7.1
+      avg_odds: 5.49
+    2026/27:
+      matches: 103
+      hit_pct: 10.7
+      normal_pct: 7.1
+      avg_odds: 5.44
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|1.5|2&UNDER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|1.5|2&UNDER
+  bet_name: Result & goals 2 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|2&UNDER
+    op: <=
+    odds: 6.659999847412109
+  summary: Result & goals 2 & under 1.5 when its odds are ≤ 6.66 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 880
+      hit_pct: 14.4
+      normal_pct: 7.2
+      avg_odds: 5.98
+    2025/26:
+      matches: 805
+      hit_pct: 13.4
+      normal_pct: 7.1
+      avg_odds: 5.94
+    2026/27:
+      matches: 211
+      hit_pct: 10.4
+      normal_pct: 7.1
+      avg_odds: 5.91
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|1&UNDER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|1&UNDER
+  bet_name: Result & goals 1 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 1 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|1&UNDER
+    op: <=
+    odds: 2.990000009536743
+  summary: Result & goals 1 & under 2.5 when its odds are ≤ 2.99 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 452
+      hit_pct: 27.9
+      normal_pct: 17.3
+      avg_odds: 2.79
+    2025/26:
+      matches: 421
+      hit_pct: 28.3
+      normal_pct: 16.7
+      avg_odds: 2.77
+    2026/27:
+      matches: 115
+      hit_pct: 35.7
+      normal_pct: 15.2
+      avg_odds: 2.73
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|1&UNDER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|1&UNDER
+  bet_name: Result & goals 1 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 1 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|1&UNDER
+    op: <=
+    odds: 3.240000009536743
+  summary: Result & goals 1 & under 2.5 when its odds are ≤ 3.24 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 912
+      hit_pct: 26.2
+      normal_pct: 17.3
+      avg_odds: 2.96
+    2025/26:
+      matches: 814
+      hit_pct: 25.3
+      normal_pct: 16.7
+      avg_odds: 2.94
+    2026/27:
+      matches: 201
+      hit_pct: 28.4
+      normal_pct: 15.2
+      avg_odds: 2.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|2&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&OVER
+  bet_name: Result & goals 2 & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|2&OVER
+    op: <=
+    odds: 2.0799999237060547
+  summary: Result & goals 2 & over 2.5 when its odds are ≤ 2.08 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 450
+      hit_pct: 46.0
+      normal_pct: 17.9
+      avg_odds: 1.74
+    2025/26:
+      matches: 416
+      hit_pct: 46.4
+      normal_pct: 18.7
+      avg_odds: 1.76
+    2026/27:
+      matches: 134
+      hit_pct: 52.2
+      normal_pct: 18.9
+      avg_odds: 1.73
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|2&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&OVER
+  bet_name: Result & goals 2 & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|2&OVER
+    op: <=
+    odds: 2.5199999809265137
+  summary: Result & goals 2 & over 2.5 when its odds are ≤ 2.52 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 874
+      hit_pct: 38.9
+      normal_pct: 17.9
+      avg_odds: 2.02
+    2025/26:
+      matches: 842
+      hit_pct: 39.4
+      normal_pct: 18.7
+      avg_odds: 2.04
+    2026/27:
+      matches: 263
+      hit_pct: 40.3
+      normal_pct: 18.9
+      avg_odds: 2.02
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|2&UNDER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&UNDER
+  bet_name: Result & goals 2 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|2&UNDER
+    op: <=
+    odds: 3.619999885559082
+  summary: Result & goals 2 & under 2.5 when its odds are ≤ 3.62 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 464
+      hit_pct: 25.0
+      normal_pct: 11.7
+      avg_odds: 3.27
+    2025/26:
+      matches: 401
+      hit_pct: 27.4
+      normal_pct: 11.7
+      avg_odds: 3.25
+    2026/27:
+      matches: 102
+      hit_pct: 26.5
+      normal_pct: 11.0
+      avg_odds: 3.31
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|2&UNDER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&UNDER
+  bet_name: Result & goals 2 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|2&UNDER
+    op: <=
+    odds: 4.010000228881836
+  summary: Result & goals 2 & under 2.5 when its odds are ≤ 4.01 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 923
+      hit_pct: 24.2
+      normal_pct: 11.7
+      avg_odds: 3.55
+    2025/26:
+      matches: 809
+      hit_pct: 22.5
+      normal_pct: 11.7
+      avg_odds: 3.54
+    2026/27:
+      matches: 181
+      hit_pct: 22.1
+      normal_pct: 11.0
+      avg_odds: 3.54
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|X&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: Result & goals X & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&OVER
+    op: <=
+    odds: 8.020000457763672
+  summary: Result & goals X & over 2.5 when its odds are ≤ 8.02 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 393
+      hit_pct: 10.4
+      normal_pct: 7.1
+      avg_odds: 7.5
+    2025/26:
+      matches: 466
+      hit_pct: 10.3
+      normal_pct: 7.1
+      avg_odds: 7.46
+    2026/27:
+      matches: 176
+      hit_pct: 11.9
+      normal_pct: 7.6
+      avg_odds: 7.34
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|X&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: Result & goals X & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&OVER
+    op: <=
+    odds: 8.59000015258789
+  summary: Result & goals X & over 2.5 when its odds are ≤ 8.59 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 815
+      hit_pct: 11.5
+      normal_pct: 7.1
+      avg_odds: 7.93
+    2025/26:
+      matches: 906
+      hit_pct: 9.5
+      normal_pct: 7.1
+      avg_odds: 7.88
+    2026/27:
+      matches: 336
+      hit_pct: 11.6
+      normal_pct: 7.6
+      avg_odds: 7.82
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|X&UNDER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|X&UNDER
+  bet_name: Result & goals X & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: <=
+    odds: 2.8499999046325684
+  summary: Result & goals X & under 2.5 when its odds are ≤ 2.85 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 407
+      hit_pct: 29.0
+      normal_pct: 19.2
+      avg_odds: 2.71
+    2025/26:
+      matches: 457
+      hit_pct: 28.4
+      normal_pct: 19.0
+      avg_odds: 2.66
+    2026/27:
+      matches: 156
+      hit_pct: 35.3
+      normal_pct: 18.2
+      avg_odds: 2.68
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|2.5|X&UNDER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|2.5|X&UNDER
+  bet_name: Result & goals X & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Alt'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: <=
+    odds: 3.049999952316284
+  summary: Result & goals X & under 2.5 when its odds are ≤ 3.05 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 878
+      hit_pct: 27.9
+      normal_pct: 19.2
+      avg_odds: 2.85
+    2025/26:
+      matches: 885
+      hit_pct: 27.5
+      normal_pct: 19.0
+      avg_odds: 2.81
+    2026/27:
+      matches: 283
+      hit_pct: 33.2
+      normal_pct: 18.2
+      avg_odds: 2.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|3.5|1&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|3.5|1&OVER
+  bet_name: Result & goals 1 & over 3.5
+  bet_name_tr: 'MS ve Alt/Üst 3,5: 1 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|1&OVER
+    op: <=
+    odds: 2.3399999141693115
+  summary: Result & goals 1 & over 3.5 when its odds are ≤ 2.34 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 465
+      hit_pct: 42.6
+      normal_pct: 14.0
+      avg_odds: 1.96
+    2025/26:
+      matches: 403
+      hit_pct: 38.7
+      normal_pct: 13.7
+      avg_odds: 1.98
+    2026/27:
+      matches: 136
+      hit_pct: 40.4
+      normal_pct: 15.6
+      avg_odds: 1.94
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|3.5|1&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|3.5|1&OVER
+  bet_name: Result & goals 1 & over 3.5
+  bet_name_tr: 'MS ve Alt/Üst 3,5: 1 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|1&OVER
+    op: <=
+    odds: 2.859999895095825
+  summary: Result & goals 1 & over 3.5 when its odds are ≤ 2.86 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 924
+      hit_pct: 36.6
+      normal_pct: 14.0
+      avg_odds: 2.28
+    2025/26:
+      matches: 795
+      hit_pct: 33.5
+      normal_pct: 13.7
+      avg_odds: 2.29
+    2026/27:
+      matches: 286
+      hit_pct: 33.9
+      normal_pct: 15.6
+      avg_odds: 2.29
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|3.5|2&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|3.5|2&OVER
+  bet_name: Result & goals 2 & over 3.5
+  bet_name_tr: 'MS ve Alt/Üst 3,5: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|2&OVER
+    op: <=
+    odds: 3.4100000858306885
+  summary: Result & goals 2 & over 3.5 when its odds are ≤ 3.41 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 447
+      hit_pct: 28.9
+      normal_pct: 8.6
+      avg_odds: 2.71
+    2025/26:
+      matches: 418
+      hit_pct: 24.9
+      normal_pct: 8.8
+      avg_odds: 2.73
+    2026/27:
+      matches: 147
+      hit_pct: 31.3
+      normal_pct: 9.6
+      avg_odds: 2.68
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|3.5|2&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|3.5|2&OVER
+  bet_name: Result & goals 2 & over 3.5
+  bet_name_tr: 'MS ve Alt/Üst 3,5: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|2&OVER
+    op: <=
+    odds: 4.360000133514404
+  summary: Result & goals 2 & over 3.5 when its odds are ≤ 4.36 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 873
+      hit_pct: 23.3
+      normal_pct: 8.6
+      avg_odds: 3.31
+    2025/26:
+      matches: 847
+      hit_pct: 22.0
+      normal_pct: 8.8
+      avg_odds: 3.33
+    2026/27:
+      matches: 295
+      hit_pct: 25.4
+      normal_pct: 9.6
+      avg_odds: 3.31
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|4.5|1&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|4.5|1&OVER
+  bet_name: Result & goals 1 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 1 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|1&OVER
+    op: <=
+    odds: 3.740000009536743
+  summary: Result & goals 1 & over 4.5 when its odds are ≤ 3.74 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 440
+      hit_pct: 23.9
+      normal_pct: 8.3
+      avg_odds: 3.02
+    2025/26:
+      matches: 377
+      hit_pct: 25.7
+      normal_pct: 7.6
+      avg_odds: 3.07
+    2026/27:
+      matches: 152
+      hit_pct: 27.6
+      normal_pct: 9.5
+      avg_odds: 3.01
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|4.5|1&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|4.5|1&OVER
+  bet_name: Result & goals 1 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 1 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|1&OVER
+    op: <=
+    odds: 4.699999809265137
+  summary: Result & goals 1 & over 4.5 when its odds are ≤ 4.70 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 864
+      hit_pct: 22.2
+      normal_pct: 8.3
+      avg_odds: 3.63
+    2025/26:
+      matches: 762
+      hit_pct: 21.7
+      normal_pct: 7.6
+      avg_odds: 3.67
+    2026/27:
+      matches: 306
+      hit_pct: 22.9
+      normal_pct: 9.5
+      avg_odds: 3.64
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|4.5|2&OVER-5
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|4.5|2&OVER
+  bet_name: Result & goals 2 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&OVER
+    op: <=
+    odds: 5.650000095367432
+  summary: Result & goals 2 & over 4.5 when its odds are ≤ 5.65 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 416
+      hit_pct: 20.4
+      normal_pct: 5.2
+      avg_odds: 4.38
+    2025/26:
+      matches: 400
+      hit_pct: 14.2
+      normal_pct: 5.2
+      avg_odds: 4.44
+    2026/27:
+      matches: 153
+      hit_pct: 19.6
+      normal_pct: 5.9
+      avg_odds: 4.28
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-1X2_AND_OU|4.5|2&OVER-10
+  kind: odds_band
+  status: proven
+  bet: 1X2_AND_OU|4.5|2&OVER
+  bet_name: Result & goals 2 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 2 ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&OVER
+    op: <=
+    odds: 7.190000057220459
+  summary: Result & goals 2 & over 4.5 when its odds are ≤ 7.19 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 823
+      hit_pct: 14.5
+      normal_pct: 5.2
+      avg_odds: 5.42
+    2025/26:
+      matches: 804
+      hit_pct: 14.1
+      normal_pct: 5.2
+      avg_odds: 5.45
+    2026/27:
+      matches: 307
+      hit_pct: 17.3
+      normal_pct: 5.9
+      avg_odds: 5.37
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-BOTH_HALVES_OVER|1.5|YES-5
+  kind: odds_band
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - bet: BOTH_HALVES_OVER|1.5|YES
+    op: <=
+    odds: 2.8399999141693115
+  summary: Both halves over yes 1.5 when its odds are ≤ 2.84 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 462
+      hit_pct: 27.7
+      normal_pct: 15.9
+      avg_odds: 2.56
+    2025/26:
+      matches: 388
+      hit_pct: 29.6
+      normal_pct: 16.1
+      avg_odds: 2.56
+    2026/27:
+      matches: 206
+      hit_pct: 34.0
+      normal_pct: 19.1
+      avg_odds: 2.55
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-BOTH_HALVES_OVER|1.5|YES-10
+  kind: odds_band
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - bet: BOTH_HALVES_OVER|1.5|YES
+    op: <=
+    odds: 3.1600000858306885
+  summary: Both halves over yes 1.5 when its odds are ≤ 3.16 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 962
+      hit_pct: 28.5
+      normal_pct: 15.9
+      avg_odds: 2.79
+    2025/26:
+      matches: 766
+      hit_pct: 28.3
+      normal_pct: 16.1
+      avg_odds: 2.79
+    2026/27:
+      matches: 337
+      hit_pct: 32.6
+      normal_pct: 19.1
+      avg_odds: 2.73
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||0-2-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: CORRECT_SCORE||0-2
+    op: <=
+    odds: 6.760000228881836
+  summary: Score 0-2 when its odds are ≤ 6.76 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 446
+      hit_pct: 11.0
+      normal_pct: 4.5
+      avg_odds: 5.93
+    2025/26:
+      matches: 81
+      hit_pct: 9.9
+      normal_pct: 4.6
+      avg_odds: 5.98
+    2026/27:
+      matches: 61
+      hit_pct: 14.8
+      normal_pct: 3.9
+      avg_odds: 6.02
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||0-2-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: CORRECT_SCORE||0-2
+    op: <=
+    odds: 7.800000190734863
+  summary: Score 0-2 when its odds are ≤ 7.80 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 870
+      hit_pct: 9.5
+      normal_pct: 4.5
+      avg_odds: 6.59
+    2025/26:
+      matches: 180
+      hit_pct: 6.1
+      normal_pct: 4.6
+      avg_odds: 6.72
+    2026/27:
+      matches: 142
+      hit_pct: 13.4
+      normal_pct: 3.9
+      avg_odds: 6.77
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||0-3-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: CORRECT_SCORE||0-3
+    op: <=
+    odds: 10.800000190734863
+  summary: Score 0-3 when its odds are ≤ 10.80 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 436
+      hit_pct: 6.9
+      normal_pct: 2.2
+      avg_odds: 8.64
+    2025/26:
+      matches: 92
+      hit_pct: 4.3
+      normal_pct: 2.3
+      avg_odds: 9.24
+    2026/27:
+      matches: 89
+      hit_pct: 11.2
+      normal_pct: 2.2
+      avg_odds: 8.88
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||0-3-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: CORRECT_SCORE||0-3
+    op: <=
+    odds: 14.350000381469727
+  summary: Score 0-3 when its odds are ≤ 14.35 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 852
+      hit_pct: 6.7
+      normal_pct: 2.2
+      avg_odds: 10.57
+    2025/26:
+      matches: 198
+      hit_pct: 4.0
+      normal_pct: 2.3
+      avg_odds: 11.05
+    2026/27:
+      matches: 199
+      hit_pct: 6.5
+      normal_pct: 2.2
+      avg_odds: 10.92
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||1-3-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||1-3
+  bet_name: Score 1-3
+  bet_name_tr: 'Maç Skoru: 1-3'
+  criteria:
+  - bet: CORRECT_SCORE||1-3
+    op: <=
+    odds: 10.539999961853027
+  summary: Score 1-3 when its odds are ≤ 10.54 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 427
+      hit_pct: 6.8
+      normal_pct: 2.6
+      avg_odds: 9.28
+    2025/26:
+      matches: 96
+      hit_pct: 5.2
+      normal_pct: 2.9
+      avg_odds: 9.54
+    2026/27:
+      matches: 113
+      hit_pct: 4.4
+      normal_pct: 2.6
+      avg_odds: 9.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||1-3-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||1-3
+  bet_name: Score 1-3
+  bet_name_tr: 'Maç Skoru: 1-3'
+  criteria:
+  - bet: CORRECT_SCORE||1-3
+    op: <=
+    odds: 12.399999618530273
+  summary: Score 1-3 when its odds are ≤ 12.40 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 848
+      hit_pct: 4.8
+      normal_pct: 2.6
+      avg_odds: 10.41
+    2025/26:
+      matches: 205
+      hit_pct: 6.3
+      normal_pct: 2.9
+      avg_odds: 10.59
+    2026/27:
+      matches: 231
+      hit_pct: 3.9
+      normal_pct: 2.6
+      avg_odds: 10.47
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||2-0-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||2-0
+  bet_name: Score 2-0
+  bet_name_tr: 'Maç Skoru: 2-0'
+  criteria:
+  - bet: CORRECT_SCORE||2-0
+    op: <=
+    odds: 5.360000133514404
+  summary: Score 2-0 when its odds are ≤ 5.36 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 451
+      hit_pct: 12.9
+      normal_pct: 7.0
+      avg_odds: 4.96
+    2025/26:
+      matches: 81
+      hit_pct: 14.8
+      normal_pct: 6.7
+      avg_odds: 4.93
+    2026/27:
+      matches: 63
+      hit_pct: 15.9
+      normal_pct: 6.4
+      avg_odds: 4.88
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||2-0-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||2-0
+  bet_name: Score 2-0
+  bet_name_tr: 'Maç Skoru: 2-0'
+  criteria:
+  - bet: CORRECT_SCORE||2-0
+    op: <=
+    odds: 5.820000171661377
+  summary: Score 2-0 when its odds are ≤ 5.82 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 870
+      hit_pct: 11.6
+      normal_pct: 7.0
+      avg_odds: 5.27
+    2025/26:
+      matches: 180
+      hit_pct: 11.7
+      normal_pct: 6.7
+      avg_odds: 5.31
+    2026/27:
+      matches: 129
+      hit_pct: 13.2
+      normal_pct: 6.4
+      avg_odds: 5.25
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||3-0-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||3-0
+  bet_name: Score 3-0
+  bet_name_tr: 'Maç Skoru: 3-0'
+  criteria:
+  - bet: CORRECT_SCORE||3-0
+    op: <=
+    odds: 7.28000020980835
+  summary: Score 3-0 when its odds are ≤ 7.28 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 458
+      hit_pct: 10.9
+      normal_pct: 3.7
+      avg_odds: 6.32
+    2025/26:
+      matches: 68
+      hit_pct: 19.1
+      normal_pct: 4.0
+      avg_odds: 6.44
+    2026/27:
+      matches: 74
+      hit_pct: 17.6
+      normal_pct: 3.8
+      avg_odds: 6.38
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||3-0-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||3-0
+  bet_name: Score 3-0
+  bet_name_tr: 'Maç Skoru: 3-0'
+  criteria:
+  - bet: CORRECT_SCORE||3-0
+    op: <=
+    odds: 8.699999809265137
+  summary: Score 3-0 when its odds are ≤ 8.70 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 869
+      hit_pct: 9.2
+      normal_pct: 3.7
+      avg_odds: 7.13
+    2025/26:
+      matches: 179
+      hit_pct: 14.0
+      normal_pct: 4.0
+      avg_odds: 7.4
+    2026/27:
+      matches: 196
+      hit_pct: 12.8
+      normal_pct: 3.8
+      avg_odds: 7.44
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||3-3-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||3-3
+  bet_name: Score 3-3
+  bet_name_tr: 'Maç Skoru: 3-3'
+  criteria:
+  - bet: CORRECT_SCORE||3-3
+    op: <=
+    odds: 34.5
+  summary: Score 3-3 when its odds are ≤ 34.50 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 830
+      hit_pct: 1.7
+      normal_pct: 1.0
+      avg_odds: 30.04
+    2025/26:
+      matches: 287
+      hit_pct: 3.8
+      normal_pct: 1.4
+      avg_odds: 29.25
+    2026/27:
+      matches: 387
+      hit_pct: 2.1
+      normal_pct: 1.4
+      avg_odds: 28.73
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-0-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-0
+  bet_name: Score 4-0
+  bet_name_tr: 'Maç Skoru: 4-0'
+  criteria:
+  - bet: CORRECT_SCORE||4-0
+    op: <=
+    odds: 12.25
+  summary: Score 4-0 when its odds are ≤ 12.25 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 445
+      hit_pct: 7.4
+      normal_pct: 1.6
+      avg_odds: 9.61
+    2025/26:
+      matches: 80
+      hit_pct: 6.2
+      normal_pct: 1.7
+      avg_odds: 10.24
+    2026/27:
+      matches: 102
+      hit_pct: 2.9
+      normal_pct: 1.5
+      avg_odds: 9.84
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-0-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-0
+  bet_name: Score 4-0
+  bet_name_tr: 'Maç Skoru: 4-0'
+  criteria:
+  - bet: CORRECT_SCORE||4-0
+    op: <=
+    odds: 16.200000762939453
+  summary: Score 4-0 when its odds are ≤ 16.20 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 843
+      hit_pct: 5.7
+      normal_pct: 1.6
+      avg_odds: 11.78
+    2025/26:
+      matches: 205
+      hit_pct: 5.4
+      normal_pct: 1.7
+      avg_odds: 12.78
+    2026/27:
+      matches: 227
+      hit_pct: 2.6
+      normal_pct: 1.5
+      avg_odds: 12.39
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-1-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-1
+  bet_name: Score 4-1
+  bet_name_tr: 'Maç Skoru: 4-1'
+  criteria:
+  - bet: CORRECT_SCORE||4-1
+    op: <=
+    odds: 14.050000190734863
+  summary: Score 4-1 when its odds are ≤ 14.05 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 431
+      hit_pct: 4.4
+      normal_pct: 1.6
+      avg_odds: 12.14
+    2025/26:
+      matches: 98
+      hit_pct: 8.2
+      normal_pct: 1.5
+      avg_odds: 12.57
+    2026/27:
+      matches: 119
+      hit_pct: 3.4
+      normal_pct: 1.5
+      avg_odds: 12.08
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-1-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-1
+  bet_name: Score 4-1
+  bet_name_tr: 'Maç Skoru: 4-1'
+  criteria:
+  - bet: CORRECT_SCORE||4-1
+    op: <=
+    odds: 17.18000030517578
+  summary: Score 4-1 when its odds are ≤ 17.18 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 844
+      hit_pct: 3.8
+      normal_pct: 1.6
+      avg_odds: 13.87
+    2025/26:
+      matches: 202
+      hit_pct: 5.0
+      normal_pct: 1.5
+      avg_odds: 14.18
+    2026/27:
+      matches: 260
+      hit_pct: 3.8
+      normal_pct: 1.5
+      avg_odds: 14.03
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-2-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-2
+  bet_name: Score 4-2
+  bet_name_tr: 'Maç Skoru: 4-2'
+  criteria:
+  - bet: CORRECT_SCORE||4-2
+    op: <=
+    odds: 28.5
+  summary: Score 4-2 when its odds are ≤ 28.50 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 414
+      hit_pct: 3.9
+      normal_pct: 1.1
+      avg_odds: 25.29
+    2025/26:
+      matches: 138
+      hit_pct: 4.3
+      normal_pct: 0.9
+      avg_odds: 25.02
+    2026/27:
+      matches: 184
+      hit_pct: 3.3
+      normal_pct: 1.1
+      avg_odds: 24.23
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-CORRECT_SCORE||4-2-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-2
+  bet_name: Score 4-2
+  bet_name_tr: 'Maç Skoru: 4-2'
+  criteria:
+  - bet: CORRECT_SCORE||4-2
+    op: <=
+    odds: 33.5
+  summary: Score 4-2 when its odds are ≤ 33.50 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 822
+      hit_pct: 2.9
+      normal_pct: 1.1
+      avg_odds: 28.3
+    2025/26:
+      matches: 249
+      hit_pct: 2.8
+      normal_pct: 0.9
+      avg_odds: 27.85
+    2026/27:
+      matches: 324
+      hit_pct: 2.2
+      normal_pct: 1.1
+      avg_odds: 27.27
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-GOAL_RANGE||6+-5
+  kind: odds_band
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 5.400000095367432
+  summary: Total goals 6+ when its odds are ≤ 5.40 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 417
+      hit_pct: 15.6
+      normal_pct: 6.0
+      avg_odds: 4.54
+    2025/26:
+      matches: 439
+      hit_pct: 15.7
+      normal_pct: 6.2
+      avg_odds: 4.51
+    2026/27:
+      matches: 260
+      hit_pct: 18.8
+      normal_pct: 7.6
+      avg_odds: 4.44
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-GOAL_RANGE||6+-10
+  kind: odds_band
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.440000057220459
+  summary: Total goals 6+ when its odds are ≤ 6.44 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 847
+      hit_pct: 13.0
+      normal_pct: 6.0
+      avg_odds: 5.26
+    2025/26:
+      matches: 870
+      hit_pct: 13.7
+      normal_pct: 6.2
+      avg_odds: 5.23
+    2026/27:
+      matches: 433
+      hit_pct: 15.2
+      normal_pct: 7.6
+      avg_odds: 5.05
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_BTTS||1&YES-5
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||1&YES
+  bet_name: 1st-half result & both score 1 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 1 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 8.399999618530273
+  summary: 1st-half result & both score 1 & yes when its odds are ≤ 8.40 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 501
+      hit_pct: 11.2
+      normal_pct: 4.8
+      avg_odds: 7.39
+    2025/26:
+      matches: 373
+      hit_pct: 12.3
+      normal_pct: 4.6
+      avg_odds: 7.4
+    2026/27:
+      matches: 152
+      hit_pct: 13.8
+      normal_pct: 5.4
+      avg_odds: 7.31
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_BTTS||1&YES-10
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||1&YES
+  bet_name: 1st-half result & both score 1 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 1 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 9.550000190734863
+  summary: 1st-half result & both score 1 & yes when its odds are ≤ 9.55 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 982
+      hit_pct: 9.6
+      normal_pct: 4.8
+      avg_odds: 8.18
+    2025/26:
+      matches: 760
+      hit_pct: 10.4
+      normal_pct: 4.6
+      avg_odds: 8.23
+    2026/27:
+      matches: 270
+      hit_pct: 11.9
+      normal_pct: 5.4
+      avg_odds: 8.05
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_BTTS||2&YES-5
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||2&YES
+  bet_name: 1st-half result & both score 2 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 2 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||2&YES
+    op: <=
+    odds: 10.399999618530273
+  summary: 1st-half result & both score 2 & yes when its odds are ≤ 10.40 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 470
+      hit_pct: 8.7
+      normal_pct: 3.7
+      avg_odds: 9.0
+    2025/26:
+      matches: 411
+      hit_pct: 8.5
+      normal_pct: 3.7
+      avg_odds: 8.93
+    2026/27:
+      matches: 155
+      hit_pct: 8.4
+      normal_pct: 3.8
+      avg_odds: 8.83
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_BTTS||2&YES-10
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||2&YES
+  bet_name: 1st-half result & both score 2 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 2 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||2&YES
+    op: <=
+    odds: 12.050000190734863
+  summary: 1st-half result & both score 2 & yes when its odds are ≤ 12.05 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 929
+      hit_pct: 6.8
+      normal_pct: 3.7
+      avg_odds: 10.13
+    2025/26:
+      matches: 811
+      hit_pct: 7.0
+      normal_pct: 3.7
+      avg_odds: 10.1
+    2026/27:
+      matches: 283
+      hit_pct: 7.1
+      normal_pct: 3.8
+      avg_odds: 9.93
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_OU|1.5|1&OVER-5
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|1&OVER
+  bet_name: 1st-half result & goals 1 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 1 & Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_OU|1.5|1&OVER
+    op: <=
+    odds: 2.7200000286102295
+  summary: 1st-half result & goals 1 & over 1.5 when its odds are ≤ 2.72 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 467
+      hit_pct: 36.0
+      normal_pct: 13.5
+      avg_odds: 2.32
+    2025/26:
+      matches: 413
+      hit_pct: 34.6
+      normal_pct: 13.8
+      avg_odds: 2.33
+    2026/27:
+      matches: 133
+      hit_pct: 35.3
+      normal_pct: 15.0
+      avg_odds: 2.32
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_OU|1.5|1&OVER-10
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|1&OVER
+  bet_name: 1st-half result & goals 1 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 1 & Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_OU|1.5|1&OVER
+    op: <=
+    odds: 3.25
+  summary: 1st-half result & goals 1 & over 1.5 when its odds are ≤ 3.25 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 920
+      hit_pct: 30.0
+      normal_pct: 13.5
+      avg_odds: 2.65
+    2025/26:
+      matches: 846
+      hit_pct: 29.2
+      normal_pct: 13.8
+      avg_odds: 2.68
+    2026/27:
+      matches: 267
+      hit_pct: 34.8
+      normal_pct: 15.0
+      avg_odds: 2.67
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_OU|1.5|2&OVER-5
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+  bet_name: 1st-half result & goals 2 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+    op: <=
+    odds: 3.7699999809265137
+  summary: 1st-half result & goals 2 & over 1.5 when its odds are ≤ 3.77 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 444
+      hit_pct: 23.4
+      normal_pct: 8.7
+      avg_odds: 3.09
+    2025/26:
+      matches: 425
+      hit_pct: 24.0
+      normal_pct: 9.4
+      avg_odds: 3.11
+    2026/27:
+      matches: 128
+      hit_pct: 25.0
+      normal_pct: 9.4
+      avg_odds: 3.05
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_1X2_AND_HT_OU|1.5|2&OVER-10
+  kind: odds_band
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+  bet_name: 1st-half result & goals 2 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+    op: <=
+    odds: 4.690000057220459
+  summary: 1st-half result & goals 2 & over 1.5 when its odds are ≤ 4.69 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 874
+      hit_pct: 20.7
+      normal_pct: 8.7
+      avg_odds: 3.67
+    2025/26:
+      matches: 888
+      hit_pct: 20.7
+      normal_pct: 9.4
+      avg_odds: 3.71
+    2026/27:
+      matches: 266
+      hit_pct: 21.8
+      normal_pct: 9.4
+      avg_odds: 3.69
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_BTTS||YES-5
+  kind: odds_band
+  status: proven
+  bet: HT_BTTS||YES
+  bet_name: 1st-half both score yes
+  bet_name_tr: '1. Yarı Karşılıklı Gol: Var'
+  criteria:
+  - bet: HT_BTTS||YES
+    op: <=
+    odds: 3.0
+  summary: 1st-half both score yes when its odds are ≤ 3.00 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 407
+      hit_pct: 32.2
+      normal_pct: 20.5
+      avg_odds: 2.82
+    2025/26:
+      matches: 505
+      hit_pct: 29.3
+      normal_pct: 19.9
+      avg_odds: 2.81
+    2026/27:
+      matches: 247
+      hit_pct: 34.4
+      normal_pct: 22.1
+      avg_odds: 2.77
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_CORRECT_SCORE||0-2-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||0-2
+  bet_name: 1st-half score 0-2
+  bet_name_tr: '1. Yarı Skoru: 0-2'
+  criteria:
+  - bet: HT_CORRECT_SCORE||0-2
+    op: <=
+    odds: 8.029999732971191
+  summary: 1st-half score 0-2 when its odds are ≤ 8.03 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 420
+      hit_pct: 9.3
+      normal_pct: 3.9
+      avg_odds: 6.64
+    2025/26:
+      matches: 109
+      hit_pct: 13.8
+      normal_pct: 4.8
+      avg_odds: 7.02
+    2026/27:
+      matches: 111
+      hit_pct: 13.5
+      normal_pct: 4.4
+      avg_odds: 6.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_CORRECT_SCORE||0-2-10
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||0-2
+  bet_name: 1st-half score 0-2
+  bet_name_tr: '1. Yarı Skoru: 0-2'
+  criteria:
+  - bet: HT_CORRECT_SCORE||0-2
+    op: <=
+    odds: 9.979999542236328
+  summary: 1st-half score 0-2 when its odds are ≤ 9.98 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 840
+      hit_pct: 8.9
+      normal_pct: 3.9
+      avg_odds: 7.84
+    2025/26:
+      matches: 217
+      hit_pct: 11.5
+      normal_pct: 4.8
+      avg_odds: 8.06
+    2026/27:
+      matches: 212
+      hit_pct: 11.3
+      normal_pct: 4.4
+      avg_odds: 7.83
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_CORRECT_SCORE||2-0-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-0
+    op: <=
+    odds: 5.840000152587891
+  summary: 1st-half score 2-0 when its odds are ≤ 5.84 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 438
+      hit_pct: 17.6
+      normal_pct: 6.5
+      avg_odds: 5.07
+    2025/26:
+      matches: 90
+      hit_pct: 16.7
+      normal_pct: 7.2
+      avg_odds: 5.25
+    2026/27:
+      matches: 108
+      hit_pct: 14.8
+      normal_pct: 7.0
+      avg_odds: 5.11
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_CORRECT_SCORE||2-0-10
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-0
+    op: <=
+    odds: 6.769999980926514
+  summary: 1st-half score 2-0 when its odds are ≤ 6.77 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 842
+      hit_pct: 15.1
+      normal_pct: 6.5
+      avg_odds: 5.66
+    2025/26:
+      matches: 216
+      hit_pct: 13.0
+      normal_pct: 7.2
+      avg_odds: 5.89
+    2026/27:
+      matches: 228
+      hit_pct: 14.9
+      normal_pct: 7.0
+      avg_odds: 5.74
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_CORRECT_SCORE||2-1-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||2-1
+  bet_name: 1st-half score 2-1
+  bet_name_tr: '1. Yarı Skoru: 2-1'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-1
+    op: <=
+    odds: 14.199999809265137
+  summary: 1st-half score 2-1 when its odds are ≤ 14.20 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 390
+      hit_pct: 6.7
+      normal_pct: 3.6
+      avg_odds: 13.14
+    2025/26:
+      matches: 147
+      hit_pct: 6.8
+      normal_pct: 3.6
+      avg_odds: 13.09
+    2026/27:
+      matches: 183
+      hit_pct: 8.2
+      normal_pct: 3.9
+      avg_odds: 12.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||1/2-5
+  kind: odds_band
+  status: proven
+  bet: HT_FT||1/2
+  bet_name: HT/FT 1/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/2'
+  criteria:
+  - bet: HT_FT||1/2
+    op: <=
+    odds: 21.700000762939453
+  summary: HT/FT 1/2 when its odds are ≤ 21.70 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 340
+      hit_pct: 5.9
+      normal_pct: 2.3
+      avg_odds: 20.33
+    2025/26:
+      matches: 445
+      hit_pct: 4.3
+      normal_pct: 2.3
+      avg_odds: 20.09
+    2026/27:
+      matches: 184
+      hit_pct: 3.8
+      normal_pct: 2.4
+      avg_odds: 19.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||2/1-5
+  kind: odds_band
+  status: proven
+  bet: HT_FT||2/1
+  bet_name: HT/FT 2/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/1'
+  criteria:
+  - bet: HT_FT||2/1
+    op: <=
+    odds: 19.850000381469727
+  summary: HT/FT 2/1 when its odds are ≤ 19.85 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 316
+      hit_pct: 5.1
+      normal_pct: 2.9
+      avg_odds: 18.93
+    2025/26:
+      matches: 468
+      hit_pct: 3.4
+      normal_pct: 2.6
+      avg_odds: 18.79
+    2026/27:
+      matches: 230
+      hit_pct: 3.9
+      normal_pct: 2.4
+      avg_odds: 18.58
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||2/2-5
+  kind: odds_band
+  status: proven
+  bet: HT_FT||2/2
+  bet_name: HT/FT 2/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/2'
+  criteria:
+  - bet: HT_FT||2/2
+    op: <=
+    odds: 2.1600000858306885
+  summary: HT/FT 2/2 when its odds are ≤ 2.16 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 393
+      hit_pct: 41.7
+      normal_pct: 16.4
+      avg_odds: 1.82
+    2025/26:
+      matches: 390
+      hit_pct: 42.6
+      normal_pct: 17.1
+      avg_odds: 1.86
+    2026/27:
+      matches: 122
+      hit_pct: 50.0
+      normal_pct: 17.0
+      avg_odds: 1.82
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||2/2-10
+  kind: odds_band
+  status: proven
+  bet: HT_FT||2/2
+  bet_name: HT/FT 2/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/2'
+  criteria:
+  - bet: HT_FT||2/2
+    op: <=
+    odds: 2.6600000858306885
+  summary: HT/FT 2/2 when its odds are ≤ 2.66 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 812
+      hit_pct: 36.9
+      normal_pct: 16.4
+      avg_odds: 2.13
+    2025/26:
+      matches: 743
+      hit_pct: 36.2
+      normal_pct: 17.1
+      avg_odds: 2.13
+    2026/27:
+      matches: 251
+      hit_pct: 39.0
+      normal_pct: 17.0
+      avg_odds: 2.14
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||X/2-5
+  kind: odds_band
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: HT_FT||X/2
+    op: <=
+    odds: 4.210000038146973
+  summary: HT/FT X/2 when its odds are ≤ 4.21 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 470
+      hit_pct: 17.4
+      normal_pct: 10.9
+      avg_odds: 3.91
+    2025/26:
+      matches: 314
+      hit_pct: 22.0
+      normal_pct: 11.0
+      avg_odds: 3.98
+    2026/27:
+      matches: 74
+      hit_pct: 20.3
+      normal_pct: 10.6
+      avg_odds: 4.02
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||X/2-10
+  kind: odds_band
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: HT_FT||X/2
+    op: <=
+    odds: 4.599999904632568
+  summary: HT/FT X/2 when its odds are ≤ 4.60 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 884
+      hit_pct: 18.3
+      normal_pct: 10.9
+      avg_odds: 4.15
+    2025/26:
+      matches: 676
+      hit_pct: 21.3
+      normal_pct: 11.0
+      avg_odds: 4.21
+    2026/27:
+      matches: 202
+      hit_pct: 16.3
+      normal_pct: 10.6
+      avg_odds: 4.27
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||X/X-5
+  kind: odds_band
+  status: proven
+  bet: HT_FT||X/X
+  bet_name: HT/FT X/X
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/X'
+  criteria:
+  - bet: HT_FT||X/X
+    op: <=
+    odds: 3.490000009536743
+  summary: HT/FT X/X when its odds are ≤ 3.49 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 407
+      hit_pct: 24.8
+      normal_pct: 15.4
+      avg_odds: 3.26
+    2025/26:
+      matches: 395
+      hit_pct: 23.8
+      normal_pct: 15.6
+      avg_odds: 3.26
+    2026/27:
+      matches: 196
+      hit_pct: 23.5
+      normal_pct: 14.9
+      avg_odds: 3.21
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-HT_FT||X/X-10
+  kind: odds_band
+  status: proven
+  bet: HT_FT||X/X
+  bet_name: HT/FT X/X
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/X'
+  criteria:
+  - bet: HT_FT||X/X
+    op: <=
+    odds: 3.7200000286102295
+  summary: HT/FT X/X when its odds are ≤ 3.72 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 794
+      hit_pct: 22.7
+      normal_pct: 15.4
+      avg_odds: 3.43
+    2025/26:
+      matches: 762
+      hit_pct: 23.8
+      normal_pct: 15.6
+      avg_odds: 3.43
+    2026/27:
+      matches: 316
+      hit_pct: 23.1
+      normal_pct: 14.9
+      avg_odds: 3.36
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-OU_AND_BTTS|2.5|OVER&NO-5
+  kind: odds_band
+  status: proven
+  bet: OU_AND_BTTS|2.5|OVER&NO
+  bet_name: Goals & both score over & no 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Üst & Yok'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|OVER&NO
+    op: <=
+    odds: 3.7899999618530273
+  summary: Goals & both score over & no 2.5 when its odds are ≤ 3.79 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 506
+      hit_pct: 25.1
+      normal_pct: 9.8
+      avg_odds: 3.09
+    2025/26:
+      matches: 352
+      hit_pct: 23.3
+      normal_pct: 10.0
+      avg_odds: 3.15
+    2026/27:
+      matches: 95
+      hit_pct: 27.4
+      normal_pct: 10.2
+      avg_odds: 3.15
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-OU_AND_BTTS|2.5|OVER&NO-10
+  kind: odds_band
+  status: proven
+  bet: OU_AND_BTTS|2.5|OVER&NO
+  bet_name: Goals & both score over & no 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Üst & Yok'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|OVER&NO
+    op: <=
+    odds: 4.659999847412109
+  summary: Goals & both score over & no 2.5 when its odds are ≤ 4.66 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 981
+      hit_pct: 21.0
+      normal_pct: 9.8
+      avg_odds: 3.64
+    2025/26:
+      matches: 735
+      hit_pct: 22.6
+      normal_pct: 10.0
+      avg_odds: 3.73
+    2026/27:
+      matches: 195
+      hit_pct: 24.1
+      normal_pct: 10.2
+      avg_odds: 3.71
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-OU|4.5|OVER-5
+  kind: odds_band
+  status: proven
+  bet: OU|4.5|OVER
+  bet_name: Goals over 4.5
+  bet_name_tr: '4,5 Alt/Üst: Üst'
+  criteria:
+  - bet: OU|4.5|OVER
+    op: <=
+    odds: 2.819999933242798
+  summary: Goals over 4.5 when its odds are ≤ 2.82 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 423
+      hit_pct: 29.3
+      normal_pct: 14.6
+      avg_odds: 2.49
+    2025/26:
+      matches: 424
+      hit_pct: 30.9
+      normal_pct: 14.4
+      avg_odds: 2.5
+    2026/27:
+      matches: 244
+      hit_pct: 35.7
+      normal_pct: 17.1
+      avg_odds: 2.47
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-OU|4.5|OVER-10
+  kind: odds_band
+  status: proven
+  bet: OU|4.5|OVER
+  bet_name: Goals over 4.5
+  bet_name_tr: '4,5 Alt/Üst: Üst'
+  criteria:
+  - bet: OU|4.5|OVER
+    op: <=
+    odds: 3.1700000762939453
+  summary: Goals over 4.5 when its odds are ≤ 3.17 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 874
+      hit_pct: 28.9
+      normal_pct: 14.6
+      avg_odds: 2.76
+    2025/26:
+      matches: 804
+      hit_pct: 27.1
+      normal_pct: 14.4
+      avg_odds: 2.75
+    2026/27:
+      matches: 400
+      hit_pct: 30.0
+      normal_pct: 17.1
+      avg_odds: 2.68
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_OU_AWAY|2.5|OVER-5
+  kind: odds_band
+  status: proven
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.5899999141693115
+  summary: Away goals over 2.5 when its odds are ≤ 2.59 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 456
+      hit_pct: 39.3
+      normal_pct: 12.5
+      avg_odds: 2.13
+    2025/26:
+      matches: 438
+      hit_pct: 35.4
+      normal_pct: 13.1
+      avg_odds: 2.13
+    2026/27:
+      matches: 162
+      hit_pct: 40.7
+      normal_pct: 14.3
+      avg_odds: 2.11
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_OU_AWAY|2.5|OVER-10
+  kind: odds_band
+  status: proven
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 3.180000066757202
+  summary: Away goals over 2.5 when its odds are ≤ 3.18 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 875
+      hit_pct: 33.0
+      normal_pct: 12.5
+      avg_odds: 2.51
+    2025/26:
+      matches: 892
+      hit_pct: 30.6
+      normal_pct: 13.1
+      avg_odds: 2.53
+    2026/27:
+      matches: 323
+      hit_pct: 33.7
+      normal_pct: 14.3
+      avg_odds: 2.51
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_OU_HOME|2.5|OVER-5
+  kind: odds_band
+  status: proven
+  bet: TEAM_OU_HOME|2.5|OVER
+  bet_name: Home goals over 2.5
+  bet_name_tr: 'Ev Sahibi 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: TEAM_OU_HOME|2.5|OVER
+    op: <=
+    odds: 1.8700000047683716
+  summary: Home goals over 2.5 when its odds are ≤ 1.87 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 482
+      hit_pct: 52.1
+      normal_pct: 19.3
+      avg_odds: 1.62
+    2025/26:
+      matches: 416
+      hit_pct: 52.9
+      normal_pct: 19.9
+      avg_odds: 1.62
+    2026/27:
+      matches: 158
+      hit_pct: 53.8
+      normal_pct: 21.7
+      avg_odds: 1.61
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_OU_HOME|2.5|OVER-10
+  kind: odds_band
+  status: proven
+  bet: TEAM_OU_HOME|2.5|OVER
+  bet_name: Home goals over 2.5
+  bet_name_tr: 'Ev Sahibi 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: TEAM_OU_HOME|2.5|OVER
+    op: <=
+    odds: 2.2200000286102295
+  summary: Home goals over 2.5 when its odds are ≤ 2.22 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 957
+      hit_pct: 45.4
+      normal_pct: 19.3
+      avg_odds: 1.84
+    2025/26:
+      matches: 840
+      hit_pct: 45.4
+      normal_pct: 19.9
+      avg_odds: 1.84
+    2026/27:
+      matches: 327
+      hit_pct: 48.0
+      normal_pct: 21.7
+      avg_odds: 1.84
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_WIN_BOTH_HALVES_AWAY||YES-5
+  kind: odds_band
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+  bet_name: Away wins both halves yes
+  bet_name_tr: 'Deplasman İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+    op: <=
+    odds: 3.940000057220459
+  summary: Away wins both halves yes when its odds are ≤ 3.94 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 398
+      hit_pct: 26.4
+      normal_pct: 7.3
+      avg_odds: 3.12
+    2025/26:
+      matches: 350
+      hit_pct: 22.9
+      normal_pct: 7.0
+      avg_odds: 3.21
+    2026/27:
+      matches: 113
+      hit_pct: 31.9
+      normal_pct: 7.3
+      avg_odds: 3.14
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_WIN_BOTH_HALVES_AWAY||YES-10
+  kind: odds_band
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+  bet_name: Away wins both halves yes
+  bet_name_tr: 'Deplasman İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+    op: <=
+    odds: 5.039999961853027
+  summary: Away wins both halves yes when its odds are ≤ 5.04 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 804
+      hit_pct: 21.1
+      normal_pct: 7.3
+      avg_odds: 3.83
+    2025/26:
+      matches: 690
+      hit_pct: 18.7
+      normal_pct: 7.0
+      avg_odds: 3.86
+    2026/27:
+      matches: 208
+      hit_pct: 24.5
+      normal_pct: 7.3
+      avg_odds: 3.78
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_WIN_BOTH_HALVES_HOME||YES-5
+  kind: odds_band
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+  bet_name: Home wins both halves yes
+  bet_name_tr: 'Ev Sahibi İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+    op: <=
+    odds: 2.6600000858306885
+  summary: Home wins both halves yes when its odds are ≤ 2.66 (cheapest 5% of matches)
+  evidence:
+    2024/25:
+      matches: 430
+      hit_pct: 37.9
+      normal_pct: 13.1
+      avg_odds: 2.21
+    2025/26:
+      matches: 339
+      hit_pct: 38.3
+      normal_pct: 12.8
+      avg_odds: 2.25
+    2026/27:
+      matches: 120
+      hit_pct: 35.0
+      normal_pct: 12.8
+      avg_odds: 2.23
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: band-TEAM_WIN_BOTH_HALVES_HOME||YES-10
+  kind: odds_band
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+  bet_name: Home wins both halves yes
+  bet_name_tr: 'Ev Sahibi İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+    op: <=
+    odds: 3.2300000190734863
+  summary: Home wins both halves yes when its odds are ≤ 3.23 (cheapest 10% of matches)
+  evidence:
+    2024/25:
+      matches: 831
+      hit_pct: 33.9
+      normal_pct: 13.1
+      avg_odds: 2.56
+    2025/26:
+      matches: 710
+      hit_pct: 30.8
+      normal_pct: 12.8
+      avg_odds: 2.62
+    2026/27:
+      matches: 240
+      hit_pct: 33.8
+      normal_pct: 12.8
+      avg_odds: 2.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-CORRECT_SCORE-3-10
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.31029999256134033
+  selections:
+  - CORRECT_SCORE||0-2
+  - CORRECT_SCORE||0-3
+  - CORRECT_SCORE||1-1
+  - CORRECT_SCORE||1-2
+  - CORRECT_SCORE||1-3
+  - CORRECT_SCORE||2-0
+  - CORRECT_SCORE||2-1
+  - CORRECT_SCORE||2-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-0
+  - CORRECT_SCORE||3-1
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||4-0
+  - CORRECT_SCORE||4-1
+  - CORRECT_SCORE||4-2
+  summary: 'Correct score: back the 3 most likely together, only when they add up to ≥ 31.0% (top 10% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 836
+      hit_pct: 36.0
+      normal_pct: null
+      avg_odds: 1.97
+      every_match_pct: 31.4
+    2025/26:
+      matches: 206
+      hit_pct: 33.5
+      normal_pct: null
+      avg_odds: 2.02
+      every_match_pct: 31.1
+    2026/27:
+      matches: 175
+      hit_pct: 36.6
+      normal_pct: null
+      avg_odds: 2.06
+      every_match_pct: 30.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-CORRECT_SCORE-3-30
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.2971000075340271
+  selections:
+  - CORRECT_SCORE||0-2
+  - CORRECT_SCORE||0-3
+  - CORRECT_SCORE||1-1
+  - CORRECT_SCORE||1-2
+  - CORRECT_SCORE||1-3
+  - CORRECT_SCORE||2-0
+  - CORRECT_SCORE||2-1
+  - CORRECT_SCORE||2-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-0
+  - CORRECT_SCORE||3-1
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||4-0
+  - CORRECT_SCORE||4-1
+  - CORRECT_SCORE||4-2
+  summary: 'Correct score: back the 3 most likely together, only when they add up to ≥ 29.7% (top 30% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 2492
+      hit_pct: 34.8
+      normal_pct: null
+      avg_odds: 2.03
+      every_match_pct: 31.4
+    2025/26:
+      matches: 636
+      hit_pct: 31.3
+      normal_pct: null
+      avg_odds: 2.09
+      every_match_pct: 31.1
+    2026/27:
+      matches: 526
+      hit_pct: 35.2
+      normal_pct: null
+      avg_odds: 2.14
+      every_match_pct: 30.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-CORRECT_SCORE-2-10
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 2
+  min_pack_chance: 0.22390000522136688
+  selections:
+  - CORRECT_SCORE||0-2
+  - CORRECT_SCORE||0-3
+  - CORRECT_SCORE||1-1
+  - CORRECT_SCORE||1-2
+  - CORRECT_SCORE||1-3
+  - CORRECT_SCORE||2-0
+  - CORRECT_SCORE||2-1
+  - CORRECT_SCORE||2-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-0
+  - CORRECT_SCORE||3-1
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||4-0
+  - CORRECT_SCORE||4-1
+  - CORRECT_SCORE||4-2
+  summary: 'Correct score: back the 2 most likely together, only when they add up to ≥ 22.4% (top 10% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 814
+      hit_pct: 25.6
+      normal_pct: null
+      avg_odds: 2.69
+      every_match_pct: 22.8
+    2025/26:
+      matches: 225
+      hit_pct: 21.8
+      normal_pct: null
+      avg_odds: 2.75
+      every_match_pct: 22.0
+    2026/27:
+      matches: 199
+      hit_pct: 26.1
+      normal_pct: null
+      avg_odds: 2.81
+      every_match_pct: 21.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-CORRECT_SCORE-2-30
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 2
+  min_pack_chance: 0.21459999680519104
+  selections:
+  - CORRECT_SCORE||0-2
+  - CORRECT_SCORE||0-3
+  - CORRECT_SCORE||1-1
+  - CORRECT_SCORE||1-2
+  - CORRECT_SCORE||1-3
+  - CORRECT_SCORE||2-0
+  - CORRECT_SCORE||2-1
+  - CORRECT_SCORE||2-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-0
+  - CORRECT_SCORE||3-1
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||4-0
+  - CORRECT_SCORE||4-1
+  - CORRECT_SCORE||4-2
+  summary: 'Correct score: back the 2 most likely together, only when they add up to ≥ 21.5% (top 30% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 2418
+      hit_pct: 24.5
+      normal_pct: null
+      avg_odds: 2.81
+      every_match_pct: 22.8
+    2025/26:
+      matches: 698
+      hit_pct: 21.9
+      normal_pct: null
+      avg_odds: 2.89
+      every_match_pct: 22.0
+    2026/27:
+      matches: 533
+      hit_pct: 25.3
+      normal_pct: null
+      avg_odds: 2.95
+      every_match_pct: 21.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-HT_CORRECT_SCORE-3-10
+  kind: pack
+  status: proven
+  market: HT_CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.2734000086784363
+  selections:
+  - HT_CORRECT_SCORE||0-2
+  - HT_CORRECT_SCORE||1-1
+  - HT_CORRECT_SCORE||1-2
+  - HT_CORRECT_SCORE||2-0
+  - HT_CORRECT_SCORE||2-1
+  summary: '1st-half score: back the 3 most likely together, only when they add up to ≥ 27.3% (top 10% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 799
+      hit_pct: 30.9
+      normal_pct: null
+      avg_odds: 2.67
+      every_match_pct: 22.9
+    2025/26:
+      matches: 254
+      hit_pct: 30.7
+      normal_pct: null
+      avg_odds: 2.74
+      every_match_pct: 23.7
+    2026/27:
+      matches: 357
+      hit_pct: 29.1
+      normal_pct: null
+      avg_odds: 2.76
+      every_match_pct: 24.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-HT_CORRECT_SCORE-3-30
+  kind: pack
+  status: proven
+  market: HT_CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.2425999939441681
+  selections:
+  - HT_CORRECT_SCORE||0-2
+  - HT_CORRECT_SCORE||1-1
+  - HT_CORRECT_SCORE||1-2
+  - HT_CORRECT_SCORE||2-0
+  - HT_CORRECT_SCORE||2-1
+  summary: '1st-half score: back the 3 most likely together, only when they add up to ≥ 24.3% (top 30% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 2326
+      hit_pct: 27.6
+      normal_pct: null
+      avg_odds: 2.91
+      every_match_pct: 22.9
+    2025/26:
+      matches: 834
+      hit_pct: 28.7
+      normal_pct: null
+      avg_odds: 3.0
+      every_match_pct: 23.7
+    2026/27:
+      matches: 835
+      hit_pct: 28.4
+      normal_pct: null
+      avg_odds: 2.99
+      every_match_pct: 24.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-HT_FT-2-10
+  kind: pack
+  status: proven
+  market: HT_FT
+  k: 2
+  min_pack_chance: 0.4537000060081482
+  selections:
+  - HT_FT||1/2
+  - HT_FT||1/X
+  - HT_FT||2/1
+  - HT_FT||2/2
+  - HT_FT||2/X
+  - HT_FT||X/1
+  - HT_FT||X/2
+  - HT_FT||X/X
+  summary: 'HT/FT: back the 2 most likely together, only when they add up to ≥ 45.4% (top 10% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 810
+      hit_pct: 54.9
+      normal_pct: null
+      avg_odds: 1.4
+      every_match_pct: 36.9
+    2025/26:
+      matches: 738
+      hit_pct: 54.3
+      normal_pct: null
+      avg_odds: 1.41
+      every_match_pct: 37.6
+    2026/27:
+      matches: 254
+      hit_pct: 53.5
+      normal_pct: null
+      avg_odds: 1.43
+      every_match_pct: 36.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: pack-HT_FT-2-30
+  kind: pack
+  status: proven
+  market: HT_FT
+  k: 2
+  min_pack_chance: 0.3822000026702881
+  selections:
+  - HT_FT||1/2
+  - HT_FT||1/X
+  - HT_FT||2/1
+  - HT_FT||2/2
+  - HT_FT||2/X
+  - HT_FT||X/1
+  - HT_FT||X/2
+  - HT_FT||X/X
+  summary: 'HT/FT: back the 2 most likely together, only when they add up to ≥ 38.2% (top 30% most predictable matches)'
+  evidence:
+    2024/25:
+      matches: 2365
+      hit_pct: 46.0
+      normal_pct: null
+      avg_odds: 1.69
+      every_match_pct: 36.9
+    2025/26:
+      matches: 2283
+      hit_pct: 46.3
+      normal_pct: null
+      avg_odds: 1.7
+      every_match_pct: 37.6
+    2026/27:
+      matches: 783
+      hit_pct: 45.8
+      normal_pct: null
+      avg_odds: 1.72
+      every_match_pct: 36.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-ARG-1-1X2_AND_OU|2.5|X&UNDER
+  kind: league
+  status: promising
+  league: ARG-1
+  league_name: Argentina Liga Profesional
+  bet: 1X2_AND_OU|2.5|X&UNDER
+  bet_name: Result & goals X & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Alt'
+  summary: 'Argentina Liga Profesional: Result & goals X & under 2.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 580
+      hit_pct: 28.8
+      normal_pct: 19.2
+      odds_say_pct: 24.6
+      return_per_100: -9.4
+    2025/26:
+      matches: 507
+      hit_pct: 29.2
+      normal_pct: 19.0
+      odds_say_pct: 25.7
+      return_per_100: -19.0
+    2026/27:
+      matches: 432
+      hit_pct: 27.1
+      normal_pct: 18.2
+      odds_say_pct: 25.6
+      return_per_100: -19.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-GER-1-BOTH_HALVES_OVER|1.5|YES
+  kind: league
+  status: promising
+  league: GER-1
+  league_name: Germany Bundesliga
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  summary: 'Germany Bundesliga: Both halves over yes 1.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 304
+      hit_pct: 22.4
+      normal_pct: 15.9
+      odds_say_pct: 21.1
+      return_per_100: -26.8
+    2025/26:
+      matches: 305
+      hit_pct: 26.2
+      normal_pct: 16.1
+      odds_say_pct: 21.7
+      return_per_100: -4.6
+    2026/27:
+      matches: 44
+      hit_pct: 31.8
+      normal_pct: 19.1
+      odds_say_pct: 26.7
+      return_per_100: 5.5
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-GER-1-TEAM_OU_AWAY|2.5|OVER
+  kind: league
+  status: promising
+  league: GER-1
+  league_name: Germany Bundesliga
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  summary: 'Germany Bundesliga: Away goals over 2.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 304
+      hit_pct: 20.7
+      normal_pct: 12.5
+      odds_say_pct: 17.1
+      return_per_100: -13.3
+    2025/26:
+      matches: 305
+      hit_pct: 20.7
+      normal_pct: 13.1
+      odds_say_pct: 17.7
+      return_per_100: -23.3
+    2026/27:
+      matches: 44
+      hit_pct: 22.7
+      normal_pct: 14.3
+      odds_say_pct: 22.6
+      return_per_100: 5.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-USA-1-TEAM_OU_AWAY|2.5|OVER
+  kind: league
+  status: promising
+  league: USA-1
+  league_name: USA MLS
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  summary: 'USA MLS: Away goals over 2.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 517
+      hit_pct: 16.6
+      normal_pct: 12.5
+      odds_say_pct: 13.9
+      return_per_100: -20.3
+    2025/26:
+      matches: 538
+      hit_pct: 16.9
+      normal_pct: 13.1
+      odds_say_pct: 14.9
+      return_per_100: -18.5
+    2026/27:
+      matches: 401
+      hit_pct: 17.5
+      normal_pct: 14.3
+      odds_say_pct: 16.8
+      return_per_100: -20.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-GER-1-1X2_AND_OU|3.5|2&OVER
+  kind: league
+  status: promising
+  league: GER-1
+  league_name: Germany Bundesliga
+  bet: 1X2_AND_OU|3.5|2&OVER
+  bet_name: Result & goals 2 & over 3.5
+  bet_name_tr: 'MS ve Alt/Üst 3,5: 2 ve Üst'
+  summary: 'Germany Bundesliga: Result & goals 2 & over 3.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 304
+      hit_pct: 14.5
+      normal_pct: 8.6
+      odds_say_pct: 12.0
+      return_per_100: -17.8
+    2025/26:
+      matches: 305
+      hit_pct: 13.1
+      normal_pct: 8.8
+      odds_say_pct: 12.5
+      return_per_100: -20.5
+    2026/27:
+      matches: 44
+      hit_pct: 20.5
+      normal_pct: 9.6
+      odds_say_pct: 16.2
+      return_per_100: 63.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-USA-1-HT_1X2_AND_HT_BTTS||2&YES
+  kind: league
+  status: promising
+  league: USA-1
+  league_name: USA MLS
+  bet: HT_1X2_AND_HT_BTTS||2&YES
+  bet_name: 1st-half result & both score 2 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 2 & Var'
+  summary: 'USA MLS: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 517
+      hit_pct: 5.6
+      normal_pct: 3.7
+      odds_say_pct: 4.0
+      return_per_100: -10.2
+    2025/26:
+      matches: 538
+      hit_pct: 5.8
+      normal_pct: 3.7
+      odds_say_pct: 4.3
+      return_per_100: 0.4
+    2026/27:
+      matches: 401
+      hit_pct: 5.5
+      normal_pct: 3.8
+      odds_say_pct: 4.8
+      return_per_100: -10.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-SUI-1-BOTH_HALVES_OVER|1.5|YES
+  kind: league
+  status: promising
+  league: SUI-1
+  league_name: Switzerland Super League
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  summary: 'Switzerland Super League: Both halves over yes 1.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 225
+      hit_pct: 21.8
+      normal_pct: 15.9
+      odds_say_pct: 19.0
+      return_per_100: -19.5
+    2025/26:
+      matches: 227
+      hit_pct: 22.0
+      normal_pct: 16.1
+      odds_say_pct: 21.4
+      return_per_100: -17.9
+    2026/27:
+      matches: 60
+      hit_pct: 31.7
+      normal_pct: 19.1
+      odds_say_pct: 25.8
+      return_per_100: -3.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-USA-1-HT_1X2_AND_HT_BTTS||1&YES
+  kind: league
+  status: promising
+  league: USA-1
+  league_name: USA MLS
+  bet: HT_1X2_AND_HT_BTTS||1&YES
+  bet_name: 1st-half result & both score 1 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 1 & Var'
+  summary: 'USA MLS: 1st-half result & both score 1 & yes — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 517
+      hit_pct: 6.8
+      normal_pct: 4.8
+      odds_say_pct: 6.2
+      return_per_100: -25.5
+    2025/26:
+      matches: 538
+      hit_pct: 6.7
+      normal_pct: 4.6
+      odds_say_pct: 6.3
+      return_per_100: -21.7
+    2026/27:
+      matches: 401
+      hit_pct: 8.5
+      normal_pct: 5.4
+      odds_say_pct: 6.8
+      return_per_100: -16.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-ITA-2-1X2_AND_OU|2.5|X&UNDER
+  kind: league
+  status: promising
+  league: ITA-2
+  league_name: Italy Serie B
+  bet: 1X2_AND_OU|2.5|X&UNDER
+  bet_name: Result & goals X & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Alt'
+  summary: 'Italy Serie B: Result & goals X & under 2.5 — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 388
+      hit_pct: 24.2
+      normal_pct: 19.2
+      odds_say_pct: 21.4
+      return_per_100: -18.7
+    2025/26:
+      matches: 390
+      hit_pct: 23.1
+      normal_pct: 19.0
+      odds_say_pct: 20.5
+      return_per_100: -20.5
+    2026/27:
+      matches: 60
+      hit_pct: 21.7
+      normal_pct: 18.2
+      odds_say_pct: 19.9
+      return_per_100: -19.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: league-FRA-1-HT_1X2_AND_HT_BTTS||2&YES
+  kind: league
+  status: promising
+  league: FRA-1
+  league_name: France Ligue 1
+  bet: HT_1X2_AND_HT_BTTS||2&YES
+  bet_name: 1st-half result & both score 2 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 2 & Var'
+  summary: 'France Ligue 1: 1st-half result & both score 2 & yes — above normal AND above what the odds say, every season'
+  evidence:
+    2024/25:
+      matches: 308
+      hit_pct: 6.2
+      normal_pct: 3.7
+      odds_say_pct: 3.9
+      return_per_100: 19.6
+    2025/26:
+      matches: 306
+      hit_pct: 5.9
+      normal_pct: 3.7
+      odds_say_pct: 4.0
+      return_per_100: -2.5
+    2026/27:
+      matches: 52
+      hit_pct: 5.8
+      normal_pct: 3.8
+      odds_say_pct: 4.5
+      return_per_100: -2.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: money-POR-1-1X2_AND_OU|2.5|X&OVER
+  kind: league
+  status: promising
+  league: POR-1
+  league_name: Portugal Primeira Liga
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: Result & goals X & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  summary: 'Portugal Primeira Liga: Result & goals X & over 2.5 — made money in every season (only league x bet out of ~4,200
+    to do so)'
+  evidence:
+    2024/25:
+      matches: 298
+      hit_pct: 7.7
+      return_per_100: 27.4
+    2025/26:
+      matches: 277
+      hit_pct: 10.8
+      return_per_100: 64.9
+    2026/27:
+      matches: 70
+      hit_pct: 12.9
+      return_per_100: 144.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: v4-POR-1-1X2_AND_OU|2.5|X&OVER-odds > 13.95
+  kind: league_rule
+  status: promising
+  league: POR-1
+  league_name: Portugal Primeira Liga
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: Result & goals X & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&OVER
+    op: '>'
+    odds: 13.95
+  summary: 'Portugal Primeira Liga: Result & goals X & over 2.5 when its odds > 13.95 — made money in every season'
+  evidence:
+    2024/25:
+      matches: 203
+      hit_pct: 7.4
+      return_per_100: 39.4
+    2025/26:
+      matches: 177
+      hit_pct: 7.9
+      return_per_100: 45.1
+    2026/27:
+      matches: 49
+      hit_pct: 12.2
+      return_per_100: 173.1
+  first_added: '2026-10-15'
+  last_confirmed: '2026-10-19'
+- id: v4-ESP-1-OU_AND_BTTS|2.5|UNDER&YES-odds 5.61–6.48
+  kind: league_rule
+  status: watch
+  league: ESP-1
+  league_name: Spain La Liga
+  bet: OU_AND_BTTS|2.5|UNDER&YES
+  bet_name: Goals & both score under & yes 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Alt & Var'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|UNDER&YES
+    op: '>'
+    odds: 5.61
+  - bet: OU_AND_BTTS|2.5|UNDER&YES
+    op: <=
+    odds: 6.48
+  summary: 'Spain La Liga: Goals & both score under & yes 2.5 when its odds 5.61–6.48 — made money in every season — but the
+    same market loses in La Liga overall (-10/-3/-9): likely a slicing artefact'
+  evidence:
+    2024/25:
+      matches: 89
+      hit_pct: 18.0
+      return_per_100: 7.4
+    2025/26:
+      matches: 152
+      hit_pct: 25.0
+      return_per_100: 48.3
+    2026/27:
+      matches: 27
+      hit_pct: 22.2
+      return_per_100: 27.9
+  first_added: '2026-10-15'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_BTTS||1&YES-0
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||1&YES
+  bet_name: 1st-half result & both score 1 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 1 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 13.47
+  - bet: 1X2_AND_OU|4.5|1&OVER
+    op: <=
+    odds: 3.87
+  summary: 1st-half result & both score 1 & yes when 1st-half result & both score 1 & yes odds ≤ 13.47  AND  Result & goals
+    1 & over 4.5 odds ≤ 3.87
+  evidence:
+    2024/25:
+      matches: 496
+      hit_pct: 12.3
+      normal_pct: 4.8
+    2025/26:
+      matches: 410
+      hit_pct: 10.0
+      normal_pct: 4.6
+    2026/27:
+      matches: 171
+      hit_pct: 12.9
+      normal_pct: 5.4
+      odds_say_pct: 10.5
+      odds_filter_same_size_pct: 15.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_BTTS||1&YES-1
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_BTTS||1&YES
+  bet_name: 1st-half result & both score 1 & yes
+  bet_name_tr: '1. Yarı ve 1. Yarı KG: 1.Y 1 & Var'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 13.47
+  - bet: OU|1.5|UNDER
+    op: '>'
+    odds: 4.6
+  summary: 1st-half result & both score 1 & yes when 1st-half result & both score 1 & yes odds ≤ 13.47  AND  Goals under 1.5
+    odds > 4.60
+  evidence:
+    2024/25:
+      matches: 1069
+      hit_pct: 10.0
+      normal_pct: 4.8
+    2025/26:
+      matches: 1097
+      hit_pct: 8.8
+      normal_pct: 4.6
+    2026/27:
+      matches: 557
+      hit_pct: 10.2
+      normal_pct: 5.4
+      odds_say_pct: 8.6
+      odds_filter_same_size_pct: 10.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-0
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+  bet_name: 1st-half result & goals 2 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Üst'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 4.8
+  - bet: 1X2_AND_OU|2.5|2&OVER
+    op: <=
+    odds: 2.61
+  - bet: 2H_1X2||1
+    op: '>'
+    odds: 5.25
+  summary: 1st-half result & goals 2 & over 1.5 when Result & both score 2 & yes odds ≤ 4.80  AND  Result & goals 2 & over
+    2.5 odds ≤ 2.61  AND  2nd-half result home odds > 5.25
+  evidence:
+    2024/25:
+      matches: 195
+      hit_pct: 33.8
+      normal_pct: 8.7
+    2025/26:
+      matches: 150
+      hit_pct: 28.7
+      normal_pct: 9.4
+    2026/27:
+      matches: 40
+      hit_pct: 47.5
+      normal_pct: 9.4
+      odds_say_pct: 30.3
+      odds_filter_same_size_pct: 35.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-1
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+  bet_name: 1st-half result & goals 2 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Üst'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 4.8
+  - bet: 1X2_AND_OU|2.5|2&OVER
+    op: <=
+    odds: 2.61
+  - bet: 1X2||1
+    op: '>'
+    odds: 5.99
+  summary: 1st-half result & goals 2 & over 1.5 when Result & both score 2 & yes odds ≤ 4.80  AND  Result & goals 2 & over
+    2.5 odds ≤ 2.61  AND  Result home odds > 5.99
+  evidence:
+    2024/25:
+      matches: 184
+      hit_pct: 34.2
+      normal_pct: 8.7
+    2025/26:
+      matches: 148
+      hit_pct: 27.7
+      normal_pct: 9.4
+    2026/27:
+      matches: 44
+      hit_pct: 47.7
+      normal_pct: 9.4
+      odds_say_pct: 30.3
+      odds_filter_same_size_pct: 36.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_OU|1.5|2&OVER-2
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+  bet_name: 1st-half result & goals 2 & over 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Üst'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 4.8
+  - bet: 1X2_AND_OU|3.5|2&OVER
+    op: <=
+    odds: 4.74
+  - bet: 2H_1X2||1
+    op: '>'
+    odds: 5.25
+  summary: 1st-half result & goals 2 & over 1.5 when Result & both score 2 & yes odds ≤ 4.80  AND  Result & goals 2 & over
+    3.5 odds ≤ 4.74  AND  2nd-half result home odds > 5.25
+  evidence:
+    2024/25:
+      matches: 194
+      hit_pct: 34.0
+      normal_pct: 8.7
+    2025/26:
+      matches: 157
+      hit_pct: 26.8
+      normal_pct: 9.4
+    2026/27:
+      matches: 40
+      hit_pct: 45.0
+      normal_pct: 9.4
+      odds_say_pct: 30.8
+      odds_filter_same_size_pct: 35.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_1X2_AND_HT_OU|1.5|2&UNDER-0
+  kind: odds_rule
+  status: proven
+  bet: HT_1X2_AND_HT_OU|1.5|2&UNDER
+  bet_name: 1st-half result & goals 2 & under 1.5
+  bet_name_tr: '1.Yarı ve 1.Yarı 1,5 Alt/Üst: 1.Y 2 & Alt'
+  criteria:
+  - bet: 1X2||1
+    op: '>'
+    odds: 2.08
+  - bet: 1X2||1
+    op: '>'
+    odds: 3.26
+  summary: 1st-half result & goals 2 & under 1.5 when Result home odds > 2.08  AND  Result home odds > 3.26
+  evidence:
+    2024/25:
+      matches: 1034
+      hit_pct: 26.7
+      normal_pct: 16.0
+    2025/26:
+      matches: 965
+      hit_pct: 24.4
+      normal_pct: 15.3
+    2026/27:
+      matches: 317
+      hit_pct: 23.3
+      normal_pct: 15.4
+      odds_say_pct: 24.3
+      odds_filter_same_size_pct: 23.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||0-2-0
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||0-2
+  bet_name: 1st-half score 0-2
+  bet_name_tr: '1. Yarı Skoru: 0-2'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 4.79
+  - bet: 1X2_AND_BTTS||2&NO
+    op: <=
+    odds: 5.55
+  summary: 1st-half score 0-2 when Result & both score 2 & yes odds ≤ 4.79  AND  Result & both score 2 & no odds ≤ 5.55
+  evidence:
+    2024/25:
+      matches: 3399
+      hit_pct: 7.0
+      normal_pct: 3.9
+    2025/26:
+      matches: 2625
+      hit_pct: 7.8
+      normal_pct: 4.8
+    2026/27:
+      matches: 673
+      hit_pct: 7.6
+      normal_pct: 4.4
+      odds_say_pct: 7.7
+      odds_filter_same_size_pct: 7.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||2-0-0
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: DC||X2
+    op: '>'
+    odds: 1.46
+  - bet: 2H_1X2||2
+    op: '>'
+    odds: 4.78
+  - bet: 1X2_AND_BTTS||1&YES
+    op: <=
+    odds: 2.57
+  summary: 1st-half score 2-0 when Double chance X2 odds > 1.46  AND  2nd-half result away odds > 4.78  AND  Result & both
+    score 1 & yes odds ≤ 2.57
+  evidence:
+    2024/25:
+      matches: 764
+      hit_pct: 17.3
+      normal_pct: 6.5
+    2025/26:
+      matches: 461
+      hit_pct: 17.4
+      normal_pct: 7.2
+    2026/27:
+      matches: 163
+      hit_pct: 13.5
+      normal_pct: 7.0
+      odds_say_pct: 15.1
+      odds_filter_same_size_pct: 14.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||2-0-1
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: DC||X2
+    op: '>'
+    odds: 1.46
+  - bet: 2H_1X2||2
+    op: '>'
+    odds: 4.78
+  summary: 1st-half score 2-0 when Double chance X2 odds > 1.46  AND  2nd-half result away odds > 4.78
+  evidence:
+    2024/25:
+      matches: 1204
+      hit_pct: 14.9
+      normal_pct: 6.5
+    2025/26:
+      matches: 1009
+      hit_pct: 14.6
+      normal_pct: 7.2
+    2026/27:
+      matches: 362
+      hit_pct: 11.6
+      normal_pct: 7.0
+      odds_say_pct: 13.3
+      odds_filter_same_size_pct: 13.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||2-0-2
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: DC||X2
+    op: '>'
+    odds: 1.46
+  - bet: 2H_1X2||2
+    op: '>'
+    odds: 4.78
+  - bet: 1X2_AND_BTTS||1&YES
+    op: '>'
+    odds: 2.57
+  summary: 1st-half score 2-0 when Double chance X2 odds > 1.46  AND  2nd-half result away odds > 4.78  AND  Result & both
+    score 1 & yes odds > 2.57
+  evidence:
+    2024/25:
+      matches: 440
+      hit_pct: 10.7
+      normal_pct: 6.5
+    2025/26:
+      matches: 548
+      hit_pct: 12.2
+      normal_pct: 7.2
+    2026/27:
+      matches: 199
+      hit_pct: 10.1
+      normal_pct: 7.0
+      odds_say_pct: 11.8
+      odds_filter_same_size_pct: 15.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||2-1-0
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-1
+  bet_name: 1st-half score 2-1
+  bet_name_tr: '1. Yarı Skoru: 2-1'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|2&UNDER
+    op: '>'
+    odds: 12.67
+  - bet: CORRECT_SCORE||2-1
+    op: '>'
+    odds: 6.69
+  summary: 1st-half score 2-1 when Result & goals 2 & under 1.5 odds > 12.67  AND  Score 2-1 odds > 6.69
+  evidence:
+    2024/25:
+      matches: 2386
+      hit_pct: 5.7
+      normal_pct: 3.6
+    2025/26:
+      matches: 3009
+      hit_pct: 5.2
+      normal_pct: 3.6
+    2026/27:
+      matches: 1242
+      hit_pct: 5.3
+      normal_pct: 3.9
+      odds_say_pct: 4.9
+      odds_filter_same_size_pct: 5.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_CORRECT_SCORE||2-1-1
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-1
+  bet_name: 1st-half score 2-1
+  bet_name_tr: '1. Yarı Skoru: 2-1'
+  criteria:
+  - bet: HT_TEAM_OU_HOME|0.5|UNDER
+    op: '>'
+    odds: 1.83
+  - bet: TEAM_OU_AWAY|1.5|UNDER
+    op: '>'
+    odds: 1.21
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 13.72
+  summary: 1st-half score 2-1 when Home 1st-half goals under 0.5 odds > 1.83  AND  Away goals under 1.5 odds > 1.21  AND  Result
+    & goals X & under 1.5 odds > 13.72
+  evidence:
+    2024/25:
+      matches: 861
+      hit_pct: 8.4
+      normal_pct: 3.6
+    2025/26:
+      matches: 933
+      hit_pct: 5.0
+      normal_pct: 3.6
+    2026/27:
+      matches: 474
+      hit_pct: 5.5
+      normal_pct: 3.9
+      odds_say_pct: 5.7
+      odds_filter_same_size_pct: 7.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-2nd half has 3+ goals-0
+  kind: odds_rule
+  status: proven
+  bet: 2nd half has 3+ goals
+  bet_name: 2nd half has 3+ goals
+  bet_name_tr: 2nd half has 3+ goals
+  criteria:
+  - bet: GOAL_RANGE||0-1
+    op: '>'
+    odds: 3.82
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.21
+  summary: 2nd half has 3+ goals when Total goals 0-1 odds > 3.82  AND  Total goals 6+ odds ≤ 6.21
+  evidence:
+    2024/25:
+      matches: 732
+      hit_pct: 32.9
+      normal_pct: 19.7
+    2025/26:
+      matches: 762
+      hit_pct: 29.5
+      normal_pct: 19.7
+    2026/27:
+      matches: 394
+      hit_pct: 34.0
+      normal_pct: 20.6
+      odds_say_pct: 31.0
+      odds_filter_same_size_pct: 32.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-2nd half has 3+ goals-1
+  kind: odds_rule
+  status: proven
+  bet: 2nd half has 3+ goals
+  bet_name: 2nd half has 3+ goals
+  bet_name_tr: 2nd half has 3+ goals
+  criteria:
+  - bet: OU|1.5|UNDER
+    op: '>'
+    odds: 3.52
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.21
+  summary: 2nd half has 3+ goals when Goals under 1.5 odds > 3.52  AND  Total goals 6+ odds ≤ 6.21
+  evidence:
+    2024/25:
+      matches: 732
+      hit_pct: 32.9
+      normal_pct: 19.7
+    2025/26:
+      matches: 762
+      hit_pct: 29.5
+      normal_pct: 19.7
+    2026/27:
+      matches: 394
+      hit_pct: 34.0
+      normal_pct: 20.6
+      odds_say_pct: 31.0
+      odds_filter_same_size_pct: 32.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-2nd half has 3+ goals-2
+  kind: odds_rule
+  status: proven
+  bet: 2nd half has 3+ goals
+  bet_name: 2nd half has 3+ goals
+  bet_name_tr: 2nd half has 3+ goals
+  criteria:
+  - bet: GOAL_RANGE||0-1
+    op: '>'
+    odds: 3.82
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.21
+  - bet: CORNERS_OU|9.5|UNDER
+    op: <=
+    odds: 2.07
+  summary: 2nd half has 3+ goals when Total goals 0-1 odds > 3.82  AND  Total goals 6+ odds ≤ 6.21  AND  Corners under 9.5
+    odds ≤ 2.07
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 39.5
+      normal_pct: 19.7
+    2025/26:
+      matches: 536
+      hit_pct: 29.3
+      normal_pct: 19.7
+    2026/27:
+      matches: 225
+      hit_pct: 36.9
+      normal_pct: 20.6
+      odds_say_pct: 30.6
+      odds_filter_same_size_pct: 34.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-5+ goals and both score-0
+  kind: odds_rule
+  status: proven
+  bet: 5+ goals and both score
+  bet_name: 5+ goals and both score
+  bet_name_tr: 5+ goals and both score
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 13.02
+  - bet: OU|2.5|UNDER
+    op: '>'
+    odds: 2.22
+  summary: 5+ goals and both score when Result & goals X & under 1.5 odds > 13.02  AND  Goals under 2.5 odds > 2.22
+  evidence:
+    2024/25:
+      matches: 1165
+      hit_pct: 24.5
+      normal_pct: 13.1
+    2025/26:
+      matches: 1149
+      hit_pct: 22.4
+      normal_pct: 13.0
+    2026/27:
+      matches: 588
+      hit_pct: 23.6
+      normal_pct: 15.5
+      odds_say_pct: 23.9
+      odds_filter_same_size_pct: 24.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-5+ goals and both score-1
+  kind: odds_rule
+  status: proven
+  bet: 5+ goals and both score
+  bet_name: 5+ goals and both score
+  bet_name_tr: 5+ goals and both score
+  criteria:
+  - bet: OU|3.5|OVER
+    op: <=
+    odds: 2.48
+  - bet: OU_AND_BTTS|2.5|UNDER&NO
+    op: '>'
+    odds: 2.75
+  summary: 5+ goals and both score when Goals over 3.5 odds ≤ 2.48  AND  Goals & both score under & no 2.5 odds > 2.75
+  evidence:
+    2024/25:
+      matches: 1279
+      hit_pct: 24.2
+      normal_pct: 13.1
+    2025/26:
+      matches: 1768
+      hit_pct: 21.1
+      normal_pct: 13.0
+    2026/27:
+      matches: 960
+      hit_pct: 22.9
+      normal_pct: 15.5
+      odds_say_pct: 21.7
+      odds_filter_same_size_pct: 22.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-5+ goals and both score-2
+  kind: odds_rule
+  status: proven
+  bet: 5+ goals and both score
+  bet_name: 5+ goals and both score
+  bet_name_tr: 5+ goals and both score
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 13.02
+  - bet: HT_BTTS||YES
+    op: <=
+    odds: 3.34
+  summary: 5+ goals and both score when Result & goals X & under 1.5 odds > 13.02  AND  1st-half both score yes odds ≤ 3.34
+  evidence:
+    2024/25:
+      matches: 1382
+      hit_pct: 23.8
+      normal_pct: 13.1
+    2025/26:
+      matches: 1618
+      hit_pct: 20.1
+      normal_pct: 13.0
+    2026/27:
+      matches: 703
+      hit_pct: 24.0
+      normal_pct: 15.5
+      odds_say_pct: 22.7
+      odds_filter_same_size_pct: 24.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_OU_AWAY|2.5|OVER-0
+  kind: odds_rule
+  status: proven
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: HT_TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 2.0
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.9
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: '>'
+    odds: 17.32
+  summary: Away goals over 2.5 when Away 1st-half goals over 0.5 odds ≤ 2.00  AND  Away goals over 2.5 odds ≤ 2.90  AND  Result
+    & goals 1 & under 1.5 odds > 17.32
+  evidence:
+    2024/25:
+      matches: 277
+      hit_pct: 45.8
+      normal_pct: 12.5
+    2025/26:
+      matches: 299
+      hit_pct: 39.1
+      normal_pct: 13.1
+    2026/27:
+      matches: 150
+      hit_pct: 42.0
+      normal_pct: 14.3
+      odds_say_pct: 39.0
+      odds_filter_same_size_pct: 42.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_OU_AWAY|2.5|OVER-1
+  kind: odds_rule
+  status: proven
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: HT_TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 2.0
+  - bet: TEAM_OU_AWAY|1.5|OVER
+    op: <=
+    odds: 1.53
+  - bet: 2H_1X2||X
+    op: '>'
+    odds: 2.62
+  summary: Away goals over 2.5 when Away 1st-half goals over 0.5 odds ≤ 2.00  AND  Away goals over 1.5 odds ≤ 1.53  AND  2nd-half
+    result draw odds > 2.62
+  evidence:
+    2024/25:
+      matches: 422
+      hit_pct: 42.4
+      normal_pct: 12.5
+    2025/26:
+      matches: 380
+      hit_pct: 35.3
+      normal_pct: 13.1
+    2026/27:
+      matches: 177
+      hit_pct: 40.1
+      normal_pct: 14.3
+      odds_say_pct: 37.9
+      odds_filter_same_size_pct: 40.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_OU_AWAY|2.5|OVER-2
+  kind: odds_rule
+  status: proven
+  bet: TEAM_OU_AWAY|2.5|OVER
+  bet_name: Away goals over 2.5
+  bet_name_tr: 'Deplasman 2,5 Alt/Üst: Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||2&YES
+    op: <=
+    odds: 21.27
+  - bet: TEAM_OU_AWAY|0.5|UNDER
+    op: '>'
+    odds: 4.14
+  - bet: 2H_1X2||X
+    op: '>'
+    odds: 2.62
+  summary: Away goals over 2.5 when 1st-half result & both score 2 & yes odds ≤ 21.27  AND  Away goals under 0.5 odds > 4.14  AND  2nd-half
+    result draw odds > 2.62
+  evidence:
+    2024/25:
+      matches: 469
+      hit_pct: 41.6
+      normal_pct: 12.5
+    2025/26:
+      matches: 414
+      hit_pct: 34.5
+      normal_pct: 13.1
+    2026/27:
+      matches: 224
+      hit_pct: 38.8
+      normal_pct: 14.3
+      odds_say_pct: 35.1
+      odds_filter_same_size_pct: 37.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-0
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+  bet_name: Away wins both halves yes
+  bet_name_tr: 'Deplasman İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: HT_1X2||2
+    op: <=
+    odds: 2.91
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.93
+  - bet: 1X2||1
+    op: '>'
+    odds: 5.85
+  summary: Away wins both halves yes when 1st-half result away odds ≤ 2.91  AND  Away goals over 2.5 odds ≤ 2.93  AND  Result
+    home odds > 5.85
+  evidence:
+    2024/25:
+      matches: 193
+      hit_pct: 36.8
+      normal_pct: 7.3
+    2025/26:
+      matches: 173
+      hit_pct: 28.9
+      normal_pct: 7.0
+    2026/27:
+      matches: 49
+      hit_pct: 42.9
+      normal_pct: 7.3
+      odds_say_pct: 32.8
+      odds_filter_same_size_pct: 40.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-1
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+  bet_name: Away wins both halves yes
+  bet_name_tr: 'Deplasman İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: 2H_1X2||2
+    op: <=
+    odds: 2.62
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.93
+  - bet: 1X2||1
+    op: '>'
+    odds: 5.85
+  summary: Away wins both halves yes when 2nd-half result away odds ≤ 2.62  AND  Away goals over 2.5 odds ≤ 2.93  AND  Result
+    home odds > 5.85
+  evidence:
+    2024/25:
+      matches: 193
+      hit_pct: 36.8
+      normal_pct: 7.3
+    2025/26:
+      matches: 173
+      hit_pct: 28.9
+      normal_pct: 7.0
+    2026/27:
+      matches: 49
+      hit_pct: 42.9
+      normal_pct: 7.3
+      odds_say_pct: 32.8
+      odds_filter_same_size_pct: 40.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_AWAY||YES-2
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_AWAY||YES
+  bet_name: Away wins both halves yes
+  bet_name_tr: 'Deplasman İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: 2H_1X2||2
+    op: <=
+    odds: 2.62
+  - bet: TEAM_OU_AWAY|1.5|OVER
+    op: <=
+    odds: 1.54
+  - bet: 1X2||1
+    op: '>'
+    odds: 5.85
+  summary: Away wins both halves yes when 2nd-half result away odds ≤ 2.62  AND  Away goals over 1.5 odds ≤ 1.54  AND  Result
+    home odds > 5.85
+  evidence:
+    2024/25:
+      matches: 193
+      hit_pct: 36.8
+      normal_pct: 7.3
+    2025/26:
+      matches: 177
+      hit_pct: 28.8
+      normal_pct: 7.0
+    2026/27:
+      matches: 49
+      hit_pct: 42.9
+      normal_pct: 7.3
+      odds_say_pct: 32.8
+      odds_filter_same_size_pct: 40.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-BOTH_HALVES_OVER|1.5|YES-0
+  kind: odds_rule
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: OU|3.5|UNDER
+    op: '>'
+    odds: 1.48
+  - cut: OU|2.5
+    op: <=
+    pct: 21.4
+  summary: Both halves over yes 1.5 when Result & goals X & under 2.5 odds > 4.39  AND  Goals under 3.5 odds > 1.48  AND  Nesine's
+    cut on OU|2.5 ≤ 21.4%
+  evidence:
+    2024/25:
+      matches: 622
+      hit_pct: 33.0
+      normal_pct: 15.9
+    2025/26:
+      matches: 630
+      hit_pct: 28.6
+      normal_pct: 16.1
+    2026/27:
+      matches: 434
+      hit_pct: 31.6
+      normal_pct: 19.1
+      odds_say_pct: 27.6
+      odds_filter_same_size_pct: 31.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-BOTH_HALVES_OVER|1.5|YES-1
+  kind: odds_rule
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: BOTH_HALVES_OVER|1.5|NO
+    op: '>'
+    odds: 1.12
+  - cut: BTTS
+    op: <=
+    pct: 21.4
+  summary: Both halves over yes 1.5 when Result & goals X & under 2.5 odds > 4.39  AND  Both halves over no 1.5 odds > 1.12  AND  Nesine's
+    cut on BTTS ≤ 21.4%
+  evidence:
+    2024/25:
+      matches: 607
+      hit_pct: 33.1
+      normal_pct: 15.9
+    2025/26:
+      matches: 613
+      hit_pct: 28.5
+      normal_pct: 16.1
+    2026/27:
+      matches: 395
+      hit_pct: 31.9
+      normal_pct: 19.1
+      odds_say_pct: 27.5
+      odds_filter_same_size_pct: 32.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-BOTH_HALVES_OVER|1.5|YES-2
+  kind: odds_rule
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: BOTH_HALVES_OVER|1.5|NO
+    op: '>'
+    odds: 1.12
+  summary: Both halves over yes 1.5 when Result & goals X & under 3.5 odds > 4.39  AND  Both halves over no 1.5 odds > 1.12
+  evidence:
+    2024/25:
+      matches: 812
+      hit_pct: 30.0
+      normal_pct: 15.9
+    2025/26:
+      matches: 794
+      hit_pct: 28.0
+      normal_pct: 16.1
+    2026/27:
+      matches: 425
+      hit_pct: 31.1
+      normal_pct: 19.1
+      odds_say_pct: 27.7
+      odds_filter_same_size_pct: 31.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU_AND_BTTS|2.5|OVER&NO-0
+  kind: odds_rule
+  status: proven
+  bet: OU_AND_BTTS|2.5|OVER&NO
+  bet_name: Goals & both score over & no 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Üst & Yok'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|OVER&NO
+    op: <=
+    odds: 5.58
+  - bet: 2H_1X2||X
+    op: '>'
+    odds: 3.23
+  summary: Goals & both score over & no 2.5 when Goals & both score over & no 2.5 odds ≤ 5.58  AND  2nd-half result draw odds
+    > 3.23
+  evidence:
+    2024/25:
+      matches: 264
+      hit_pct: 31.4
+      normal_pct: 9.8
+    2025/26:
+      matches: 174
+      hit_pct: 28.2
+      normal_pct: 10.0
+    2026/27:
+      matches: 85
+      hit_pct: 22.4
+      normal_pct: 10.2
+      odds_say_pct: 25.4
+      odds_filter_same_size_pct: 29.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU_AND_BTTS|2.5|OVER&NO-1
+  kind: odds_rule
+  status: proven
+  bet: OU_AND_BTTS|2.5|OVER&NO
+  bet_name: Goals & both score over & no 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Üst & Yok'
+  criteria:
+  - bet: OU_AND_BTTS|2.5|OVER&NO
+    op: <=
+    odds: 5.58
+  - bet: 1X2_AND_OU|3.5|X&OVER
+    op: '>'
+    odds: 16.52
+  - bet: 1X2_AND_OU|2.5|1&UNDER
+    op: '>'
+    odds: 3.06
+  summary: Goals & both score over & no 2.5 when Goals & both score over & no 2.5 odds ≤ 5.58  AND  Result & goals X & over
+    3.5 odds > 16.52  AND  Result & goals 1 & under 2.5 odds > 3.06
+  evidence:
+    2024/25:
+      matches: 428
+      hit_pct: 30.1
+      normal_pct: 9.8
+    2025/26:
+      matches: 378
+      hit_pct: 24.3
+      normal_pct: 10.0
+    2026/27:
+      matches: 110
+      hit_pct: 28.2
+      normal_pct: 10.2
+      odds_say_pct: 24.0
+      odds_filter_same_size_pct: 27.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU_AND_BTTS|2.5|OVER&NO-2
+  kind: odds_rule
+  status: proven
+  bet: OU_AND_BTTS|2.5|OVER&NO
+  bet_name: Goals & both score over & no 2.5
+  bet_name_tr: '2,5 Alt/Üst ve Karşılıklı Gol: Üst & Yok'
+  criteria:
+  - bet: TEAM_OU_HOME|1.5|UNDER
+    op: '>'
+    odds: 2.01
+  - bet: 1X2_AND_OU|1.5|X&OVER
+    op: '>'
+    odds: 5.5
+  summary: Goals & both score over & no 2.5 when Home goals under 1.5 odds > 2.01  AND  Result & goals X & over 1.5 odds >
+    5.50
+  evidence:
+    2024/25:
+      matches: 642
+      hit_pct: 25.4
+      normal_pct: 9.8
+    2025/26:
+      matches: 600
+      hit_pct: 22.5
+      normal_pct: 10.0
+    2026/27:
+      matches: 204
+      hit_pct: 21.1
+      normal_pct: 10.2
+      odds_say_pct: 21.5
+      odds_filter_same_size_pct: 26.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU|4.5|OVER-0
+  kind: odds_rule
+  status: proven
+  bet: OU|4.5|OVER
+  bet_name: Goals over 4.5
+  bet_name_tr: '4,5 Alt/Üst: Üst'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 12.47
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.35
+  - bet: CORNERS_OU|9.5|OVER
+    op: <=
+    odds: 1.34
+  summary: Goals over 4.5 when Result & goals X & under 1.5 odds > 12.47  AND  Total goals 6+ odds ≤ 6.35  AND  Corners over
+    9.5 odds ≤ 1.34
+  evidence:
+    2024/25:
+      matches: 341
+      hit_pct: 23.8
+      normal_pct: 14.6
+    2025/26:
+      matches: 251
+      hit_pct: 28.3
+      normal_pct: 14.4
+    2026/27:
+      matches: 166
+      hit_pct: 25.3
+      normal_pct: 17.1
+      odds_say_pct: 28.9
+      odds_filter_same_size_pct: 38.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU|4.5|OVER-1
+  kind: odds_rule
+  status: proven
+  bet: OU|4.5|OVER
+  bet_name: Goals over 4.5
+  bet_name_tr: '4,5 Alt/Üst: Üst'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 12.47
+  - bet: BOTH_HALVES_OVER|1.5|YES
+    op: <=
+    odds: 3.11
+  summary: Goals over 4.5 when Result & goals X & under 1.5 odds > 12.47  AND  Both halves over yes 1.5 odds ≤ 3.11
+  evidence:
+    2024/25:
+      matches: 869
+      hit_pct: 29.8
+      normal_pct: 14.6
+    2025/26:
+      matches: 694
+      hit_pct: 27.8
+      normal_pct: 14.4
+    2026/27:
+      matches: 311
+      hit_pct: 30.9
+      normal_pct: 17.1
+      odds_say_pct: 29.3
+      odds_filter_same_size_pct: 32.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-OU|4.5|OVER-2
+  kind: odds_rule
+  status: proven
+  bet: OU|4.5|OVER
+  bet_name: Goals over 4.5
+  bet_name_tr: '4,5 Alt/Üst: Üst'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 12.47
+  - bet: GOAL_RANGE||6+
+    op: <=
+    odds: 6.35
+  summary: Goals over 4.5 when Result & goals X & under 1.5 odds > 12.47  AND  Total goals 6+ odds ≤ 6.35
+  evidence:
+    2024/25:
+      matches: 794
+      hit_pct: 30.5
+      normal_pct: 14.6
+    2025/26:
+      matches: 835
+      hit_pct: 26.9
+      normal_pct: 14.4
+    2026/27:
+      matches: 422
+      hit_pct: 29.4
+      normal_pct: 17.1
+      odds_say_pct: 28.1
+      odds_filter_same_size_pct: 30.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_FT||2/2-0
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/2
+  bet_name: HT/FT 2/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/2'
+  criteria:
+  - bet: HT_1X2||2
+    op: <=
+    odds: 3.34
+  - bet: 1X2||1
+    op: '>'
+    odds: 3.25
+  summary: HT/FT 2/2 when 1st-half result away odds ≤ 3.34  AND  Result home odds > 3.25
+  evidence:
+    2024/25:
+      matches: 1042
+      hit_pct: 38.7
+      normal_pct: 16.4
+    2025/26:
+      matches: 974
+      hit_pct: 34.9
+      normal_pct: 17.1
+    2026/27:
+      matches: 319
+      hit_pct: 37.0
+      normal_pct: 17.0
+      odds_say_pct: 37.2
+      odds_filter_same_size_pct: 37.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_FT||2/2-1
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/2
+  bet_name: HT/FT 2/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/2'
+  criteria:
+  - bet: 2H_1X2||2
+    op: <=
+    odds: 3.02
+  - bet: 1X2||1
+    op: '>'
+    odds: 3.25
+  summary: HT/FT 2/2 when 2nd-half result away odds ≤ 3.02  AND  Result home odds > 3.25
+  evidence:
+    2024/25:
+      matches: 1043
+      hit_pct: 38.6
+      normal_pct: 16.4
+    2025/26:
+      matches: 974
+      hit_pct: 34.9
+      normal_pct: 17.1
+    2026/27:
+      matches: 319
+      hit_pct: 37.0
+      normal_pct: 17.0
+      odds_say_pct: 37.2
+      odds_filter_same_size_pct: 37.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_FT||2/2-2
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/2
+  bet_name: HT/FT 2/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/2'
+  criteria:
+  - bet: 1X2||2
+    op: <=
+    odds: 2.82
+  - bet: 1X2||1
+    op: '>'
+    odds: 3.25
+  summary: HT/FT 2/2 when Result away odds ≤ 2.82  AND  Result home odds > 3.25
+  evidence:
+    2024/25:
+      matches: 1043
+      hit_pct: 38.6
+      normal_pct: 16.4
+    2025/26:
+      matches: 974
+      hit_pct: 34.9
+      normal_pct: 17.1
+    2026/27:
+      matches: 319
+      hit_pct: 37.0
+      normal_pct: 17.0
+      odds_say_pct: 37.2
+      odds_filter_same_size_pct: 37.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-HT_FT||X/2-0
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: 1X2||1
+    op: '>'
+    odds: 1.56
+  - bet: HT_1X2||1
+    op: '>'
+    odds: 2.85
+  - bet: 1X2_AND_BTTS||1&YES
+    op: '>'
+    odds: 6.32
+  summary: HT/FT X/2 when Result home odds > 1.56  AND  1st-half result home odds > 2.85  AND  Result & both score 1 & yes
+    odds > 6.32
+  evidence:
+    2024/25:
+      matches: 957
+      hit_pct: 19.6
+      normal_pct: 10.9
+    2025/26:
+      matches: 1310
+      hit_pct: 18.6
+      normal_pct: 11.0
+    2026/27:
+      matches: 516
+      hit_pct: 17.2
+      normal_pct: 10.6
+      odds_say_pct: 16.5
+      odds_filter_same_size_pct: 18.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-0
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+  bet_name: Home wins both halves yes
+  bet_name_tr: 'Ev Sahibi İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: HT_1X2||1
+    op: <=
+    odds: 2.21
+  - bet: 2H_1X2||1
+    op: <=
+    odds: 1.6
+  - bet: 1X2_AND_OU|2.5|1&OVER
+    op: <=
+    odds: 1.33
+  summary: Home wins both halves yes when 1st-half result home odds ≤ 2.21  AND  2nd-half result home odds ≤ 1.60  AND  Result
+    & goals 1 & over 2.5 odds ≤ 1.33
+  evidence:
+    2024/25:
+      matches: 164
+      hit_pct: 51.8
+      normal_pct: 13.1
+    2025/26:
+      matches: 133
+      hit_pct: 48.9
+      normal_pct: 12.8
+    2026/27:
+      matches: 41
+      hit_pct: 39.0
+      normal_pct: 12.8
+      odds_say_pct: 44.3
+      odds_filter_same_size_pct: 46.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-1
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+  bet_name: Home wins both halves yes
+  bet_name_tr: 'Ev Sahibi İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: HT_1X2||1
+    op: <=
+    odds: 2.21
+  - bet: 1X2_AND_OU|2.5|2&UNDER
+    op: '>'
+    odds: 12.77
+  - bet: 1X2_AND_OU|2.5|1&OVER
+    op: <=
+    odds: 1.33
+  summary: Home wins both halves yes when 1st-half result home odds ≤ 2.21  AND  Result & goals 2 & under 2.5 odds > 12.77  AND  Result
+    & goals 1 & over 2.5 odds ≤ 1.33
+  evidence:
+    2024/25:
+      matches: 164
+      hit_pct: 51.8
+      normal_pct: 13.1
+    2025/26:
+      matches: 133
+      hit_pct: 48.9
+      normal_pct: 12.8
+    2026/27:
+      matches: 41
+      hit_pct: 39.0
+      normal_pct: 12.8
+      odds_say_pct: 44.3
+      odds_filter_same_size_pct: 46.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-TEAM_WIN_BOTH_HALVES_HOME||YES-2
+  kind: odds_rule
+  status: proven
+  bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+  bet_name: Home wins both halves yes
+  bet_name_tr: 'Ev Sahibi İki Yarıyı da Kazanır: Evet'
+  criteria:
+  - bet: HT_1X2||1
+    op: <=
+    odds: 2.21
+  - bet: 2H_1X2||1
+    op: <=
+    odds: 1.6
+  summary: Home wins both halves yes when 1st-half result home odds ≤ 2.21  AND  2nd-half result home odds ≤ 1.60
+  evidence:
+    2024/25:
+      matches: 997
+      hit_pct: 35.3
+      normal_pct: 13.1
+    2025/26:
+      matches: 792
+      hit_pct: 33.0
+      normal_pct: 12.8
+    2026/27:
+      matches: 262
+      hit_pct: 34.7
+      normal_pct: 12.8
+      odds_say_pct: 33.4
+      odds_filter_same_size_pct: 33.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_BTTS||2&NO-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_BTTS||2&NO
+  bet_name: Result & both score 2 & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Yok'
+  criteria:
+  - bet: 1X2||2
+    op: <=
+    odds: 2.69
+  - bet: 1X2||1
+    op: '>'
+    odds: 2.76
+  - bet: CORRECT_SCORE||0-2
+    op: <=
+    odds: 6.46
+  summary: Result & both score 2 & no when Result away odds ≤ 2.69  AND  Result home odds > 2.76  AND  Score 0-2 odds ≤ 6.46
+  evidence:
+    2024/25:
+      matches: 576
+      hit_pct: 39.1
+      normal_pct: 15.1
+    2025/26:
+      matches: 1311
+      hit_pct: 28.8
+      normal_pct: 15.1
+    2026/27:
+      matches: 143
+      hit_pct: 34.3
+      normal_pct: 14.7
+      odds_say_pct: 33.0
+      odds_filter_same_size_pct: 37.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_BTTS||2&NO-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_BTTS||2&NO
+  bet_name: Result & both score 2 & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Yok'
+  criteria:
+  - bet: DC||X2
+    op: <=
+    odds: 1.24
+  - bet: 1X2||1
+    op: '>'
+    odds: 2.76
+  summary: Result & both score 2 & no when Double chance X2 odds ≤ 1.24  AND  Result home odds > 2.76
+  evidence:
+    2024/25:
+      matches: 1693
+      hit_pct: 31.1
+      normal_pct: 15.1
+    2025/26:
+      matches: 1647
+      hit_pct: 28.0
+      normal_pct: 15.1
+    2026/27:
+      matches: 512
+      hit_pct: 28.7
+      normal_pct: 14.7
+      odds_say_pct: 28.1
+      odds_filter_same_size_pct: 27.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_BTTS||2&NO-2
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_BTTS||2&NO
+  bet_name: Result & both score 2 & no
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Yok'
+  criteria:
+  - bet: DC||X2
+    op: <=
+    odds: 1.24
+  - bet: HT_1X2_AND_HT_BTTS||1&NO
+    op: '>'
+    odds: 3.61
+  summary: Result & both score 2 & no when Double chance X2 odds ≤ 1.24  AND  1st-half result & both score 1 & no odds > 3.61
+  evidence:
+    2024/25:
+      matches: 1533
+      hit_pct: 31.8
+      normal_pct: 15.1
+    2025/26:
+      matches: 1883
+      hit_pct: 26.8
+      normal_pct: 15.1
+    2026/27:
+      matches: 616
+      hit_pct: 26.9
+      normal_pct: 14.7
+      odds_say_pct: 26.8
+      odds_filter_same_size_pct: 26.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_BTTS||2&YES-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_BTTS||2&YES
+  bet_name: Result & both score 2 & yes
+  bet_name_tr: 'MS ve Karşılıklı Gol: MS2 & Var'
+  criteria:
+  - bet: HT_1X2||2
+    op: <=
+    odds: 3.71
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 4.76
+  summary: Result & both score 2 & yes when 1st-half result away odds ≤ 3.71  AND  Away goals over 2.5 odds ≤ 4.76
+  evidence:
+    2024/25:
+      matches: 2497
+      hit_pct: 24.5
+      normal_pct: 14.5
+    2025/26:
+      matches: 2510
+      hit_pct: 24.1
+      normal_pct: 15.3
+    2026/27:
+      matches: 852
+      hit_pct: 21.6
+      normal_pct: 15.2
+      odds_say_pct: 25.2
+      odds_filter_same_size_pct: 21.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|1&OVER-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|1&OVER
+  bet_name: Result & goals 1 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 1 ve Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 13.62
+  - bet: HT_1X2||1
+    op: <=
+    odds: 1.98
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 8.26
+  summary: Result & goals 1 & over 4.5 when 1st-half result & both score 1 & yes odds ≤ 13.62  AND  1st-half result home odds
+    ≤ 1.98  AND  1st-half result & both score 1 & yes odds ≤ 8.26
+  evidence:
+    2024/25:
+      matches: 485
+      hit_pct: 26.8
+      normal_pct: 8.3
+    2025/26:
+      matches: 395
+      hit_pct: 24.3
+      normal_pct: 7.6
+    2026/27:
+      matches: 205
+      hit_pct: 24.9
+      normal_pct: 9.5
+      odds_say_pct: 23.6
+      odds_filter_same_size_pct: 26.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|1&OVER-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|1&OVER
+  bet_name: Result & goals 1 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 1 ve Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 13.62
+  - bet: HT_1X2||1
+    op: <=
+    odds: 1.98
+  - bet: HT_OU|0.5|UNDER
+    op: '>'
+    odds: 3.13
+  summary: Result & goals 1 & over 4.5 when 1st-half result & both score 1 & yes odds ≤ 13.62  AND  1st-half result home odds
+    ≤ 1.98  AND  1st-half goals under 0.5 odds > 3.13
+  evidence:
+    2024/25:
+      matches: 965
+      hit_pct: 23.2
+      normal_pct: 8.3
+    2025/26:
+      matches: 1071
+      hit_pct: 19.8
+      normal_pct: 7.6
+    2026/27:
+      matches: 437
+      hit_pct: 22.7
+      normal_pct: 9.5
+      odds_say_pct: 20.6
+      odds_filter_same_size_pct: 21.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|1&OVER-2
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|1&OVER
+  bet_name: Result & goals 1 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 1 ve Üst'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||1&YES
+    op: <=
+    odds: 13.62
+  - bet: HT_1X2||1
+    op: <=
+    odds: 1.98
+  summary: Result & goals 1 & over 4.5 when 1st-half result & both score 1 & yes odds ≤ 13.62  AND  1st-half result home odds
+    ≤ 1.98
+  evidence:
+    2024/25:
+      matches: 1665
+      hit_pct: 19.6
+      normal_pct: 8.3
+    2025/26:
+      matches: 1553
+      hit_pct: 17.2
+      normal_pct: 7.6
+    2026/27:
+      matches: 534
+      hit_pct: 20.8
+      normal_pct: 9.5
+      odds_say_pct: 19.0
+      odds_filter_same_size_pct: 20.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&OVER-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&OVER
+  bet_name: Result & goals 2 & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 1.16
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.87
+  summary: Result & goals 2 & over 2.5 when Away goals over 0.5 odds ≤ 1.16  AND  Away goals over 2.5 odds ≤ 2.87
+  evidence:
+    2024/25:
+      matches: 622
+      hit_pct: 45.3
+      normal_pct: 17.9
+    2025/26:
+      matches: 623
+      hit_pct: 43.2
+      normal_pct: 18.7
+    2026/27:
+      matches: 232
+      hit_pct: 44.8
+      normal_pct: 18.9
+      odds_say_pct: 44.8
+      odds_filter_same_size_pct: 43.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&OVER-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&OVER
+  bet_name: Result & goals 2 & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Üst'
+  criteria:
+  - bet: HT_TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 1.92
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 2.87
+  summary: Result & goals 2 & over 2.5 when Away 1st-half goals over 0.5 odds ≤ 1.92  AND  Away goals over 2.5 odds ≤ 2.87
+  evidence:
+    2024/25:
+      matches: 622
+      hit_pct: 45.3
+      normal_pct: 17.9
+    2025/26:
+      matches: 623
+      hit_pct: 43.2
+      normal_pct: 18.7
+    2026/27:
+      matches: 232
+      hit_pct: 44.8
+      normal_pct: 18.9
+      odds_say_pct: 44.8
+      odds_filter_same_size_pct: 43.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&OVER-2
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&OVER
+  bet_name: Result & goals 2 & over 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 1.16
+  - bet: HT_TEAM_OU_AWAY|0.5|OVER
+    op: <=
+    odds: 1.5
+  summary: Result & goals 2 & over 2.5 when Away goals over 0.5 odds ≤ 1.16  AND  Away 1st-half goals over 0.5 odds ≤ 1.50
+  evidence:
+    2024/25:
+      matches: 606
+      hit_pct: 45.4
+      normal_pct: 17.9
+    2025/26:
+      matches: 698
+      hit_pct: 42.3
+      normal_pct: 18.7
+    2026/27:
+      matches: 254
+      hit_pct: 42.5
+      normal_pct: 18.9
+      odds_say_pct: 43.5
+      odds_filter_same_size_pct: 42.5
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|2&OVER-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|2&OVER
+  bet_name: Result & goals 2 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 2 ve Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 5.04
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: '>'
+    odds: 15.17
+  - bet: HT_1X2||X
+    op: '>'
+    odds: 2.42
+  summary: Result & goals 2 & over 4.5 when Away goals over 2.5 odds ≤ 5.04  AND  Result & goals 1 & under 1.5 odds > 15.17  AND  1st-half
+    result draw odds > 2.42
+  evidence:
+    2024/25:
+      matches: 152
+      hit_pct: 32.2
+      normal_pct: 5.2
+    2025/26:
+      matches: 158
+      hit_pct: 20.3
+      normal_pct: 5.2
+    2026/27:
+      matches: 112
+      hit_pct: 20.5
+      normal_pct: 5.9
+      odds_say_pct: 20.4
+      odds_filter_same_size_pct: 26.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|2&OVER-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|2&OVER
+  bet_name: Result & goals 2 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 2 ve Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 5.04
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: '>'
+    odds: 15.17
+  summary: Result & goals 2 & over 4.5 when Away goals over 2.5 odds ≤ 5.04  AND  Result & goals 1 & under 1.5 odds > 15.17
+  evidence:
+    2024/25:
+      matches: 472
+      hit_pct: 20.6
+      normal_pct: 5.2
+    2025/26:
+      matches: 490
+      hit_pct: 15.5
+      normal_pct: 5.2
+    2026/27:
+      matches: 256
+      hit_pct: 16.4
+      normal_pct: 5.9
+      odds_say_pct: 17.1
+      odds_filter_same_size_pct: 18.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|4.5|2&OVER-2
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|4.5|2&OVER
+  bet_name: Result & goals 2 & over 4.5
+  bet_name_tr: 'MS ve Alt/Üst 4,5: 2 ve Üst'
+  criteria:
+  - bet: TEAM_OU_AWAY|2.5|OVER
+    op: <=
+    odds: 5.04
+  - bet: 1X2_AND_OU|1.5|1&UNDER
+    op: '>'
+    odds: 15.17
+  - bet: HT_1X2||X
+    op: <=
+    odds: 2.42
+  summary: Result & goals 2 & over 4.5 when Away goals over 2.5 odds ≤ 5.04  AND  Result & goals 1 & under 1.5 odds > 15.17  AND  1st-half
+    result draw odds ≤ 2.42
+  evidence:
+    2024/25:
+      matches: 320
+      hit_pct: 15.0
+      normal_pct: 5.2
+    2025/26:
+      matches: 332
+      hit_pct: 13.3
+      normal_pct: 5.2
+    2026/27:
+      matches: 144
+      hit_pct: 13.2
+      normal_pct: 5.9
+      odds_say_pct: 14.6
+      odds_filter_same_size_pct: 22.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|1.5|2&UNDER-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|1.5|2&UNDER
+  bet_name: Result & goals 2 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: TEAM_OU_HOME|0.5|OVER
+    op: '>'
+    odds: 1.15
+  - bet: 1X2_AND_OU|1.5|2&UNDER
+    op: <=
+    odds: 6.76
+  summary: Result & goals 2 & under 1.5 when Home goals over 0.5 odds > 1.15  AND  Result & goals 2 & under 1.5 odds ≤ 6.76
+  evidence:
+    2024/25:
+      matches: 1082
+      hit_pct: 15.0
+      normal_pct: 7.2
+    2025/26:
+      matches: 1050
+      hit_pct: 12.8
+      normal_pct: 7.1
+    2026/27:
+      matches: 297
+      hit_pct: 9.8
+      normal_pct: 7.1
+      odds_say_pct: 13.3
+      odds_filter_same_size_pct: 10.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|1.5|2&UNDER-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|1.5|2&UNDER
+  bet_name: Result & goals 2 & under 1.5
+  bet_name_tr: 'MS ve 1,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: TEAM_OU_HOME|0.5|OVER
+    op: '>'
+    odds: 1.15
+  - bet: CORRECT_SCORE||3-3
+    op: '>'
+    odds: 62.5
+  summary: Result & goals 2 & under 1.5 when Home goals over 0.5 odds > 1.15  AND  Score 3-3 odds > 62.50
+  evidence:
+    2024/25:
+      matches: 2303
+      hit_pct: 12.5
+      normal_pct: 7.2
+    2025/26:
+      matches: 2847
+      hit_pct: 10.7
+      normal_pct: 7.1
+    2026/27:
+      matches: 679
+      hit_pct: 11.2
+      normal_pct: 7.1
+      odds_say_pct: 11.4
+      odds_filter_same_size_pct: 10.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&UNDER-0
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&UNDER
+  bet_name: Result & goals 2 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 2H_1X2||1
+    op: '>'
+    odds: 2.48
+  - bet: HT_TEAM_OU_HOME|0.5|UNDER
+    op: <=
+    odds: 1.3
+  summary: Result & goals 2 & under 2.5 when 2nd-half result home odds > 2.48  AND  Home 1st-half goals under 0.5 odds ≤ 1.30
+  evidence:
+    2024/25:
+      matches: 876
+      hit_pct: 25.1
+      normal_pct: 11.7
+    2025/26:
+      matches: 750
+      hit_pct: 23.7
+      normal_pct: 11.7
+    2026/27:
+      matches: 233
+      hit_pct: 19.7
+      normal_pct: 11.0
+      odds_say_pct: 22.6
+      odds_filter_same_size_pct: 20.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&UNDER-1
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&UNDER
+  bet_name: Result & goals 2 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: 2H_1X2||1
+    op: '>'
+    odds: 2.48
+  - bet: 1X2_AND_BTTS||1&YES
+    op: '>'
+    odds: 6.41
+  summary: Result & goals 2 & under 2.5 when 2nd-half result home odds > 2.48  AND  Result & both score 1 & yes odds > 6.41
+  evidence:
+    2024/25:
+      matches: 915
+      hit_pct: 25.2
+      normal_pct: 11.7
+    2025/26:
+      matches: 1287
+      hit_pct: 19.9
+      normal_pct: 11.7
+    2026/27:
+      matches: 512
+      hit_pct: 18.0
+      normal_pct: 11.0
+      odds_say_pct: 19.3
+      odds_filter_same_size_pct: 18.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-1X2_AND_OU|2.5|2&UNDER-2
+  kind: odds_rule
+  status: proven
+  bet: 1X2_AND_OU|2.5|2&UNDER
+  bet_name: Result & goals 2 & under 2.5
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: 2 ve Alt'
+  criteria:
+  - bet: DC||X2
+    op: <=
+    odds: 1.24
+  - bet: 1X2_AND_OU|2.5|2&UNDER
+    op: <=
+    odds: 4.59
+  summary: Result & goals 2 & under 2.5 when Double chance X2 odds ≤ 1.24  AND  Result & goals 2 & under 2.5 odds ≤ 4.59
+  evidence:
+    2024/25:
+      matches: 1888
+      hit_pct: 21.8
+      normal_pct: 11.7
+    2025/26:
+      matches: 1775
+      hit_pct: 19.5
+      normal_pct: 11.7
+    2026/27:
+      matches: 343
+      hit_pct: 18.7
+      normal_pct: 11.0
+      odds_say_pct: 21.3
+      odds_filter_same_size_pct: 17.5
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||0-2-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: DC||X2
+    op: <=
+    odds: 1.24
+  - bet: 1X2_AND_OU|3.5|2&UNDER
+    op: <=
+    odds: 2.77
+  summary: Score 0-2 when Double chance X2 odds ≤ 1.24  AND  Result & goals 2 & under 3.5 odds ≤ 2.77
+  evidence:
+    2024/25:
+      matches: 1864
+      hit_pct: 9.9
+      normal_pct: 4.5
+    2025/26:
+      matches: 1799
+      hit_pct: 8.0
+      normal_pct: 4.6
+    2026/27:
+      matches: 439
+      hit_pct: 10.0
+      normal_pct: 3.9
+      odds_say_pct: 8.6
+      odds_filter_same_size_pct: 9.8
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||0-2-1
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: HT_1X2||1
+    op: '>'
+    odds: 2.33
+  - bet: 1X2_AND_OU|3.5|2&UNDER
+    op: <=
+    odds: 2.77
+  summary: Score 0-2 when 1st-half result home odds > 2.33  AND  Result & goals 2 & under 3.5 odds ≤ 2.77
+  evidence:
+    2024/25:
+      matches: 1883
+      hit_pct: 9.8
+      normal_pct: 4.5
+    2025/26:
+      matches: 1899
+      hit_pct: 8.0
+      normal_pct: 4.6
+    2026/27:
+      matches: 526
+      hit_pct: 8.6
+      normal_pct: 3.9
+      odds_say_pct: 7.9
+      odds_filter_same_size_pct: 8.7
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||0-3-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: 1X2_AND_OU|3.5|1&UNDER
+    op: '>'
+    odds: 2.66
+  - bet: 1X2_AND_OU|1.5|2&OVER
+    op: <=
+    odds: 2.65
+  summary: Score 0-3 when Result & goals 1 & under 3.5 odds > 2.66  AND  Result & goals 2 & over 1.5 odds ≤ 2.65
+  evidence:
+    2024/25:
+      matches: 1862
+      hit_pct: 5.6
+      normal_pct: 2.2
+    2025/26:
+      matches: 1841
+      hit_pct: 4.7
+      normal_pct: 2.3
+    2026/27:
+      matches: 559
+      hit_pct: 5.0
+      normal_pct: 2.2
+      odds_say_pct: 4.8
+      odds_filter_same_size_pct: 5.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||0-3-1
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 4.98
+  - bet: 1X2_AND_OU|1.5|2&OVER
+    op: <=
+    odds: 2.65
+  summary: Score 0-3 when Result & both score 2 & yes odds ≤ 4.98  AND  Result & goals 2 & over 1.5 odds ≤ 2.65
+  evidence:
+    2024/25:
+      matches: 1863
+      hit_pct: 5.6
+      normal_pct: 2.2
+    2025/26:
+      matches: 1832
+      hit_pct: 4.7
+      normal_pct: 2.3
+    2026/27:
+      matches: 519
+      hit_pct: 4.4
+      normal_pct: 2.2
+      odds_say_pct: 4.8
+      odds_filter_same_size_pct: 5.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||0-3-2
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: HT_1X2_AND_HT_BTTS||2&NO
+    op: <=
+    odds: 3.53
+  - bet: 1X2_AND_BTTS||1&NO
+    op: '>'
+    odds: 4.28
+  summary: Score 0-3 when 1st-half result & both score 2 & no odds ≤ 3.53  AND  Result & both score 1 & no odds > 4.28
+  evidence:
+    2024/25:
+      matches: 1893
+      hit_pct: 5.6
+      normal_pct: 2.2
+    2025/26:
+      matches: 2518
+      hit_pct: 4.4
+      normal_pct: 2.3
+    2026/27:
+      matches: 770
+      hit_pct: 4.2
+      normal_pct: 2.2
+      odds_say_pct: 4.3
+      odds_filter_same_size_pct: 4.5
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||3-0-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||3-0
+  bet_name: Score 3-0
+  bet_name_tr: 'Maç Skoru: 3-0'
+  criteria:
+  - bet: 2H_1X2||2
+    op: '>'
+    odds: 3.72
+  - bet: HT_FT||2/X
+    op: '>'
+    odds: 19.67
+  summary: Score 3-0 when 2nd-half result away odds > 3.72  AND  HT/FT 2/X odds > 19.67
+  evidence:
+    2024/25:
+      matches: 955
+      hit_pct: 10.3
+      normal_pct: 3.7
+    2025/26:
+      matches: 878
+      hit_pct: 9.7
+      normal_pct: 4.0
+    2026/27:
+      matches: 320
+      hit_pct: 10.0
+      normal_pct: 3.8
+      odds_say_pct: 8.2
+      odds_filter_same_size_pct: 10.6
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||3-1-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||3-1
+  bet_name: Score 3-1
+  bet_name_tr: 'Maç Skoru: 3-1'
+  criteria:
+  - bet: HT_1X2_AND_HT_OU|1.5|1&OVER
+    op: <=
+    odds: 4.29
+  - bet: HT_FT||2/X
+    op: '>'
+    odds: 17.77
+  summary: Score 3-1 when 1st-half result & goals 1 & over 1.5 odds ≤ 4.29  AND  HT/FT 2/X odds > 17.77
+  evidence:
+    2024/25:
+      matches: 1116
+      hit_pct: 8.9
+      normal_pct: 4.1
+    2025/26:
+      matches: 1055
+      hit_pct: 6.8
+      normal_pct: 4.4
+    2026/27:
+      matches: 298
+      hit_pct: 8.1
+      normal_pct: 4.7
+      odds_say_pct: 7.0
+      odds_filter_same_size_pct: 7.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||4-0-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||4-0
+  bet_name: Score 4-0
+  bet_name_tr: 'Maç Skoru: 4-0'
+  criteria:
+  - bet: TEAM_OU_HOME|2.5|OVER
+    op: <=
+    odds: 3.23
+  - bet: 1X2_AND_BTTS||1&YES
+    op: <=
+    odds: 2.61
+  summary: Score 4-0 when Home goals over 2.5 odds ≤ 3.23  AND  Result & both score 1 & yes odds ≤ 2.61
+  evidence:
+    2024/25:
+      matches: 1722
+      hit_pct: 5.1
+      normal_pct: 1.6
+    2025/26:
+      matches: 978
+      hit_pct: 4.5
+      normal_pct: 1.7
+    2026/27:
+      matches: 435
+      hit_pct: 2.3
+      normal_pct: 1.5
+      odds_say_pct: 4.2
+      odds_filter_same_size_pct: 3.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-CORRECT_SCORE||4-1-0
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||4-1
+  bet_name: Score 4-1
+  bet_name_tr: 'Maç Skoru: 4-1'
+  criteria:
+  - bet: 2H_1X2||1
+    op: <=
+    odds: 2.43
+  - bet: 1X2_AND_OU|1.5|1&OVER
+    op: <=
+    odds: 1.7
+  summary: Score 4-1 when 2nd-half result home odds ≤ 2.43  AND  Result & goals 1 & over 1.5 odds ≤ 1.70
+  evidence:
+    2024/25:
+      matches: 1849
+      hit_pct: 3.7
+      normal_pct: 1.6
+    2025/26:
+      matches: 1864
+      hit_pct: 3.5
+      normal_pct: 1.5
+    2026/27:
+      matches: 633
+      hit_pct: 2.2
+      normal_pct: 1.5
+      odds_say_pct: 3.4
+      odds_filter_same_size_pct: 2.4
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-GOAL_RANGE||6+-0
+  kind: odds_rule
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 12.42
+  - bet: 1X2_AND_OU|3.5|X&UNDER
+    op: '>'
+    odds: 6.9
+  summary: Total goals 6+ when Result & goals X & under 1.5 odds > 12.42  AND  Result & goals X & under 3.5 odds > 6.90
+  evidence:
+    2024/25:
+      matches: 545
+      hit_pct: 16.3
+      normal_pct: 6.0
+    2025/26:
+      matches: 478
+      hit_pct: 13.8
+      normal_pct: 6.2
+    2026/27:
+      matches: 244
+      hit_pct: 18.4
+      normal_pct: 7.6
+      odds_say_pct: 15.8
+      odds_filter_same_size_pct: 20.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-GOAL_RANGE||6+-1
+  kind: odds_rule
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: 1X2_AND_OU|1.5|X&UNDER
+    op: '>'
+    odds: 12.42
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 6.87
+  summary: Total goals 6+ when Result & goals X & under 1.5 odds > 12.42  AND  Result & goals X & under 2.5 odds > 6.87
+  evidence:
+    2024/25:
+      matches: 533
+      hit_pct: 16.3
+      normal_pct: 6.0
+    2025/26:
+      matches: 463
+      hit_pct: 13.6
+      normal_pct: 6.2
+    2026/27:
+      matches: 238
+      hit_pct: 18.9
+      normal_pct: 7.6
+      odds_say_pct: 15.9
+      odds_filter_same_size_pct: 20.2
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-Winner by 3+ goals-0
+  kind: odds_rule
+  status: proven
+  bet: Winner by 3+ goals
+  bet_name: Winner by 3+ goals
+  bet_name_tr: Winner by 3+ goals
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: 1X2_AND_OU|1.5|X&OVER
+    op: '>'
+    odds: 4.87
+  - bet: 2H_1X2||X
+    op: '>'
+    odds: 3.23
+  summary: Winner by 3+ goals when Result & goals X & under 2.5 odds > 4.39  AND  Result & goals X & over 1.5 odds > 4.87  AND  2nd-half
+    result draw odds > 3.23
+  evidence:
+    2024/25:
+      matches: 261
+      hit_pct: 43.7
+      normal_pct: 14.2
+    2025/26:
+      matches: 167
+      hit_pct: 44.3
+      normal_pct: 14.2
+    2026/27:
+      matches: 88
+      hit_pct: 36.4
+      normal_pct: 15.2
+      odds_say_pct: 40.5
+      odds_filter_same_size_pct: 40.9
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-Winner by 3+ goals-1
+  kind: odds_rule
+  status: proven
+  bet: Winner by 3+ goals
+  bet_name: Winner by 3+ goals
+  bet_name_tr: Winner by 3+ goals
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: OU_AND_BTTS|2.5|UNDER&YES
+    op: '>'
+    odds: 9.23
+  summary: Winner by 3+ goals when Result & goals X & under 2.5 odds > 4.39  AND  Goals & both score under & yes 2.5 odds
+    > 9.23
+  evidence:
+    2024/25:
+      matches: 651
+      hit_pct: 34.4
+      normal_pct: 14.2
+    2025/26:
+      matches: 689
+      hit_pct: 32.4
+      normal_pct: 14.2
+    2026/27:
+      matches: 297
+      hit_pct: 31.6
+      normal_pct: 15.2
+      odds_say_pct: 30.5
+      odds_filter_same_size_pct: 34.3
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tree-Winner by 3+ goals-2
+  kind: odds_rule
+  status: proven
+  bet: Winner by 3+ goals
+  bet_name: Winner by 3+ goals
+  bet_name_tr: Winner by 3+ goals
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>'
+    odds: 4.39
+  - bet: 1X2_AND_OU|1.5|X&OVER
+    op: '>'
+    odds: 4.87
+  - bet: 2H_1X2||X
+    op: <=
+    odds: 3.23
+  summary: Winner by 3+ goals when Result & goals X & under 2.5 odds > 4.39  AND  Result & goals X & over 1.5 odds > 4.87  AND  2nd-half
+    result draw odds ≤ 3.23
+  evidence:
+    2024/25:
+      matches: 963
+      hit_pct: 25.3
+      normal_pct: 14.2
+    2025/26:
+      matches: 912
+      hit_pct: 26.0
+      normal_pct: 14.2
+    2026/27:
+      matches: 315
+      hit_pct: 28.3
+      normal_pct: 15.2
+      odds_say_pct: 24.5
+      odds_filter_same_size_pct: 34.0
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: tipster-3
+  kind: tipster
+  status: proven
+  bet: HT_BTTS||YES
+  bet_name: 1st-half both score yes
+  bet_name_tr: '1. Yarı Karşılıklı Gol: Var'
+  criteria:
+  - near:
+    - HT_BTTS||YES
+    - HT_2H_BTTS||NO/YES
+    tol: 0.1
+  summary: 'Tipster rule 3: 1st-half BTTS yes ~ half-by-half ''No/Yes'' (within 0.10) -> 1st-half BTTS yes'
+  evidence:
+    2025/26:
+      matches: 1094
+      hit_pct: 22.8
+      normal_pct: 19.9
+      return_per_100: -22.9
+    2026/27:
+      matches: 672
+      hit_pct: 25.0
+      normal_pct: 21.8
+      return_per_100: -16.1
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-6a
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: GOAL_RANGE||4-5
+    op: '>='
+    odds: 2.75
+  - bet: GOAL_RANGE||4-5
+    op: <=
+    odds: 3.1
+  summary: 'Tipster rule 6a: Total goals 4-5 odds 2.75-3.10 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 1742
+      hit_pct: 37.0
+      normal_pct: 29.8
+      return_per_100: -19.0
+    2025/26:
+      matches: 1778
+      hit_pct: 34.6
+      normal_pct: 29.7
+      return_per_100: -22.3
+    2026/27:
+      matches: 635
+      hit_pct: 38.0
+      normal_pct: 32.3
+      return_per_100: -14.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-7
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: GOAL_RANGE||0-1
+    op: '>'
+    odds: 4.2
+  summary: 'Tipster rule 7: Total goals 0-1 odds > 4.20 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 2359
+      hit_pct: 42.8
+      normal_pct: 29.8
+      return_per_100: -17.2
+    2025/26:
+      matches: 2112
+      hit_pct: 40.9
+      normal_pct: 29.7
+      return_per_100: -21.9
+    2026/27:
+      matches: 903
+      hit_pct: 44.9
+      normal_pct: 32.3
+      return_per_100: -15.8
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-9a
+  kind: tipster
+  status: proven
+  bet: OU|3.5|OVER
+  bet_name: Goals over 3.5
+  bet_name_tr: '3,5 Alt/Üst: Üst'
+  criteria:
+  - bet: HT_CORRECT_SCORE||OTHER
+    op: <
+    odds: 5
+  - bet: CORRECT_SCORE||OTHER
+    op: <
+    odds: 8
+  summary: 'Tipster rule 9a: 1st-half score ''other'' < 5 & score ''other'' < 8 -> over 3.5'
+  evidence:
+    2024/25:
+      matches: 86
+      hit_pct: 59.3
+      normal_pct: 29.8
+      return_per_100: -11.5
+    2025/26:
+      matches: 15
+      hit_pct: 46.7
+      normal_pct: 29.7
+      return_per_100: -32.1
+    2026/27:
+      matches: 36
+      hit_pct: 58.3
+      normal_pct: 32.3
+      return_per_100: -17.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-9b
+  kind: tipster
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - bet: HT_CORRECT_SCORE||OTHER
+    op: <
+    odds: 5
+  - bet: CORRECT_SCORE||OTHER
+    op: <
+    odds: 8
+  summary: 'Tipster rule 9b: 1st-half score ''other'' < 5 & score ''other'' < 8 -> 6+ goals'
+  evidence:
+    2024/25:
+      matches: 86
+      hit_pct: 24.4
+      normal_pct: 6.1
+      return_per_100: -5.8
+    2025/26:
+      matches: 15
+      hit_pct: 26.7
+      normal_pct: 6.2
+      return_per_100: -8.9
+    2026/27:
+      matches: 36
+      hit_pct: 16.7
+      normal_pct: 7.3
+      return_per_100: -49.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-11
+  kind: tipster
+  status: proven
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  criteria:
+  - near:
+    - OU|4.5|OVER
+    - BOTH_HALVES_OVER|1.5|YES
+    tol: 0.2
+  summary: 'Tipster rule 11: Over 4.5 ~ both halves over 1.5 (within 0.20) -> 6+ goals'
+  evidence:
+    2024/25:
+      matches: 1951
+      hit_pct: 11.0
+      normal_pct: 6.1
+      return_per_100: -29.8
+    2025/26:
+      matches: 2533
+      hit_pct: 10.3
+      normal_pct: 6.2
+      return_per_100: -32.9
+    2026/27:
+      matches: 946
+      hit_pct: 13.1
+      normal_pct: 7.3
+      return_per_100: -18.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-12
+  kind: tipster
+  status: proven
+  bet: BOTH_HALVES_OVER|1.5|YES
+  bet_name: Both halves over yes 1.5
+  bet_name_tr: 'İki Yarı da 1,5 Üst: Evet'
+  criteria:
+  - any:
+    - - bet: HT_1X2_AND_HT_BTTS||1&YES
+        op: <
+        odds: 8
+    - - bet: HT_1X2_AND_HT_BTTS||2&YES
+        op: <
+        odds: 8
+  summary: 'Tipster rule 12: 1st-half home/away lead & both scored < 8 -> both halves over 1.5'
+  evidence:
+    2024/25:
+      matches: 459
+      hit_pct: 30.3
+      normal_pct: 16.0
+      return_per_100: -21.1
+    2025/26:
+      matches: 361
+      hit_pct: 30.7
+      normal_pct: 16.0
+      return_per_100: -21.8
+    2026/27:
+      matches: 154
+      hit_pct: 32.5
+      normal_pct: 18.8
+      return_per_100: -19.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-13
+  kind: tipster
+  status: proven
+  bet: HT_BTTS||YES
+  bet_name: 1st-half both score yes
+  bet_name_tr: '1. Yarı Karşılıklı Gol: Var'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-2
+    op: <
+    odds: 38
+  summary: 'Tipster rule 13: 1st-half score 2-2 odds < 38 -> 1st-half BTTS yes'
+  evidence:
+    2024/25:
+      matches: 34
+      hit_pct: 32.4
+      normal_pct: 20.5
+      return_per_100: -17.3
+    2025/26:
+      matches: 34
+      hit_pct: 44.1
+      normal_pct: 19.9
+      return_per_100: 12.4
+    2026/27:
+      matches: 53
+      hit_pct: 28.3
+      normal_pct: 21.8
+      return_per_100: -28.0
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-14
+  kind: tipster
+  status: proven
+  bet: BTTS||YES
+  bet_name: Both teams score yes
+  bet_name_tr: 'Karşılıklı Gol: Var'
+  criteria:
+  - bet: BTTS||NO
+    op: '>'
+    odds: 2.2
+  summary: 'Tipster rule 14: BTTS no odds > 2.20 -> BTTS yes'
+  evidence:
+    2024/25:
+      matches: 719
+      hit_pct: 66.8
+      normal_pct: 54.0
+      return_per_100: -14.2
+    2025/26:
+      matches: 830
+      hit_pct: 65.8
+      normal_pct: 54.4
+      return_per_100: -15.4
+    2026/27:
+      matches: 514
+      hit_pct: 67.1
+      normal_pct: 56.8
+      return_per_100: -13.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-16h
+  kind: tipster
+  status: proven
+  bet: HT_1X2||1
+  bet_name: 1st-half result home
+  bet_name_tr: '1. Yarı Sonucu: 1'
+  criteria:
+  - bet: 1X2||1
+    op: in
+    values:
+    - 1.65
+    - 1.67
+    - 1.75
+  summary: 'Tipster rule 16h: Home team''s odds exactly 1.65 / 1.67 / 1.75 -> home wins the 1st half (record: home and away
+    together)'
+  evidence:
+    2024/25:
+      matches: 256
+      hit_pct: 39.8
+      normal_pct: 25.1
+      return_per_100: -11.4
+    2025/26:
+      matches: 226
+      hit_pct: 37.6
+      normal_pct: 25.1
+      return_per_100: -14.9
+    2026/27:
+      matches: 92
+      hit_pct: 37.0
+      normal_pct: 25.5
+      return_per_100: -18.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-16a
+  kind: tipster
+  status: proven
+  bet: HT_1X2||2
+  bet_name: 1st-half result away
+  bet_name_tr: '1. Yarı Sonucu: 2'
+  criteria:
+  - bet: 1X2||2
+    op: in
+    values:
+    - 1.65
+    - 1.67
+    - 1.75
+  summary: 'Tipster rule 16a: Away team''s odds exactly 1.65 / 1.67 / 1.75 -> away wins the 1st half (record: home and away
+    together)'
+  evidence:
+    2024/25:
+      matches: 256
+      hit_pct: 39.8
+      normal_pct: 25.1
+      return_per_100: -11.4
+    2025/26:
+      matches: 226
+      hit_pct: 37.6
+      normal_pct: 25.1
+      return_per_100: -14.9
+    2026/27:
+      matches: 92
+      hit_pct: 37.0
+      normal_pct: 25.5
+      return_per_100: -18.5
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: tipster-19
+  kind: tipster
+  status: proven
+  bet: HT_FT||X/X
+  bet_name: HT/FT X/X
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/X'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: '>='
+    odds: 2.86
+  - bet: 1X2_AND_OU|2.5|X&UNDER
+    op: <=
+    odds: 2.99
+  summary: 'Tipster rule 19: Draw & under 2.5 odds 2.86-2.99 -> HT/FT X/X'
+  evidence:
+    2024/25:
+      matches: 273
+      hit_pct: 24.2
+      normal_pct: 15.9
+      return_per_100: -14.0
+    2025/26:
+      matches: 277
+      hit_pct: 23.1
+      normal_pct: 15.7
+      return_per_100: -16.0
+    2026/27:
+      matches: 91
+      hit_pct: 27.5
+      normal_pct: 14.7
+      return_per_100: -4.1
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: watch-ht02-away-fav
+  kind: watch
+  status: watch
+  bet: HT_CORRECT_SCORE||0-2
+  bet_name: 1st-half score 0-2
+  bet_name_tr: '1. Yarı Skoru: 0-2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&UNDER
+    op: <=
+    odds: 2.01
+  - bet: HT_FT||1/1
+    op: '>'
+    odds: 5.83
+  summary: 1st-half score 0-2 when Result & goals away & under 4.5 odds ≤ 2.01 AND HT/FT 1/1 odds > 5.83 (strong away favourite)
+  evidence:
+    2025/26:
+      matches: 173
+      hit_pct: 9.2
+      normal_pct: 4.4
+    2026/27:
+      matches: 167
+      hit_pct: 16.8
+      normal_pct: 4.4
+      odds_say_pct: 10.1
+  first_added: '2026-10-14'
+  last_confirmed: '2026-10-19'
+- id: system-goals-coupon
+  kind: system
+  status: promising
+  name: Goals coupon
+  bet: 1X2_AND_OU|2.5|X&OVER
+  bet_name: 'Result & goals X & over 2.5 (draw with 4+ goals: 2-2, 3-3 ...)'
+  bet_name_tr: 'MS ve 2,5 Alt/Üst: X ve Üst'
+  summary: 'Goals coupon for your 10-game system (3-4-5), every weekend (Fri-Mon): every Portugal game as ''draw & over 2.5''
+    (MS X ve 2,5 Üst), then the lowest ''draw & over 2.5'' odds from the leagues where it paid best, up to 10 games. Same
+    result under ''X & over 3.5'': take the higher price.'
+  window: weekend
+  legs: 10
+  sizes:
+  - 3
+  - 4
+  - 5
+  groups:
+  - name: Portugal
+    leagues:
+    - POR-1
+    bets:
+    - 1X2_AND_OU|2.5|X&OVER
+    - 1X2_AND_OU|3.5|X&OVER
+    value_for_chances: 1.15
+  - name: best leagues for this bet
+    leagues:
+    - NED-1
+    - ITA-2
+    - BRA-1
+    - ITA-1
+    - DEN-1
+    - SCO-1
+    - ENG-1
+    bets:
+    - 1X2_AND_OU|2.5|X&OVER
+    - 1X2_AND_OU|3.5|X&OVER
+    value_for_chances: 0.9
+  note: 'Portugal returned 1.57 per unit on this bet over all seasons (1.28 / 1.65 / 2.44); chances shown in the scan assume
+    only 1.15 (Portugal) and 0.90 (others). As a 3-4-5 system it is a lottery: 3+ hits in ~4-8% of weekends; singles were
+    profitable in every season.'
+  evidence:
+    2024/25:
+      coupons: 55
+      games_per_coupon: 10.0
+      avg_odds: 14.34
+      hit_pct: 9.8
+      return_per_unit_per_game: 1.316
+      coupons_3plus_hits_pct: 5.5
+      coupons_4plus_hits_pct: 0.0
+      return_per_100: 31.6
+      system_345_return_per_100: -91.0
+    2025/26:
+      coupons: 47
+      games_per_coupon: 10.0
+      avg_odds: 14.11
+      hit_pct: 9.6
+      return_per_unit_per_game: 1.289
+      coupons_3plus_hits_pct: 6.4
+      coupons_4plus_hits_pct: 0.0
+      return_per_100: 28.9
+      system_345_return_per_100: -71.2
+    2026/27:
+      coupons: 11
+      games_per_coupon: 10.0
+      avg_odds: 15.06
+      hit_pct: 10.9
+      return_per_unit_per_game: 1.79
+      coupons_3plus_hits_pct: 18.2
+      coupons_4plus_hits_pct: 9.1
+      return_per_100: 79.0
+      system_345_return_per_100: 4572.6
+  evidence_portugal_only:
+    2024/25:
+      coupons: 34
+      games_per_coupon: 8.6
+      avg_odds: 16.76
+      hit_pct: 7.8
+      return_per_unit_per_game: 1.304
+      coupons_3plus_hits_pct: 0.0
+      coupons_4plus_hits_pct: 0.0
+      return_per_100: 30.4
+      system_345_return_per_100: -100.0
+    2025/26:
+      coupons: 34
+      games_per_coupon: 8.0
+      avg_odds: 17.31
+      hit_pct: 10.7
+      return_per_unit_per_game: 1.62
+      coupons_3plus_hits_pct: 5.9
+      coupons_4plus_hits_pct: 0.0
+      return_per_100: 62.0
+      system_345_return_per_100: -8.7
+    2026/27:
+      coupons: 8
+      games_per_coupon: 8.5
+      avg_odds: 17.89
+      hit_pct: 13.2
+      return_per_unit_per_game: 2.514
+      coupons_3plus_hits_pct: 12.5
+      coupons_4plus_hits_pct: 12.5
+      return_per_100: 151.4
+      system_345_return_per_100: 13857.3
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: system-6plus-lowest
+  kind: system
+  status: info
+  name: Your 6+ coupon (for comparison)
+  bet: GOAL_RANGE||6+
+  bet_name: Total goals 6+
+  bet_name_tr: 'Toplam Gol Aralığı: 6+'
+  summary: 'Your 6+ coupon, for comparison: the 10 lowest 6+ odds of the weekend (all 26 leagues), 6+ on each, system 3-4-5.
+    Loses ~80% over time: 6+ returns only ~0.70 per unit.'
+  window: weekend
+  legs: 10
+  sizes:
+  - 3
+  - 4
+  - 5
+  groups:
+  - name: all leagues
+    leagues: all
+    bets:
+    - GOAL_RANGE||6+
+    value_ladder:
+    - - 4.5
+      - 0.771
+    - - 6.0
+      - 0.615
+    - - 7.5
+      - 0.692
+    - - 9.0
+      - 0.784
+    - - 11.0
+      - 0.706
+    - - 14.0
+      - 0.757
+    - - 20.0
+      - 0.66
+    - - 1000.0
+      - 0.585
+  evidence:
+    2024/25:
+      coupons: 69
+      games_per_coupon: 10.0
+      avg_odds: 7.87
+      hit_pct: 11.0
+      return_per_unit_per_game: 0.637
+      coupons_3plus_hits_pct: 11.6
+      coupons_4plus_hits_pct: 4.3
+      return_per_100: -36.3
+      system_345_return_per_100: -83.9
+    2025/26:
+      coupons: 50
+      games_per_coupon: 10.0
+      avg_odds: 5.71
+      hit_pct: 15.6
+      return_per_unit_per_game: 0.797
+      coupons_3plus_hits_pct: 22.0
+      coupons_4plus_hits_pct: 8.0
+      return_per_100: -20.3
+      system_345_return_per_100: -76.7
+    2026/27:
+      coupons: 15
+      games_per_coupon: 10.0
+      avg_odds: 4.73
+      hit_pct: 16.7
+      return_per_unit_per_game: 0.704
+      coupons_3plus_hits_pct: 33.3
+      coupons_4plus_hits_pct: 13.3
+      return_per_100: -29.6
+      system_345_return_per_100: -66.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: watch-htft-fav-ahead-draw-home
+  kind: watch
+  status: watch
+  bet: HT_FT||1/X
+  bet_name: HT/FT 1/X (home favourite ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/X'
+  criteria:
+  - bet: 1X2||1
+    op: '>'
+    chance_pct: 60
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 70
+  - bet: OU|2.5|OVER
+    op: '>'
+    chance_pct: 65
+  summary: HT/FT 1/X when the home team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time,
+    match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck
+  evidence:
+    2024/25:
+      matches: 110
+      hit_pct: 7.3
+      normal_pct: 5.7
+      return_per_100: 19.5
+    2025/26:
+      matches: 115
+      hit_pct: 6.1
+      normal_pct: 5.3
+      return_per_100: -3.5
+    2026/27:
+      matches: 56
+      hit_pct: 10.7
+      normal_pct: 5.5
+      return_per_100: 64.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: watch-htft-fav-ahead-draw-away
+  kind: watch
+  status: watch
+  bet: HT_FT||2/X
+  bet_name: HT/FT 2/X (away favourite ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/X'
+  criteria:
+  - bet: 1X2||2
+    op: '>'
+    chance_pct: 60
+  - bet: 1X2||2
+    op: <=
+    chance_pct: 70
+  - bet: OU|2.5|OVER
+    op: '>'
+    chance_pct: 65
+  summary: HT/FT 2/X when the away team is a 60-70% favourite and over 2.5 goals is 65%+ likely (favourite ahead at half-time,
+    match ends level) - one lone cell above break-even in every season; neighbouring cells do not confirm it, so likely luck
+  evidence:
+    2024/25:
+      matches: 24
+      hit_pct: 12.5
+      normal_pct: 5.7
+      return_per_100: 120.8
+    2025/26:
+      matches: 35
+      hit_pct: 11.4
+      normal_pct: 5.3
+      return_per_100: 75.4
+    2026/27:
+      matches: 25
+      hit_pct: 4.0
+      normal_pct: 5.5
+      return_per_100: -41.6
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: watch-POR-1-HT_FT||1/X
+  kind: league_rule
+  status: watch
+  league: POR-1
+  league_name: Portugal Primeira Liga
+  bet: HT_FT||1/X
+  bet_name: HT/FT 1/X (home ahead at half-time, ends level)
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/X'
+  criteria: []
+  summary: 'Portugal: HT/FT 1/X (home ahead at half-time, ends level) - follows from the Portugal 2-2 effect (+15 / -3 / +10
+    per 100); not proven, the away version 2/X loses'
+  evidence:
+    2024/25:
+      matches: 292
+      hit_pct: 6.8
+      return_per_100: 14.7
+    2025/26:
+      matches: 267
+      hit_pct: 6.4
+      return_per_100: -2.9
+    2026/27:
+      matches: 70
+      hit_pct: 4.3
+      return_per_100: 10.0
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: htft3-X/1-odds-5
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/1
+  bet_name: HT/FT X/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/1'
+  criteria:
+  - bet: HT_FT||X/1
+    op: <=
+    odds: 3.66
+  summary: HT/FT X/1 (level at half-time, home wins) when its odds are <= 3.66 (lowest 5% of 2024/25)
+  evidence:
+    2024/25:
+      matches: 408
+      hit_pct: 20.1
+      normal_pct: 14.7
+    2025/26:
+      matches: 74
+      hit_pct: 27.0
+      normal_pct: 14.5
+    2026/27:
+      matches: 30
+      hit_pct: 40.0
+      normal_pct: 14.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: htft3-X/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||X/2
+  bet_name: HT/FT X/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: X/2'
+  criteria:
+  - bet: TEAM_WIN_BOTH_HALVES_HOME||YES
+    op: '>='
+    odds: 13.35
+  - bet: TEAM_WIN_EITHER_HALF_AWAY||NO
+    op: <=
+    chance_pct: 31.21
+  summary: 'HT/FT X/2 when odds: Home wins both halves yes ≥ 13.35  AND  chance: Away wins a half no ≤ 31.2%'
+  evidence:
+    2024/25:
+      matches: 173
+      hit_pct: 24.3
+      normal_pct: 10.8
+    2025/26:
+      matches: 230
+      hit_pct: 22.6
+      normal_pct: 11.1
+    2026/27:
+      matches: 63
+      hit_pct: 19.0
+      normal_pct: 10.7
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: htft3-1/2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||1/2
+  bet_name: HT/FT 1/2
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 1/2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|2&OVER
+    op: <=
+    odds: 5.66
+  - bet: HT_FT||1/2
+    op: <=
+    odds: 22.0
+  summary: 'HT/FT 1/2 when odds: Result & goals 2 & over 4.5 ≤ 5.66  AND  HT/FT 1/2 odds ≤ 22.00'
+  evidence:
+    2024/25:
+      matches: 314
+      hit_pct: 7.3
+      normal_pct: 2.2
+    2025/26:
+      matches: 350
+      hit_pct: 5.1
+      normal_pct: 2.3
+    2026/27:
+      matches: 145
+      hit_pct: 3.4
+      normal_pct: 2.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: htft3-2/1-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_FT||2/1
+  bet_name: HT/FT 2/1
+  bet_name_tr: 'İlk Yarı/Maç Sonucu: 2/1'
+  criteria:
+  - bet: CORRECT_SCORE||2-1
+    op: '>='
+    chance_pct: 9.32
+  - bet: TEAM_WIN_EITHER_HALF_HOME||YES
+    op: '>='
+    chance_pct: 56.24
+  summary: 'HT/FT 2/1 when chance: score 2-1 ≥ 9.3%  AND  chance: Home wins a half yes ≥ 56.2%'
+  evidence:
+    2024/25:
+      matches: 451
+      hit_pct: 6.4
+      normal_pct: 2.9
+    2025/26:
+      matches: 172
+      hit_pct: 7.0
+      normal_pct: 2.6
+    2026/27:
+      matches: 138
+      hit_pct: 3.6
+      normal_pct: 2.4
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: bb-odds-5
+  kind: odds_band
+  status: promising
+  bet: HT_2H_BTTS||YES/YES
+  bet_name: Both score 1st/2nd half yes/yes
+  bet_name_tr: '1. Yarı / 2. Yarı Karşılıklı Gol: Evet/Evet'
+  criteria:
+  - bet: HT_2H_BTTS||YES/YES
+    op: '>'
+    odds: 4.0
+  - bet: HT_2H_BTTS||YES/YES
+    op: <=
+    odds: 8.34
+  summary: Both score 1st/2nd half yes/yes when its odds are <= 8.34 (cheapest 5% of 2025/26; the price exists only from 2025/26)
+  evidence:
+    2025/26:
+      matches: 232
+      hit_pct: 10.3
+      normal_pct: 5.7
+    2026/27:
+      matches: 212
+      hit_pct: 11.8
+      normal_pct: 7.3
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: bb-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_2H_BTTS||YES/YES
+  bet_name: Both score 1st/2nd half yes/yes
+  bet_name_tr: '1. Yarı / 2. Yarı Karşılıklı Gol: Evet/Evet'
+  criteria:
+  - bet: BTTS||YES
+    op: <=
+    odds: 1.36
+  - bet: HT_OU|1.5|UNDER
+    op: '>='
+    odds: 1.49
+  summary: 'Both score 1st/2nd half yes/yes when odds: Both teams score yes ≤ 1.36  AND  odds: 1st-half goals under 1.5 ≥
+    1.49'
+  evidence:
+    2024/25:
+      matches: 367
+      hit_pct: 12.3
+      normal_pct: 5.5
+    2025/26:
+      matches: 447
+      hit_pct: 10.7
+      normal_pct: 5.7
+    2026/27:
+      matches: 330
+      hit_pct: 10.9
+      normal_pct: 7.2
+  first_added: '2026-10-16'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-0
+  bet_name: Score 0-0
+  bet_name_tr: 'Maç Skoru: 0-0'
+  criteria:
+  - bet: CORRECT_SCORE||0-0
+    op: '>='
+    chance_pct: 12.63
+  summary: Score 0-0 when Nesine's chance for it is >= 12.6% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 15.6
+      normal_pct: 7.15
+    2025/26:
+      matches: 172
+      hit_pct: 14.5
+      normal_pct: 7.11
+    2026/27:
+      matches: 165
+      hit_pct: 15.8
+      normal_pct: 6.45
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-0-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-0
+  bet_name: Score 0-0
+  bet_name_tr: 'Maç Skoru: 0-0'
+  criteria:
+  - bet: GOAL_RANGE||6+
+    op: <=
+    chance_pct: 2.38
+  - bet: GOAL_RANGE||0-1
+    op: '>='
+    chance_pct: 38.34
+  summary: 'Score 0-0 when chance: Total goals 6+ ≤ 2.4%  AND  chance: Total goals 0-1 ≥ 38.3%'
+  evidence:
+    2024/25:
+      matches: 361
+      hit_pct: 18.0
+      normal_pct: 7.15
+    2025/26:
+      matches: 411
+      hit_pct: 15.8
+      normal_pct: 7.11
+    2026/27:
+      matches: 226
+      hit_pct: 15.9
+      normal_pct: 6.45
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-1-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-1
+  bet_name: Score 0-1
+  bet_name_tr: 'Maç Skoru: 0-1'
+  criteria:
+  - bet: CORRECT_SCORE||0-1
+    op: '>='
+    chance_pct: 12.13
+  summary: Score 0-1 when Nesine's chance for it is >= 12.1% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 14.6
+      normal_pct: 7.21
+    2025/26:
+      matches: 135
+      hit_pct: 17.8
+      normal_pct: 7.11
+    2026/27:
+      matches: 112
+      hit_pct: 9.8
+      normal_pct: 7.12
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-2-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: CORRECT_SCORE||0-2
+    op: '>='
+    chance_pct: 9.45
+  summary: Score 0-2 when Nesine's chance for it is >= 9.5% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 10.8
+      normal_pct: 4.47
+    2025/26:
+      matches: 84
+      hit_pct: 8.3
+      normal_pct: 4.59
+    2026/27:
+      matches: 74
+      hit_pct: 14.9
+      normal_pct: 3.98
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-2-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||0-2
+  bet_name: Score 0-2
+  bet_name_tr: 'Maç Skoru: 0-2'
+  criteria:
+  - bet: 1X2_AND_OU|2.5|2&UNDER
+    op: <=
+    odds: 4.57
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 18.85
+  summary: 'Score 0-2 when odds: Result & goals 2 & under 2.5 ≤ 4.57  AND  chance: Result home ≤ 18.9%'
+  evidence:
+    2024/25:
+      matches: 380
+      hit_pct: 14.2
+      normal_pct: 4.47
+    2025/26:
+      matches: 319
+      hit_pct: 13.8
+      normal_pct: 4.59
+    2026/27:
+      matches: 76
+      hit_pct: 14.5
+      normal_pct: 3.98
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-0-3-chance-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||0-3
+  bet_name: Score 0-3
+  bet_name_tr: 'Maç Skoru: 0-3'
+  criteria:
+  - bet: CORRECT_SCORE||0-3
+    op: '>='
+    chance_pct: 4.54
+  summary: Score 0-3 when Nesine's chance for it is >= 4.5% (its top 10% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 793
+      hit_pct: 6.8
+      normal_pct: 2.18
+    2025/26:
+      matches: 190
+      hit_pct: 3.7
+      normal_pct: 2.28
+    2026/27:
+      matches: 212
+      hit_pct: 6.1
+      normal_pct: 2.25
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-1-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||1-0
+  bet_name: Score 1-0
+  bet_name_tr: 'Maç Skoru: 1-0'
+  criteria:
+  - bet: CORRECT_SCORE||1-0
+    op: '>='
+    chance_pct: 14.18
+  summary: Score 1-0 when Nesine's chance for it is >= 14.2% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 18.6
+      normal_pct: 10.29
+    2025/26:
+      matches: 139
+      hit_pct: 18.7
+      normal_pct: 10.01
+    2026/27:
+      matches: 124
+      hit_pct: 16.1
+      normal_pct: 8.82
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-1-3-chance-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||1-3
+  bet_name: Score 1-3
+  bet_name_tr: 'Maç Skoru: 1-3'
+  criteria:
+  - bet: CORRECT_SCORE||1-3
+    op: '>='
+    chance_pct: 5.17
+  summary: Score 1-3 when Nesine's chance for it is >= 5.2% (its top 10% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 793
+      hit_pct: 5.0
+      normal_pct: 2.6
+    2025/26:
+      matches: 206
+      hit_pct: 6.3
+      normal_pct: 2.88
+    2026/27:
+      matches: 256
+      hit_pct: 3.5
+      normal_pct: 2.6
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-1-3-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||1-3
+  bet_name: Score 1-3
+  bet_name_tr: 'Maç Skoru: 1-3'
+  criteria:
+  - bet: 1X2_AND_BTTS||2&YES
+    op: <=
+    odds: 2.92
+  - bet: HT_FT||1/2
+    op: <=
+    odds: 22.0
+  summary: 'Score 1-3 when odds: Result & both score 2 & yes ≤ 2.92  AND  odds: HT/FT 1/2 ≤ 22.00'
+  evidence:
+    2024/25:
+      matches: 379
+      hit_pct: 8.2
+      normal_pct: 2.6
+    2025/26:
+      matches: 383
+      hit_pct: 6.5
+      normal_pct: 2.88
+    2026/27:
+      matches: 133
+      hit_pct: 4.5
+      normal_pct: 2.6
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-1-4-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||1-4
+  bet_name: Score 1-4
+  bet_name_tr: 'Maç Skoru: 1-4'
+  criteria:
+  - bet: CORRECT_SCORE||1-4
+    op: '>='
+    chance_pct: 3.01
+  summary: Score 1-4 when Nesine's chance for it is >= 3.0% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 4.5
+      normal_pct: 0.97
+    2025/26:
+      matches: 103
+      hit_pct: 7.8
+      normal_pct: 0.85
+    2026/27:
+      matches: 139
+      hit_pct: 3.6
+      normal_pct: 1.03
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-2-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||2-0
+  bet_name: Score 2-0
+  bet_name_tr: 'Maç Skoru: 2-0'
+  criteria:
+  - bet: CORRECT_SCORE||2-0
+    op: '>='
+    chance_pct: 11.72
+  summary: Score 2-0 when Nesine's chance for it is >= 11.7% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 12.6
+      normal_pct: 6.99
+    2025/26:
+      matches: 98
+      hit_pct: 13.3
+      normal_pct: 6.72
+    2026/27:
+      matches: 97
+      hit_pct: 14.4
+      normal_pct: 6.61
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-3-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||3-0
+  bet_name: Score 3-0
+  bet_name_tr: 'Maç Skoru: 3-0'
+  criteria:
+  - bet: CORRECT_SCORE||3-0
+    op: '>='
+    chance_pct: 8.83
+  summary: Score 3-0 when Nesine's chance for it is >= 8.8% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 10.6
+      normal_pct: 3.71
+    2025/26:
+      matches: 68
+      hit_pct: 19.1
+      normal_pct: 4.01
+    2026/27:
+      matches: 85
+      hit_pct: 16.5
+      normal_pct: 3.75
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-3-1-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||3-1
+  bet_name: Score 3-1
+  bet_name_tr: 'Maç Skoru: 3-1'
+  criteria:
+  - bet: 1X2_AND_BTTS||1&NO
+    op: '>='
+    chance_pct: 35.7
+  - bet: 1X2_AND_BTTS||2&NO
+    op: '>='
+    odds: 13.4
+  summary: 'Score 3-1 when chance: Result & both score 1 & no ≥ 35.7%  AND  odds: Result & both score 2 & no ≥ 13.40'
+  evidence:
+    2024/25:
+      matches: 380
+      hit_pct: 11.3
+      normal_pct: 4.09
+    2025/26:
+      matches: 407
+      hit_pct: 7.1
+      normal_pct: 4.42
+    2026/27:
+      matches: 123
+      hit_pct: 11.4
+      normal_pct: 4.43
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-3-3-chance-10
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||3-3
+  bet_name: Score 3-3
+  bet_name_tr: 'Maç Skoru: 3-3'
+  criteria:
+  - bet: CORRECT_SCORE||3-3
+    op: '>='
+    chance_pct: 1.84
+  summary: Score 3-3 when Nesine's chance for it is >= 1.8% (its top 10% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 793
+      hit_pct: 1.3
+      normal_pct: 1.0
+    2025/26:
+      matches: 309
+      hit_pct: 3.9
+      normal_pct: 1.41
+    2026/27:
+      matches: 447
+      hit_pct: 2.0
+      normal_pct: 1.41
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-4-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-0
+  bet_name: Score 4-0
+  bet_name_tr: 'Maç Skoru: 4-0'
+  criteria:
+  - bet: CORRECT_SCORE||4-0
+    op: '>='
+    chance_pct: 5.28
+  summary: Score 4-0 when Nesine's chance for it is >= 5.3% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 7.1
+      normal_pct: 1.62
+    2025/26:
+      matches: 76
+      hit_pct: 6.6
+      normal_pct: 1.69
+    2026/27:
+      matches: 104
+      hit_pct: 4.8
+      normal_pct: 1.44
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-4-1-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-1
+  bet_name: Score 4-1
+  bet_name_tr: 'Maç Skoru: 4-1'
+  criteria:
+  - bet: CORRECT_SCORE||4-1
+    op: '>='
+    chance_pct: 4.53
+  summary: Score 4-1 when Nesine's chance for it is >= 4.5% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 4.3
+      normal_pct: 1.62
+    2025/26:
+      matches: 102
+      hit_pct: 7.8
+      normal_pct: 1.57
+    2026/27:
+      matches: 140
+      hit_pct: 4.3
+      normal_pct: 1.48
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-4-2-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||4-2
+  bet_name: Score 4-2
+  bet_name_tr: 'Maç Skoru: 4-2'
+  criteria:
+  - bet: CORRECT_SCORE||4-2
+    op: '>='
+    chance_pct: 2.2
+  summary: Score 4-2 when Nesine's chance for it is >= 2.2% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 3.8
+      normal_pct: 1.11
+    2025/26:
+      matches: 142
+      hit_pct: 4.2
+      normal_pct: 0.91
+    2026/27:
+      matches: 227
+      hit_pct: 2.6
+      normal_pct: 1.15
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-FT-OTHER-chance-5
+  kind: odds_band
+  status: proven
+  bet: CORRECT_SCORE||OTHER
+  bet_name: Score OTHER
+  bet_name_tr: 'Maç Skoru: Diğer'
+  criteria:
+  - bet: CORRECT_SCORE||OTHER
+    op: '>='
+    chance_pct: 6.56
+  summary: Score OTHER when Nesine's chance for it is >= 6.6% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 397
+      hit_pct: 6.5
+      normal_pct: 2.11
+    2025/26:
+      matches: 133
+      hit_pct: 6.8
+      normal_pct: 2.13
+    2026/27:
+      matches: 261
+      hit_pct: 10.7
+      normal_pct: 3.18
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-0-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||0-0
+  bet_name: 1st-half score 0-0
+  bet_name_tr: '1. Yarı Skoru: 0-0'
+  criteria:
+  - bet: HT_CORRECT_SCORE||0-0
+    op: '>='
+    chance_pct: 40.02
+  summary: 1st-half score 0-0 when Nesine's chance for it is >= 40.0% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 41.8
+      normal_pct: 29.06
+    2025/26:
+      matches: 149
+      hit_pct: 51.0
+      normal_pct: 29.3
+    2026/27:
+      matches: 141
+      hit_pct: 45.4
+      normal_pct: 27.87
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-0-1-chance-10
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||0-1
+  bet_name: 1st-half score 0-1
+  bet_name_tr: '1. Yarı Skoru: 0-1'
+  criteria:
+  - bet: HT_CORRECT_SCORE||0-1
+    op: '>='
+    chance_pct: 21.15
+  summary: 1st-half score 0-1 when Nesine's chance for it is >= 21.1% (its top 10% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 800
+      hit_pct: 25.4
+      normal_pct: 15.99
+    2025/26:
+      matches: 188
+      hit_pct: 25.5
+      normal_pct: 15.35
+    2026/27:
+      matches: 186
+      hit_pct: 21.5
+      normal_pct: 15.46
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-0-1-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||0-1
+  bet_name: 1st-half score 0-1
+  bet_name_tr: '1. Yarı Skoru: 0-1'
+  criteria:
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 24.22
+  - bet: 1X2_AND_OU|1.5|2&OVER
+    op: '>='
+    chance_pct: 46.4
+  summary: '1st-half score 0-1 when chance: Result home ≤ 24.2%  AND  chance: Result & goals 2 & over 1.5 ≥ 46.4%'
+  evidence:
+    2024/25:
+      matches: 405
+      hit_pct: 28.4
+      normal_pct: 15.99
+    2025/26:
+      matches: 390
+      hit_pct: 28.2
+      normal_pct: 15.35
+    2026/27:
+      matches: 134
+      hit_pct: 27.6
+      normal_pct: 15.46
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-0-2-chance-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||0-2
+  bet_name: 1st-half score 0-2
+  bet_name_tr: '1. Yarı Skoru: 0-2'
+  criteria:
+  - bet: HT_CORRECT_SCORE||0-2
+    op: '>='
+    chance_pct: 9.81
+  summary: 1st-half score 0-2 when Nesine's chance for it is >= 9.8% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 9.2
+      normal_pct: 3.88
+    2025/26:
+      matches: 110
+      hit_pct: 14.5
+      normal_pct: 4.76
+    2026/27:
+      matches: 120
+      hit_pct: 12.5
+      normal_pct: 4.36
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-1-0-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||1-0
+  bet_name: 1st-half score 1-0
+  bet_name_tr: '1. Yarı Skoru: 1-0'
+  criteria:
+  - bet: HT_FT||X/1
+    op: <=
+    odds: 3.82
+  - bet: TEAM_WIN_EITHER_HALF_HOME||NO
+    op: '>='
+    odds: 2.65
+  summary: '1st-half score 1-0 when odds: HT/FT X/1 ≤ 3.82  AND  odds: Home wins a half no ≥ 2.65'
+  evidence:
+    2024/25:
+      matches: 398
+      hit_pct: 31.7
+      normal_pct: 20.75
+    2025/26:
+      matches: 233
+      hit_pct: 31.8
+      normal_pct: 20.61
+    2026/27:
+      matches: 62
+      hit_pct: 35.5
+      normal_pct: 19.4
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-1-2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||1-2
+  bet_name: 1st-half score 1-2
+  bet_name_tr: '1. Yarı Skoru: 1-2'
+  criteria:
+  - bet: HT_BTTS||YES
+    op: <=
+    odds: 3.2
+  - bet: HT_1X2_AND_HT_OU|1.5|2&OVER
+    op: '>='
+    chance_pct: 12.63
+  summary: '1st-half score 1-2 when odds: 1st-half both score yes ≤ 3.20  AND  chance: 1st-half result & goals 2 & over 1.5
+    ≥ 12.6%'
+  evidence:
+    2024/25:
+      matches: 386
+      hit_pct: 7.8
+      normal_pct: 3.13
+    2025/26:
+      matches: 501
+      hit_pct: 5.2
+      normal_pct: 2.78
+    2026/27:
+      matches: 214
+      hit_pct: 7.5
+      normal_pct: 3.11
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-2-0-chance-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||2-0
+  bet_name: 1st-half score 2-0
+  bet_name_tr: '1. Yarı Skoru: 2-0'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-0
+    op: '>='
+    chance_pct: 13.55
+  summary: 1st-half score 2-0 when Nesine's chance for it is >= 13.6% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 17.2
+      normal_pct: 6.52
+    2025/26:
+      matches: 92
+      hit_pct: 17.4
+      normal_pct: 7.18
+    2026/27:
+      matches: 124
+      hit_pct: 14.5
+      normal_pct: 7.09
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-2-1-chance-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||2-1
+  bet_name: 1st-half score 2-1
+  bet_name_tr: '1. Yarı Skoru: 2-1'
+  criteria:
+  - bet: HT_CORRECT_SCORE||2-1
+    op: '>='
+    chance_pct: 5.47
+  summary: 1st-half score 2-1 when Nesine's chance for it is >= 5.5% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 6.5
+      normal_pct: 3.64
+    2025/26:
+      matches: 170
+      hit_pct: 6.5
+      normal_pct: 3.6
+    2026/27:
+      matches: 238
+      hit_pct: 7.1
+      normal_pct: 3.78
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-2-2-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||2-2
+  bet_name: 1st-half score 2-2
+  bet_name_tr: '1. Yarı Skoru: 2-2'
+  criteria:
+  - bet: DC||12
+    op: '>='
+    chance_pct: 72.13
+  - bet: BTTS||YES
+    op: <=
+    odds: 1.42
+  summary: '1st-half score 2-2 when chance: Double chance 12 ≥ 72.1%  AND  odds: Both teams score yes ≤ 1.42'
+  evidence:
+    2024/25:
+      matches: 336
+      hit_pct: 3.3
+      normal_pct: 0.81
+    2025/26:
+      matches: 1026
+      hit_pct: 1.5
+      normal_pct: 1.12
+    2026/27:
+      matches: 731
+      hit_pct: 1.9
+      normal_pct: 1.06
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-OTHER-chance-5
+  kind: odds_band
+  status: proven
+  bet: HT_CORRECT_SCORE||OTHER
+  bet_name: 1st-half score OTHER
+  bet_name_tr: '1. Yarı Skoru: Diğer'
+  criteria:
+  - bet: HT_CORRECT_SCORE||OTHER
+    op: '>='
+    chance_pct: 11.18
+  summary: 1st-half score OTHER when Nesine's chance for it is >= 11.2% (its top 5% of 2024/25; chance, not odds)
+  evidence:
+    2024/25:
+      matches: 400
+      hit_pct: 13.8
+      normal_pct: 5.03
+    2025/26:
+      matches: 118
+      hit_pct: 7.6
+      normal_pct: 4.9
+    2026/27:
+      matches: 190
+      hit_pct: 11.1
+      normal_pct: 6.09
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-HT-OTHER-rule
+  kind: odds_rule
+  status: proven
+  bet: HT_CORRECT_SCORE||OTHER
+  bet_name: 1st-half score OTHER
+  bet_name_tr: '1. Yarı Skoru: Diğer'
+  criteria:
+  - bet: 2H_1X2||X
+    op: '>='
+    odds: 2.82
+  - bet: 1X2_AND_BTTS||X&NO
+    op: '>='
+    odds: 21.24
+  summary: '1st-half score OTHER when odds: 2nd-half result draw ≥ 2.82  AND  odds: Result & both score X & no ≥ 21.24'
+  evidence:
+    2024/25:
+      matches: 378
+      hit_pct: 16.4
+      normal_pct: 5.03
+    2025/26:
+      matches: 454
+      hit_pct: 11.7
+      normal_pct: 4.9
+    2026/27:
+      matches: 246
+      hit_pct: 11.4
+      normal_pct: 6.09
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: pack-CORRECT_SCORE-high-3-5
+  kind: pack
+  status: proven
+  market: CORRECT_SCORE
+  k: 3
+  min_pack_chance: 0.0914
+  selections:
+  - CORRECT_SCORE||3-2
+  - CORRECT_SCORE||2-3
+  - CORRECT_SCORE||3-3
+  - CORRECT_SCORE||2-4
+  - CORRECT_SCORE||4-2
+  summary: 'High-scoring correct scores (3-2, 2-3, 3-3, 2-4, 4-2): back the 3 most likely of the five together, only when
+    they add up to >= 9.1% (top 5% of games)'
+  evidence:
+    2024/25:
+      matches: 394
+      hit_pct: 11.9
+      normal_pct: null
+      every_match_pct: 6.0
+      avg_odds: 6.36
+      return_per_100: -31.0
+    2025/26:
+      matches: 172
+      hit_pct: 8.7
+      normal_pct: null
+      every_match_pct: 6.1
+      avg_odds: 6.33
+      return_per_100: -39.5
+    2026/27:
+      matches: 281
+      hit_pct: 11.0
+      normal_pct: null
+      every_match_pct: 7.1
+      avg_odds: 6.38
+      return_per_100: -30.9
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-high-FT-3-2-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||3-2
+  bet_name: Score 3-2
+  bet_name_tr: 'Maç Skoru: 3-2'
+  criteria:
+  - bet: 1X2_AND_OU|4.5|1&OVER
+    op: '>='
+    chance_pct: 10.22
+  - bet: HT_BTTS||YES
+    op: <=
+    odds: 3.03
+  summary: 'Score 3-2 when chance: Result & goals 1 & over 4.5 ≥ 10.2%  AND  odds: 1st-half both score yes ≤ 3.03'
+  evidence:
+    2024/25:
+      matches: 305
+      hit_pct: 7.2
+      normal_pct: 2.8
+    2025/26:
+      matches: 354
+      hit_pct: 3.4
+      normal_pct: 2.59
+    2026/27:
+      matches: 189
+      hit_pct: 5.3
+      normal_pct: 3.27
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
+- id: cs-high-FT-2-3-rule
+  kind: odds_rule
+  status: proven
+  bet: CORRECT_SCORE||2-3
+  bet_name: Score 2-3
+  bet_name_tr: 'Maç Skoru: 2-3'
+  criteria:
+  - bet: HT_OU|1.5|OVER
+    op: <=
+    odds: 2.04
+  - bet: 1X2||1
+    op: <=
+    chance_pct: 35.33
+  summary: 'Score 2-3 when odds: 1st-half goals over 1.5 ≤ 2.04  AND  chance: Result home ≤ 35.3%'
+  evidence:
+    2024/25:
+      matches: 432
+      hit_pct: 7.6
+      normal_pct: 2.19
+    2025/26:
+      matches: 540
+      hit_pct: 3.7
+      normal_pct: 2.14
+    2026/27:
+      matches: 207
+      hit_pct: 3.4
+      normal_pct: 2.5
+  first_added: '2026-10-17'
+  last_confirmed: '2026-10-19'
