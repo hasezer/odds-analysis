@@ -70,6 +70,7 @@
 - `corners_study.py` (corners second pass after `v5_corners.py`: fair race and calibration; nothing stored, lesson in the book)
 - `live_minutes.py` (live tables by minute from match events: a PREVIEW, events cover only ~300 usable matches so far;
   re-run when events cover 2,000+ matches)
+- `tipster_heavy_fav.py` (tipster rule: heavy favourite 1.5 / 4.0 / 5.0 ends 1/0 or 2/0 or a draw: no; lesson in the book)
 - `htft_weekly_lowest.py` (each league's lowest HT/FT 2/1, 1/2, 1/X, 2/X odds of the week: hit rates by league; `output/htft_weekly_lowest.xlsx`; lesson in the book)
 - `six_waves.py` (do 6+ goal games come in waves every few weeks? No: the count follows the number of matches, the
   share follows the prices; `output/six_waves.png` / `.xlsx`; lesson in the book)
