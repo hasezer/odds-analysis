@@ -190,6 +190,12 @@ LESSONS = [
     "2/X POR-1, 5-8 wins each) vs 3.4 on average and 7 at the 95th pct with outcomes redrawn from the fair chance: "
     "luck. The week's lowest 1/2 game ends 2/2 30%, X/2 16%, 1/1 14%, X/X 14%, 1/X 5.7%, 1/2 3.5%; backing 1/2 + "
     "1/X together hits 9.2% and returns -18 per 100 (lowest 2/1 game: ends 1/1 42%; 2/1 + 2/X -37).",
+    "Tipster 'heavy favourite manipulation' rule (tipster_heavy_fav.py; favourite 1.40-1.60, draw 3.60-4.40, opponent "
+    "4.30-5.70 at closing odds, 357 games): the draw hit 24.4% (the odds imply 22.5%, break-even 26.7%, -9 per 100; "
+    "24.1 / 25.0 / 23.3% by season, luck alone gives -16 and beats -9 in 26% of runs); favourite-leads-then-draw "
+    "(1/0, 2/0) 5.3% vs 6.8% needed, -28 per 100; draw with goals 19%. The favourite's form does not help: weak "
+    "form (0-4 points of 15, 29 games) drew 24%, good form 25.5%, and 1/0-2/0 hit most after GOOD form (8.5%, 106 "
+    "games), the opposite of the claim. Favourites at that price win 59% as priced (not less).",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
