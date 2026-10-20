@@ -41419,3 +41419,4 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-20T09:50:11+00:00,results,coverage_stats,TUR-1 2026/27,ok,0.875,63 of 72 finished matches
 2026-10-20T09:50:11+00:00,results,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
 2026-10-20T09:54:05+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-20T11:43:12+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
