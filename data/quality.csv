@@ -41035,3 +41035,4 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-19T10:43:03+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
 2026-10-19T13:23:33+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
 2026-10-20T01:50:38+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-20T06:05:58+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
