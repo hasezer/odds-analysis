@@ -18,6 +18,9 @@ Sources: cache/hi_data.npz, hi_leagues.parquet, hi_trees.parquet, rules_v3_leagu
 Nothing is ever lost: a strategy from the previous book that no longer passes is KEPT with status "retired" (date
 and reason); every strategy keeps its "first_added" date; each build that changes the book saves a dated copy in
 strategy_history/ and adds a line to strategy_history/CHANGELOG.md. LESSONS records what did NOT work.
+Live retirements: strategies that monthly_review.py lists in live_review.yaml (live record far below the book's
+evidence) are retired the same way, in every rebuild. `python analysis/build_strategy_book.py --live-only` applies
+that list to the current book without a rebuild (no caches needed; only statuses change).
 """
 import datetime as dt
 from pathlib import Path
@@ -37,6 +40,7 @@ from rules_targets import tr_labels  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HIST = HERE / "strategy_history"
+LIVE = HERE / "live_review.yaml"          # written by monthly_review.py
 LESSONS = [
     "No strategy beats Nesine's prices in general: ML on all markets, 21M mined patterns, sure-bet scans, rule "
     "stacking and 'price + corrections' all lost money on unseen seasons (reports: ML_REPORT, MINER_REPORT, "
@@ -150,6 +154,48 @@ LESSONS = [
     "197 games); 2-4 and 4-2 too few winners. The three most likely of the five together in the top 5% of games: "
     "11.8 / 8.7 / 11.0% vs 6-7% every game (stored; -31 to -39 per 100). Live: after half-time 2-2 the game ends 2-3 "
     "17%, 3-2 16%, 3-3 11%, 4-2 8%; after 2-1, 3-2 12%; after 1-2, 2-3 12%.",
+    "How teams play vs their results (perf_study.py; team match statistics, last 10 matches): shots, shots on "
+    "target, possession, corners and 'luck' (goals minus what the shots on target were worth at the league's rate) "
+    "add nothing beyond Nesine's price for home win, draw, away win, over/under 2.5 and BTTS: out-of-sample log-loss "
+    "gain about 0 (-1.1 to +0.9 per 1,000), the same AUC. The 5-10% of games where the stats disagree most with the "
+    "price beat shuffled stats in 2 of 28 checks, neither repeating in the other season; Nesine's cut leaves at most "
+    "9 bets a season with a 5% edge. Backing the 'unlucky' side (results far below its shots) hits exactly its fair "
+    "chance (home 35-38% vs 34-37%, away 19-23% vs 24-26%): -13 to -31 per 100.",
+    "Corners, second pass (corners_study.py; first pass v5_corners.py): Nesine's corner cut is 21-22% on every line "
+    "(8.5-12.5) and corners are mostly noise (Nesine's expected corners correlate 0.16 with the real total, team "
+    "habits 0.14, goal expectation 0.13). Nesine's line already blends team corner habits (corr 0.69), the league "
+    "average (0.71) and goal expectation (0.48). Fair race (top 10% of games, 2025/26 + 2026/27): Nesine's own corner "
+    "chance picks best or ties (over 8.5 67%, over 9.5 59%, under 10.5 66%); team habits, same-venue habits, "
+    "favourite strength and a fitted 'price + all signs' model add nothing beyond shuffled-sign luck. Low goal "
+    "expectation picks under 9.5 / 10.5 corners about as well (61% / 69%) and loses least (-7 to -12 per 100). All 99 "
+    "price bands with 300+ bets lose 9-30 per 100; no corner strategy is stored.",
+    "Own play (own_play.py; every pick since July 2025 at closing odds, 1 stake each, 5,000 simulated years): the "
+    "hit-rate strategies lose steadily when bet flat: both teams score in both halves -25 per 100 (38 picks a month, "
+    "a typical year -110 stakes, a 1-in-20 losing run of 61, bankroll ~200 stakes), the high-scoring score pack -38, "
+    "correct-score bands and rules -27, every single-bet strategy together -23. Portugal draw & over 2.5 singles "
+    "+81 per 100 (23 a month, ahead in 99% of simulated years, losing runs up to ~50, bankroll ~60 stakes; found on "
+    "these same seasons, so the tracker must confirm it). The Goals coupon as a 3-4-5 system is a lottery: one weekend "
+    "in 104 since Aug 2024 (7 Aug 2026, 512x the stake) decides it; without it -80%; 37% chance to end a year ahead.",
+    "6+ goal 'waves' (six_waves.py; 19,810 games, 141 weeks; luck control: every game redrawn 2,000 times from its "
+    "own 6+ price): the weekly NUMBER of 6+ games follows the number of matches played (correlation 0.86; "
+    "international-break weeks 25-60 matches, busy weeks 250+), while the SHARE stays at what Nesine's prices expect "
+    "(6.3%). Week-to-week swings are within luck (p 0.11); no cycle of 1-10 weeks beyond luck (strongest: 5-6 weeks, "
+    "p 0.06-0.08; as a signal, 5 weeks after a hot week gave 0.94 / 1.11 / 1.08x expected); no waves inside a league; "
+    "after international breaks 0.97 / 1.51 / 0.94x; weeks 3-4 of the month 1.07 / 1.15 / 0.97x. 6+ bets lose 32 per "
+    "100 at closing odds.",
+    "Each league's lowest HT/FT 2/1, 1/2, 1/X ('1/0'), 2/X ('2/0') odds of the week (htft_weekly_lowest.py; 2,027 "
+    "league-weeks): the week's lowest hits a bit more than an average game but below break-even: 1/2 3.5% (fair "
+    "3.2%, needs 4.3%) -20 per 100; 2/1 2.7% -44; 1/X 5.9% -25; 2/X 6.4% -18 (lowest 2 or 3 the same). League by "
+    "league, 6 of 104 league x bet pairs paid in all three seasons (1/2 in NED-1, NED-2, SCO-1, SUI-1; 2/1 NED-2; "
+    "2/X POR-1, 5-8 wins each) vs 3.4 on average and 7 at the 95th pct with outcomes redrawn from the fair chance: "
+    "luck. The week's lowest 1/2 game ends 2/2 30%, X/2 16%, 1/1 14%, X/X 14%, 1/X 5.7%, 1/2 3.5%; backing 1/2 + "
+    "1/X together hits 9.2% and returns -18 per 100 (lowest 2/1 game: ends 1/1 42%; 2/1 + 2/X -37).",
+    "Tipster 'heavy favourite manipulation' rule (tipster_heavy_fav.py; favourite 1.40-1.60, draw 3.60-4.40, opponent "
+    "4.30-5.70 at closing odds, 357 games): the draw hit 24.4% (the odds imply 22.5%, break-even 26.7%, -9 per 100; "
+    "24.1 / 25.0 / 23.3% by season, luck alone gives -16 and beats -9 in 26% of runs); favourite-leads-then-draw "
+    "(1/0, 2/0) 5.3% vs 6.8% needed, -28 per 100; draw with goals 19%. The favourite's form does not help: weak "
+    "form (0-4 points of 15, 29 games) drew 24%, good form 25.5%, and 1/0-2/0 hit most after GOOD form (8.5%, 106 "
+    "games), the opposite of the claim. Favourites at that price win 59% as priced (not less).",
     "No early-season goal surplus: 2024/25 Aug-Oct had fewer goals than the odds expected and 2025/26 ~0; the "
     "2026/27 surplus (mostly August) is a one-off.",
     "Team form, last match, market disagreement, calendar and Nesine's cut add only ~1 point of hit rate over odds.",
@@ -817,16 +863,35 @@ def plain(x):
     return x
 
 
+def live_retirements():
+    """Strategies the monthly review (monthly_review.py) found far below their book evidence on live matches."""
+    if not LIVE.exists():
+        return {}
+    return {x["id"]: x for x in (yaml.safe_load(LIVE.read_text()) or {}).get("retire", [])}
+
+
+def retire_live(x, old, fails, today):
+    """Retire x if the monthly review listed it, keeping the first retirement's date and reason."""
+    if x["id"] not in fails:
+        return x
+    if old and old.get("status") == "retired":
+        return {**x, "status": "retired", "retired_on": old["retired_on"], "retired_reason": old["retired_reason"]}
+    return {**x, "status": "retired", "retired_on": today, "retired_reason": fails[x["id"]]["reason"]}
+
+
 def merge_with_previous(items, today):
-    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not."""
+    """Keep every earlier strategy: update the ones still passing, retire (never delete) the ones that do not or
+    that the monthly review listed in live_review.yaml."""
     f = HERE / "strategies.yaml"
     prev = yaml.safe_load(f.read_text())["strategies"] if f.exists() else []
     prev_by_id = {p["id"]: p for p in prev}
     new_ids = {x["id"] for x in items}
+    fails = live_retirements()
     for x in items:
         old = prev_by_id.get(x["id"])
         x["first_added"] = old.get("first_added", today) if old else today
         x["last_confirmed"] = today
+    items = [retire_live(x, prev_by_id.get(x["id"]), fails, today) for x in items]
     kept = []
     for p in prev:
         if p["id"] in new_ids:
@@ -836,8 +901,40 @@ def merge_with_previous(items, today):
                  "retired_reason": "no longer passed the gates when the book was rebuilt on newer data"}
         kept.append(p)
     added = sum(1 for x in items if x["id"] not in prev_by_id)
-    retired = sum(1 for p in kept if p.get("retired_on") == today)
+    retired = sum(1 for p in items + kept if p.get("retired_on") == today)
     return items + kept, added, len(items) - added, retired
+
+
+def save(book, today, line):
+    """Write strategies.yaml and STRATEGIES.md; if the book changed, a dated copy and a CHANGELOG line."""
+    items = book["strategies"]
+    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
+    (HERE / "strategies.yaml").write_text(text)
+    (HERE / "STRATEGIES.md").write_text(to_md(book))
+    HIST.mkdir(exist_ok=True)
+    snaps = sorted(HIST.glob("strategies_*.yaml"))
+    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
+    if not snaps or strip(snaps[-1].read_text()) != strip(text):
+        (HIST / f"strategies_{today}.yaml").write_text(text)
+        with open(HIST / "CHANGELOG.md", "a") as fh:
+            if fh.tell() == 0:
+                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
+                         "strategies_<date>.yaml in this folder.\n\n")
+            fh.write(f"- {today}: {line}; {sum(1 for x in items if x['status'] != 'retired')} active, "
+                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
+
+
+def live_only():
+    """Apply the monthly review's retirements (live_review.yaml) to the current book, without a rebuild (no caches
+    needed): only statuses change; evidence, lessons and everything else stay as they are."""
+    today = dt.date.today().isoformat()
+    book = yaml.safe_load((HERE / "strategies.yaml").read_text())
+    fails = live_retirements()
+    before = {x["id"]: x.get("status") for x in book["strategies"]}
+    book["strategies"] = [retire_live(x, x, fails, today) for x in book["strategies"]]
+    n = sum(1 for x in book["strategies"] if before[x["id"]] != "retired" and x["status"] == "retired")
+    save(book, today, f"monthly live review, {n} retired")
+    return book, n
 
 
 def build():
@@ -852,24 +949,14 @@ def build():
     book = {"built_on": today,
             "built_from": "seasons 2024/25 + 2024 (find), 2025/26 + 2025 (confirm), 2026/27 + 2026 so far (exam)",
             "lessons": LESSONS, "strategies": items}
-    text = yaml.safe_dump(book, allow_unicode=True, sort_keys=False, width=120)
-    (HERE / "strategies.yaml").write_text(text)
-    (HERE / "STRATEGIES.md").write_text(to_md(book))
-    HIST.mkdir(exist_ok=True)
-    snaps = sorted(HIST.glob("strategies_*.yaml"))
-    strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith(("built_on:", "  last_confirmed:")))
-    if not snaps or strip(snaps[-1].read_text()) != strip(text):
-        (HIST / f"strategies_{today}.yaml").write_text(text)
-        with open(HIST / "CHANGELOG.md", "a") as fh:
-            if fh.tell() == 0:
-                fh.write("# Strategy book changelog\n\nOne line per rebuild that changed the book. Full copies: "
-                         "strategies_<date>.yaml in this folder.\n\n")
-            fh.write(f"- {today}: {added} new, {updated} kept/updated, {retired} retired; "
-                     f"{sum(1 for x in items if x['status'] != 'retired')} active, "
-                     f"{sum(1 for x in items if x['status'] == 'retired')} retired in total\n")
+    save(book, today, f"{added} new, {updated} kept/updated, {retired} retired")
     return book
 
 
 if __name__ == "__main__":
-    b = build()
-    print(pd.Series([s["kind"] for s in b["strategies"]]).value_counts().to_string())
+    if "--live-only" in sys.argv:
+        b, n = live_only()
+        print(f"monthly live review applied: {n} retired")
+    else:
+        b = build()
+        print(pd.Series([s["kind"] for s in b["strategies"]]).value_counts().to_string())

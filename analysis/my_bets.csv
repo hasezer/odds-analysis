@@ -1,0 +1,4 @@
+# The owner's own bets, for analysis/my_bets.py (closing-price check). One row per bet; a system coupon: one row per game.
+# date = kick-off date in Turkey; home/away = names as Nesine shows them; bet = market|line|selection (e.g. 1X2||1, OU|2.5|OVER, BTTS||YES, HT_2H_BTTS||YES/YES, HT_FT||X/1, CORRECT_SCORE||2-1, 1X2_AND_OU|2.5|X&OVER)
+# Example (lines starting with # are ignored): 2026-10-18,Galatasaray,Fenerbahçe,1X2||1,2.10,100,system coupon leg
+date,home,away,bet,odds_taken,stake,note
