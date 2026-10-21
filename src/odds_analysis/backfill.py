@@ -23,7 +23,7 @@ from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
 
-from . import budget, daily, flat, quality, www
+from . import budget, daily, flat, quality, store, www
 from . import http as H
 from .config import DATA, ROOT, TR, load
 from .ingest import season_type
@@ -305,8 +305,10 @@ def progress_table(state: dict) -> pd.DataFrame:
     day = pd.to_datetime(fx["kickoff_utc"], utc=True).dt.tz_convert("Europe/Istanbul").dt.date.astype(str)
     newest = (datetime.now(UTC).astimezone(TR).date() - timedelta(days=cfg.get("newest_offset_days", 6))).isoformat()
     fx = fx[(day >= cfg.get("oldest_date", "2019-08-01")) & (day <= newest)].assign(day=day)
-    cursor = state.get("next_date")
-    fx["done"] = fx["day"] > cursor if cursor else False
+    fx = fx[~fx["match_id"].str.startswith("macko")]  # Mackolik's empty placeholder entries (no real match)
+    # "done" = the match is actually saved in data/matches (not just: its date was passed by the cursor)
+    saved = set(store.read("matches", columns=["match_id"])["match_id"])
+    fx["done"] = fx["match_id"].isin(saved)
     out = fx.groupby(["league_id", "season"]).agg(matches=("match_id", "size"), done=("done", "sum")).reset_index()
     out["pct"] = (100 * out["done"] / out["matches"]).round(1)
     return out.sort_values(["season", "league_id"], ascending=[False, True])
@@ -333,12 +335,12 @@ def readme_block(table: pd.DataFrame, state: dict, allow: dict | None) -> str:
         lines.append("Not started yet: the first job builds the fixture index of every league season.")
     else:
         total, done = int(table["matches"].sum()), int(table["done"].sum())
-        lines.append(f"**{done:,} of {total:,} matches ({100 * done / max(total, 1):.1f} %)** · next date to process: "
+        lines.append(f"**{done:,} of {total:,} matches saved ({100 * done / max(total, 1):.1f} %)** · next date to process: "
                      f"{state.get('next_date') or '-'}")
-        lines += ["", "| Season | Matches | Done | % |", "|---|---|---|---|"]
+        lines += ["", "| Season | Matches | Saved | % |", "|---|---|---|---|"]
         by = table.groupby("season")[["matches", "done"]].sum().sort_index(ascending=False)
         for season, r in by.iterrows():
-            lines.append(f"| {season} | {int(r['matches']):,} | {int(r['done']):,} | {100 * r['done'] / max(r['matches'], 1):.0f} % |")
+            lines.append(f"| {season} | {int(r['matches']):,} | {int(r['done']):,} | {100 * r['done'] / max(r['matches'], 1):.1f} % |")
         lines.append("")
         lines.append("Per league and season: [`data/backfill_progress.csv`](data/backfill_progress.csv).")
     if allow:

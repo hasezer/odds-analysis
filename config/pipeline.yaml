@@ -16,6 +16,11 @@ results:
   # Stop cleanly after this many minutes (job limit is 150): progress is saved and a follow-up run starts.
   max_minutes: 110
 
+# Requests to Mackolik. Since Oct 2026 it answers HTTP 429 (too many requests) after ~50 requests sent one
+# per second; a 429 stops the job (no retry). Every job starts its requests at least this many seconds apart.
+http:
+  request_interval_s: 6
+
 # Statistics pages (www.mackolik.com, corners): Mackolik answers them with HTTP 429 (too many requests) since
 # Oct 13 2026. While fetch is false they are not requested at all: matches are saved with odds and scores, every
 # non-corner market is settled and corner markets stay unsettled. Set back to true when the pages answer again

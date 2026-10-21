@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 
 from . import http as H
-from .config import iso, now_utc
+from .config import iso, load, now_utc
 from .runs import run_status
 from .storage import append_log
 
@@ -23,7 +23,9 @@ def _run_job(job: str, raw_dir: Path | None, limit: int | None = None, full: boo
     run_at = iso(now_utc())
     stats: dict = {}
     crash = None
-    with H.MackolikClient(raw_dir=raw_dir) as client:
+    # seconds between the starts of two requests (config/pipeline.yaml http.request_interval_s)
+    interval = float((load("pipeline").get("http") or {}).get("request_interval_s", 1.0))
+    with H.MackolikClient(raw_dir=raw_dir, min_interval_s=interval) as client:
         try:
             from . import daily, migrate
 
