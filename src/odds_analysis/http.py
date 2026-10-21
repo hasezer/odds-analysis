@@ -141,6 +141,8 @@ class MackolikClient:
         if status is not None and status != 200 and last_error is None:
             last_error = f"HTTP {status}"
         if last_error is not None:
+            if status not in RETRY_STATUSES:  # retried statuses are already logged above
+                log.warning("failed %s (%s)", url, last_error)
             with self._lock:
                 if quick:
                     self.soft_failed += 1
