@@ -39,7 +39,7 @@ See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_R
 ## Backfill progress
 
 <!-- backfill-progress:start -->
-_Updated 2026-10-22 06:16 UTC by the Backfill workflow (newest dates first)._
+_Updated 2026-10-22 12:19 UTC by the Backfill workflow (newest dates first)._
 
 **28,647 of 64,136 matches saved (44.7 %)** · next date to process: 2023-07-31
 
