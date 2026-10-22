@@ -41934,3 +41934,4 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-22T09:52:01+00:00,results,coverage_events,MEX-1 2026/27,ok,0.161,18 of 112 finished matches
 2026-10-22T09:52:01+00:00,results,coverage_stats,MEX-1 2026/27,ok,0.839,94 of 112 finished matches
 2026-10-22T09:52:01+00:00,results,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-22T09:54:16+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
