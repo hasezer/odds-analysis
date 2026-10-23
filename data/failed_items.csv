@@ -18713,3 +18713,14 @@ logged_at_utc,job,kind,key,match_id,attempts,error
 2026-10-23T06:04:42Z,backfill,match,kh1ee97k0ya3yftd6v538rv8,kh1ee97k0ya3yftd6v538rv8,4,statistics page failed (saved without statistics)
 2026-10-23T06:04:42Z,backfill,match,ko7w2vuom60ifwdh6yb3tst0,ko7w2vuom60ifwdh6yb3tst0,4,statistics page failed (saved without statistics)
 2026-10-23T06:04:42Z,backfill,listing,2023-07-31,,7,date listing failed
+2026-10-23T09:46:09Z,results,listing,2026-10-18,,2,date listing failed
+2026-10-23T09:46:09Z,results,listing,2026-10-19,,2,date listing failed
+2026-10-23T09:46:09Z,results,match,92gcm858oujs769qjf3gad250,92gcm858oujs769qjf3gad250,3,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,92t5sglo49xtc5l1sf18ax2qc,92t5sglo49xtc5l1sf18ax2qc,3,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,25fj874q8x5peh8gsp5h6x2qc,25fj874q8x5peh8gsp5h6x2qc,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,24he5vq74ixq2j86avzi9ndp0,24he5vq74ixq2j86avzi9ndp0,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,23gpus8w3bpg9ugoys679tus4,23gpus8w3bpg9ugoys679tus4,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,262llnle0py98hyv22k0zz4t0,262llnle0py98hyv22k0zz4t0,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,a7t297d7xwm5swon9my95r0us,a7t297d7xwm5swon9my95r0us,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,93wdx5igtzzqoigf7tvs8x6ac,93wdx5igtzzqoigf7tvs8x6ac,2,RuntimeError('popup HTTP 403')
+2026-10-23T09:46:09Z,results,match,93j3cklwtedekmrawxo522710,93j3cklwtedekmrawxo522710,2,RuntimeError('popup HTTP 403')
