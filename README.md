@@ -39,14 +39,14 @@ See [SCHEMA.md](SCHEMA.md) for the data structure, [HISTORY_REPORT.md](HISTORY_R
 ## Backfill progress
 
 <!-- backfill-progress:start -->
-_Updated 2026-10-23 12:37 UTC by the Backfill workflow (newest dates first)._
+_Updated 2026-10-24 06:51 UTC by the Backfill workflow (newest dates first)._
 
-**28,730 of 64,219 matches saved (44.7 %)** · next date to process: 2023-07-31
+**28,824 of 64,313 matches saved (44.8 %)** · next date to process: 2023-07-31
 
 | Season | Matches | Saved | % |
 |---|---|---|---|
-| 2026/27 | 1,670 | 1,659 | 99.3 % |
-| 2026 | 1,352 | 1,341 | 99.2 % |
+| 2026/27 | 1,726 | 1,715 | 99.4 % |
+| 2026 | 1,390 | 1,379 | 99.2 % |
 | 2025/26 | 6,884 | 6,867 | 99.8 % |
 | 2025 | 2,050 | 2,045 | 99.8 % |
 | 2024/25 | 6,923 | 6,912 | 99.8 % |
