@@ -140,7 +140,7 @@ def test_backfill_scenario(tmp_path):
     assert out["listing_down_state"] == "2026-09-27"
     assert out["past_deadline"][1] is False  # deadline passed: the date is not complete (redone by the next job)
     assert out["progress"] == [{"league_id": "TUR-1", "season": "2026/27", "matches": 2, "done": 2, "pct": 100.0}]
-    assert "**2 of 2 matches (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100 % |" in out["readme"]
+    assert "**2 of 2 matches saved (100.0 %)**" in out["readme"] and "| 2026/27 | 2 | 2 | 100.0 % |" in out["readme"]
 
 
 def test_no_minutes_limit_while_public(monkeypatch):
