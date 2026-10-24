@@ -42306,3 +42306,4 @@ checked_at_utc,job,check,scope,status,value,detail
 2026-10-23T09:46:09+00:00,results,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
 2026-10-23T09:48:50+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
 2026-10-23T11:43:51+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
+2026-10-24T01:35:19+00:00,backfill,popup_match,this run,ok,0,matches whose popup showed another match and no fallback found ours (retried next run)
